@@ -1,4 +1,5 @@
-from census2text import states
+#!/usr/bin/env python
+from lib import STATES
 import os
 
 cmd = "python census2text.py -q --state '%s' --geography tract  -w -o data/%s.tsv %s "
@@ -8,7 +9,7 @@ try:
     os.mkdir('data')
 except OSError: pass
 
-for state in states:
-    command = cmd % (state, state.replace(' ','_'), ' '.join(TABLES))
+for state, number, postal in STATES:
+    command = cmd % (state, number, ' '.join(TABLES))
     os.system( command )
     print "downloaded %s" % state

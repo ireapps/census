@@ -1,29 +1,19 @@
 #!/usr/bin/env python
 import psycopg2
-import argparse 
+
 import csv
 from os import listdir
-DB_CONNECT_STRING = "dbname=censusweb user=censusweb"
+import os.path
+from lib import STATES
+import re
 
-import argparse
+STATE_NUMBERS = dict((x[0],x[1]) for x in STATES)
+
+DB_CONNECT_STRING = "dbname=censusweb user=censusweb"
 
 INSERT_SQL = "insert into tract_data(%s) values (%s)"
 CREATE_SQL = "create table tract_data (%s)"
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Load raw census data that has already been downloaded.')
-    parser.add_argument('-c','--clear', dest='clear', action='store_true',
-                        help='Clear all existing data.')
-    parser.add_argument('--createdb', dest='create_db', action='store_true',
-                        help='Create the database.')
-
-    return parser.parse_args()
-
-def clear_database():
-    pass
-
-def create_database():
-    pass
 
 def create_tables(cur, first_line):
     def tablize(q):
@@ -31,44 +21,34 @@ def create_tables(cur, first_line):
     fields = map(tablize, first_line)
     line = CREATE_SQL % ", ".join(fields)
     cur.execute(line)
-        
-def do_the_db():
-    # Execute a command: this creates a new table
-    cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
 
-    # Pass data to fill a query placeholders and let Psycopg perform
-    # the correct conversion (no more SQL injections!)
-    cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (100, "abc'def"))
-
-    # Make the changes to the database persistent
-    conn.commit()
-
-    # Close communication with the database
-
-
-
-def load_file(file_name,init_tables):
+def load_file(cur,file_name,init_tables):
     reader = csv.reader(open(file_name), delimiter='\t')
     header = reader.next()
+
     if init_tables:
         create_tables(cur,header)
-    for line in reader:
-        INSERT_SQL % (", ".join(header), ", ".join(line))
         
+    match = re.findall('(\d+)\.tsv',file_name)
+    cur.execute("delete from tract_data where state_fips = %s",(match[0],))    
+    columns = ", ".join(map(lambda x: x.replace(' ','_'),header))    
+    for i,line in enumerate(reader):
+        sql = INSERT_SQL % (columns, ", ".join(map(lambda x: "'%s'" % x,line)))
+        cur.execute(sql)
+        
+    print "done: %s" % file_name    
+
 if __name__ == '__main__':
-    
-    for i, file in enumerate(listdir("./data")):
-        load_file(file,not bool(i))
-    
-    file = csv.reader(open('data/Mississippi.tsv'), delimiter='\t')
-    first_line = file.next()
-    
     # Connect to a database
     conn = psycopg2.connect(DB_CONNECT_STRING)
     cur = conn.cursor()
-    create_tables(cur)
-    conn.commit()
+
+    cur.execute("drop table if exists tract_data")
+
+    for i, file in enumerate(listdir("./data")):
+        load_file(cur,os.path.join("./data",file),not bool(i))
     
+    conn.commit()
     cur.close()
     conn.close()
     
