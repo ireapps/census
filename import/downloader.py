@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from lib import STATES
 import os
 
@@ -9,6 +10,6 @@ try:
 except OSError: pass
 
 for state, number, postal in STATES:
-    command = cmd % (state, state.replace(' ','_'), ' '.join(TABLES))
+    command = cmd % (state, number, ' '.join(TABLES))
     os.system( command )
     print "downloaded %s" % state

@@ -11,17 +11,9 @@ STATE_NUMBERS = dict((x[0],x[1]) for x in STATES)
 
 DB_CONNECT_STRING = "dbname=censusweb user=censusweb"
 
-import argparse
-
 INSERT_SQL = "insert into tract_data(%s) values (%s)"
 CREATE_SQL = "create table tract_data (%s)"
 
-
-def clear_database():
-    pass
-
-def create_database():
-    pass
 
 def create_tables(cur, first_line):
     def tablize(q):
@@ -29,25 +21,11 @@ def create_tables(cur, first_line):
     fields = map(tablize, first_line)
     line = CREATE_SQL % ", ".join(fields)
     cur.execute(line)
-        
-def do_the_db():
-    # Execute a command: this creates a new table
-    cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
-
-    # Pass data to fill a query placeholders and let Psycopg perform
-    # the correct conversion (no more SQL injections!)
-    cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (100, "abc'def"))
-
-    # Make the changes to the database persistent
-    conn.commit()
-
-    # Close communication with the database
-
-
 
 def load_file(cur,file_name,init_tables):
     reader = csv.reader(open(file_name), delimiter='\t')
     header = reader.next()
+
     if init_tables:
         create_tables(cur,header)
         
@@ -59,8 +37,8 @@ def load_file(cur,file_name,init_tables):
         cur.execute(sql)
         
     print "done: %s" % file_name    
+
 if __name__ == '__main__':
-    
     # Connect to a database
     conn = psycopg2.connect(DB_CONNECT_STRING)
     cur = conn.cursor()
