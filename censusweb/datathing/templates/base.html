@@ -1,0 +1,15 @@
+{% load helpertags %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %} - census.ire.org</title>
+  <link rel="stylesheet" href="{% build_media_url '/css/reset.css' %}" type="text/css" charset="utf-8"/>
+  <link rel="stylesheet" href="{% build_media_url '/css/census.css' %}" type="text/css" charset="utf-8"/>
+</head>
+<body>
+  <div id="container">
+    <img src="{% build_media_url '/images/logo.png' %}" width="328" height="29" />
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
