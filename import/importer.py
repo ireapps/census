@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import psycopg2
-import argparse 
+
 import csv
 from os import listdir
 import os.path
