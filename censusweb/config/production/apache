@@ -1,0 +1,34 @@
+<VirtualHost *:80>
+    ServerName censusweb.censusweb.ire.org
+    ServerAlias www.censusweb.censusweb.ire.org
+    
+    SetEnv DEPLOYMENT_TARGET production
+    WSGIScriptAlias / /home/newsapps/sites/censusweb/application.wsgi
+    <Directory /home/newsapps/sites/censusweb/repository>
+        Order deny,allow
+        Allow from all
+    </Directory>
+    
+    Redirect permanent /favicon.ico http://media.censusweb.ire.org/censusweb/na_media/favicon.ico
+    
+    Alias /robots.txt /home/newsapps/sites/censusweb/repository/media/robots.txt
+
+    ErrorLog /home/newsapps/logs/censusweb.error.log
+    LogLevel warn
+
+    SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" is-forwarder
+    LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+    LogFormat "[%h] %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio2
+    CustomLog /home/newsapps/logs/censusweb.access.log combinedio env=is-forwarder
+    CustomLog /home/newsapps/logs/censusweb.access.log combinedio2 env=!is-forwarder
+
+    ServerSignature Off
+    
+    RewriteEngine on
+    # canonical hostname
+    RewriteCond %{HTTP_HOST} !^censusweb.censusweb.ire.org [NC] 
+    RewriteRule ^/(.*)  http://censusweb.censusweb.ire.org/$1 [L,R]
+    
+    RewriteCond %{REQUEST_URI} /maintenance.html$ 
+    RewriteRule $ / [R=302,L]
+</VirtualHost>
