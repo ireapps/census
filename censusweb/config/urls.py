@@ -20,5 +20,5 @@ urlpatterns = patterns('',
         'document_root': settings.MEDIA_ROOT
     }),
     
-    (r'tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{5}))?\.(?P<extension>json|csv|html)$', views.tracts)
+    (r'tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{6}))?\.(?P<extension>json|csv|html)$', views.tracts)
 )

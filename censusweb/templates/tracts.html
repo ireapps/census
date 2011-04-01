@@ -8,4 +8,7 @@
 <h3>{{ county }}</h3>
 <h3>{{ tract }}</h3>
 
+{% for k,v in data.items %}
+{{ k }} - {{ v }}
+{% endfor %}
 {% endblock %}

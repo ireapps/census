@@ -6,21 +6,22 @@ from django.template import RequestContext
 import simplejson
 import csv
 
+from models import data_for_tract
 # Create your views here.
     
 def tracts(request, extension, state="", county="", tract=""):
     
-    test = { 'a':1, 'b':2 }
+    data = data_for_tract(state,county,tract)
     
     if extension == 'json':
-        return HttpResponse(simplejson.dumps(test), mimetype='application/json')
+        return HttpResponse(simplejson.dumps(data), mimetype='application/json')
     
     elif extension == 'csv':
         response = HttpResponse(mimetype='text/csv')
         filename = "%s%s%s.csv" % (state,county,tract)
         response['Content-Disposition'] = 'attachment; filename=' + filename
         writer = csv.writer(response)
-        writer.writerow(test.values())
+        writer.writerow(data.values())
         return response
     
     else: #html
@@ -30,6 +31,7 @@ def tracts(request, extension, state="", county="", tract=""):
                 'county': county,
                 'tract': tract,
                 'extension': extension,
+                'data': data,
             },
             context_instance=RequestContext(request))
 
