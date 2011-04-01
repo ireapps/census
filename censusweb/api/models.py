@@ -23,7 +23,21 @@ def clean_state(state):
 def data_for_tract(state,county,tract):
     state = clean_state(state)
     cursor = connection.cursor()
-    print [state, county, tract]
-    cursor.execute("SELECT * from tract_data where state_fips = %s and county_fips = %s and tract = %s", [state, county, tract])
-    row = cursor.fetchone()
-    return dict((desc[0], value) for desc, value in zip(cursor.description, row))
+    cols = ['SELECT * from tract_data where state_fips = %s']
+    args = [state]
+    if county:
+        cols.append('county_fips = %s')
+        args.append(county)
+    if tract:
+        cols.append('tract = %s')
+        args.append(tract)
+
+    statement = ' and '.join(cols)    
+    print "sql: ", statement
+    print
+    print "args: ", args
+    cursor.execute(statement, args)
+    results = []
+    for row in cursor.fetchall():
+        results.append(dict((desc[0], value) for desc, value in zip(cursor.description, row)))
+    return results
