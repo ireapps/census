@@ -1,0 +1,19 @@
+body, html {
+    font-family: Helvetica, Arial, sans-serif;
+}
+.serif {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
+}
+.interface {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+h1 {
+    font-size: 30px;
+}
+#container {
+    width: 960px;
+    margin: 0 auto;
+}
