@@ -7,6 +7,9 @@ from datathing import views
 
 urlpatterns = patterns('',
 
-    (r'^datathing\.(?P<extension>(json)|(csv))', views.theapi)
+    (r'^datathing\.(?P<extension>(json)|(csv))', views.theapi),
+
+    # The Homepage.
+    (r'^$', views.homepage)
 
 )
