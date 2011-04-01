@@ -15,5 +15,17 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # (r'^admin/', include(admin.site.urls)),
     
-    (r'^datathing\.(?P<extension>(json)|(csv))', views.theapi)
+    #(r'^datathing\.(?P<extension>(json)|(csv))', views.theapi)
+    #/tracts/illinois.json
+    #/tracts/illinois/cook.json
+    #/tracts/illinois/cook/00001.json
+    
+    #/places/illinois.json
+    #/counties/illinois.json
+    #/states/illinois.json
+    #/states.json
+    
+    #/illinois/tracts.json
+    
+    (r'tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{5}))?\.(?P<extension>json|csv|html)', views.tracts)
 )

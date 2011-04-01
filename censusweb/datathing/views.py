@@ -5,3 +5,13 @@ from django.template import RequestContext
 
 def theapi(request, extension):
     return render_to_response('datathing.html', {'extension': extension}, context_instance=RequestContext(request))
+    
+def tracts(request, state, county='', tract='', extension=''):
+    return render_to_response('datathing.html',
+        {
+            'state': state,
+            'county': county,
+            'tract': tract,
+            'extension': extension,
+        },
+        context_instance=RequestContext(request))
