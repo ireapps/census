@@ -104,7 +104,7 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'django.contrib.sitemaps',
     
-    'datathing',
+    'api',
 )
 
 # Predefined domain
