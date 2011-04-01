@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 # Create your views here.
     
-def tracts(request, state, county='', tract='', extension=''):
+def tracts(request, state, county, tract, extension):
     return render_to_response('datathing.html',
         {
             'state': state,
