@@ -17,15 +17,6 @@ INSERT_SQL = "insert into tract_data(%s) values (%s)"
 CREATE_SQL = "create table tract_data (%s)"
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Load raw census data that has already been downloaded.')
-    parser.add_argument('-c','--clear', dest='clear', action='store_true',
-                        help='Clear all existing data.')
-    parser.add_argument('--createdb', dest='create_db', action='store_true',
-                        help='Create the database.')
-
-    return parser.parse_args()
-
 def clear_database():
     pass
 
