@@ -8,17 +8,21 @@ class AggregateStatistic(object):
     """Collect a number of statistics so that a total and pct can be computed."""
     def __init__(self,label):
         self.label = label
-        self.census2010 = 0
-        self.census2000 = 0
+        self.census2010 = None
+        self.census2000 = None
         self.delta = None
         self.stats = []
 
     def add(self,stat):
         self.stats.append(stat)
-        if stat.census2010: self.census2010 += stat.census2010
-        if stat.census2000: self.census2000 += stat.census2000
+        if stat.census2010: 
+            try: self.census2010 += stat.census2010
+            except TypeError: self.census2010 = stat.census2010
+        if stat.census2000: 
+            try: self.census2000 += stat.census2000
+            except TypeError: self.census2000 = stat.census2000
         stat.parent = self
-        if self.census2000:
+        if self.census2000 and self.census2010:
             self.delta = float(self.census2010 + self.census2000) / self.census2000
         else:
             self.delta = None
@@ -27,6 +31,9 @@ class AggregateStatistic(object):
     def children(self):
         for kid in self.stats:
             yield kid
+
+    def __iter__(self):
+        return iter(self.stats)
 
     def __unicode__(self):
         return self.label
@@ -87,7 +94,20 @@ class Statistic(object):
         except:
             return None
 
-
+class Report(object):
+    """Encapsulate any number of StatsBundles (where are multiple places going?)"""
+    def __init__(self):
+        super(Report, self).__init__()
+        self.bundles = []
+    
+    def add(self,bundle):
+        self.bundles.append(bundle)
+        
+    def __iter__(self):
+        for bundle in self.bundles:
+            yield { 'label': bundle.name, 'header': True }
+            for item in bundle:
+                yield item
 
 class StatsBundle(object):
     """docstring for StatsBundle"""
@@ -97,6 +117,7 @@ class StatsBundle(object):
         self.census2000 = census2000
         self.name = name
 
+        
 class AgeSex(StatsBundle):
     """Wrapper for a bundle of place statistics that exposes the age/sex stats.
         TODO: Will we pass in multiple args for different comparison years?
@@ -187,9 +208,9 @@ class AgeSex(StatsBundle):
             fvalue = female_lookup[label]
             tot2010 = tot2000 = None
             try: tot2010 = compute_value(self.census2010,value) + compute_value(self.census2010,fvalue)
-            except TypeError: print "none for %s" % value
+            except TypeError: pass
             try: tot2000 = compute_value(self.census2000,value) + compute_value(self.census2000,fvalue)
-            except TypeError: print "none for %s" % value
+            except TypeError: pass
 
             stat = Statistic(label, 
                              census2010=tot2010,
@@ -199,3 +220,17 @@ class AgeSex(StatsBundle):
 
     def __repr__(self):
         return self.name    
+        
+    def __iter__(self):
+        yield self.total_population
+        for child in self.total_population:
+            yield child
+
+        yield self.male_population
+        for child in self.male_population:
+            yield child
+
+        yield self.female_population
+        for child in self.female_population:
+            yield child
+
