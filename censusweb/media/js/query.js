@@ -10,6 +10,7 @@ $(function(){
 
     Query.prototype.render = function() {
         $("#search").html(this.template({query: this}));
+        $('#filter-help').toggle(!!this.summarylevel);
         $("#summarylevel-select .link").click(this.selectSummaryLevel);
         $("#state-select .link").click(this.selectState);
         $('#county-select .link').click(this.selectCounty);
