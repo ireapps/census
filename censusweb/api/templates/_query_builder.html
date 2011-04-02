@@ -64,8 +64,22 @@
         - <b><%= query.subdivisionDisplay %></b>.
     <% } %>
 
+    <% if (query.mappings.tracts && !query.tract) { %>
+        for
+        <span id="tract-select">
+            <% var tracts = query.filtered(query.mappings.tracts); %>
+            <% _.each(tracts, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == tracts.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.tract) { %>
+        - <b><%= query.tractDisplay %></b>.
+    <% } %>
+
     <% if (query.isCompletable()) { %>
         <button>Go</button>
     <% } %>
+
+    <div id="help-link">Huh?</div>
 
 </script>

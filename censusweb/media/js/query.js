@@ -3,7 +3,7 @@ $(function(){
     // ------------------------- Query Model ---------------------------------
 
     window.Query = function(){
-        _.bindAll(this, 'keypress', 'render');
+        _.bindAll(this, 'keypress', 'render', 'showHelp');
         this.template = _.template($('#query-template').html());
         this.lazyRender = _.debounce(this.render, 50);
         this.filter = '';
@@ -14,11 +14,13 @@ $(function(){
         $("#search").html(this.template({query: this}));
         $('#filter-help').toggle(!!this.shouldShowFilterHelp());
         $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
+        $('#help-link').click(this.showHelp);
         $("#summarylevel-select .link").click(_.bind(this.select, this, 'summarylevel'));
         $("#state-select .link").click(_.bind(this.select, this, 'state'));
         $('#county-select .link').click(_.bind(this.select, this, 'county'));
         $('#place-select .link').click(_.bind(this.select, this, 'place'));
         $('#subdivision-select .link').click(_.bind(this.select, this, 'subdivision'));
+        $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
     };
 
     Query.prototype.isCompletable = function() {
@@ -43,6 +45,7 @@ $(function(){
 
     Query.prototype.keypress = function(e) {
         if (e.which == 8) {
+            e.preventDefault();
             this.filter = this.filter.substr(0, this.filter.length - 1);
             this.lazyRender();
         } else if (e.which == 13 && this.filter) {
@@ -65,6 +68,7 @@ $(function(){
         var val = this[level] = el.attr('data-val');
         var display = this[level + 'Display'] = el.text();
         this.render();
+        if (this.isComplete()) return this.finish();
         if (level == 'state') {
             if (this.summarylevel == 'tract' || this.summarylevel == 'county' || this.summarylevel == 'subdivision') {
                 this.loadCounties();
@@ -73,7 +77,22 @@ $(function(){
             }
         } else if (level == 'county' && this.summarylevel == 'subdivision') {
             this.loadSubdivisions();
+        } else if (level == 'county' && this.summarylevel == 'tract') {
+            this.loadTracts();
         }
+    };
+
+    Query.prototype.finish = function() {
+        switch (this.summarylevel) {
+            case "tract":
+                window.location = '/tracts/' + this.state + '/' + this.county.substr(2) + '/' + this.tract + '.html';
+                break;
+        }
+    };
+
+    Query.prototype.showHelp = function(e) {
+        $(e.currentTarget).hide();
+        $('#help').removeClass('hidden');
     };
 
     Query.prototype.loadCounties = function() {
@@ -93,6 +112,13 @@ $(function(){
     Query.prototype.loadSubdivisions = function() {
         $.getJSON('/internal/subdivisions_for_county/' + this.county + '.json', _.bind(function(response) {
             this.mappings.subdivisions = response;
+            this.render();
+        }, this));
+    };
+
+    Query.prototype.loadTracts = function() {
+        $.getJSON('/internal/tracts_for_county/' + this.county + '.json', _.bind(function(response) {
+            this.mappings.tracts = response;
             this.render();
         }, this));
     };

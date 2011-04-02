@@ -21,7 +21,7 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
     font-size: 30px;
 }
-.link {
+.link, #help-link {
     cursor: pointer;
     color: #aa0000;
     text-decoration: underline;
@@ -36,6 +36,21 @@ h1 {
 #logo {
     margin-bottom: 25px;
 }
+
+#help-link, #help {
+    font-size: 16px;
+    margin-top: 25px;
+}
+    #help dt {
+        color: #000;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    #help dd {
+        color: #333;
+        margin-bottom: 15px;
+        max-width: 550px;
+    }
 
 #filter-help, #filter-display {
     position: absolute;

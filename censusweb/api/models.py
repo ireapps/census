@@ -53,6 +53,11 @@ def get_subdivisions_by_county(fips):
     county_fips = fips[2:]
     return get_rows('SELECT county_subdivision_name, geo_id from county_subdivision_lookup where state_fips = %s and county_fips = %s order by county_subdivision_name asc', [state_fips, county_fips])
 
+def get_tracts_by_county(fips):
+    state_fips  = fips[0:2]
+    county_fips = fips[2:]
+    return get_rows('SELECT name, tract from tract_data where state_fips = %s and county_fips = %s order by name asc', [state_fips, county_fips])
+
 def get_rows(query, data):
     results = []
     cursor = connection.cursor()
@@ -62,4 +67,4 @@ def get_rows(query, data):
     return results
 
 
-        
+

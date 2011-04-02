@@ -8,12 +8,19 @@
 <h3>{{ county }}</h3>
 <h3>{{ tract }}</h3>
 
-{% for row in data %}
-<h2>{{ row.name }}</h2>
-<pre>
-{% for k, v in row.items %}
-{{ k }} - {{ v }}
+<table>
+{% for row in report %}
+  <tr>
+  {% if row.header %}
+    <th>{{ row.label }}</th>
+  {% else %}
+    <td>{{ row.label }}</td>
+    <td>{{ row.census2000 }}</td>
+    <td>{{ row.census2010 }}</td>
+    <td>{{ row.delta }}</td>
+  {% endif %}
+  </tr>
 {% endfor %}
-</pre>
-{% endfor %}
+</table>
+
 {% endblock %}
