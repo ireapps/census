@@ -3,58 +3,77 @@ $(function(){
     // ------------------------- Query Model ---------------------------------
 
     window.Query = function(){
-        _.bindAll(this, 'selectSummaryLevel', 'selectState', 'selectCounty',
-                        'selectPlace');
+        _.bindAll(this, 'keypress', 'render');
         this.template = _.template($('#query-template').html());
+        this.lazyRender = _.debounce(this.render, 50);
+        this.filter = '';
+        $(document.body).keypress(this.keypress);
     };
 
     Query.prototype.render = function() {
         $("#search").html(this.template({query: this}));
-        $('#filter-help').toggle(!!this.summarylevel);
-        $("#summarylevel-select .link").click(this.selectSummaryLevel);
-        $("#state-select .link").click(this.selectState);
-        $('#county-select .link').click(this.selectCounty);
-        $('#place-select .link').click(this.selectPlace);
+        $('#filter-help').toggle(!!this.shouldShowFilterHelp());
+        $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
+        $("#summarylevel-select .link").click(_.bind(this.select, this, 'summarylevel'));
+        $("#state-select .link").click(_.bind(this.select, this, 'state'));
+        $('#county-select .link').click(_.bind(this.select, this, 'county'));
+        $('#place-select .link').click(_.bind(this.select, this, 'place'));
+        $('#subdivision-select .link').click(_.bind(this.select, this, 'subdivision'));
     };
 
-    Query.prototype.isComplete = function() {
+    Query.prototype.isCompletable = function() {
         return (this.summarylevel && this.state);
     };
 
-    Query.prototype.selectSummaryLevel = function(e) {
-        var el = $(e.currentTarget);
-        this.summarylevel = el.attr('data-val');
-        this.summarylevelDisplay = el.text();
-        this.render();
+    Query.prototype.isComplete = function() {
+        return this.summarylevel == 'nation' || this[this.summarylevel];
     };
 
-    Query.prototype.selectState = function(e) {
-        var el = $(e.currentTarget);
-        this.state = el.attr('data-val');
-        this.stateDisplay = el.text();
-        this.render();
-        if (this.summarylevel == 'tract' || this.summarylevel == 'county' || this.summarylevel == 'subdivision') {
-            this.loadCounties();
-        } else if (this.summarylevel == 'place') {
-            this.loadPlaces();
+    Query.prototype.shouldShowFilterHelp = function() {
+        return this.isFilterable() && !this.filter;
+    };
+
+    Query.prototype.isFilterable = function() {
+        return !!this.summarylevel && !this.isComplete();
+    };
+
+    Query.prototype.filterDisplay = function() {
+        return 'Results matching "' + this.filter + '"';
+    };
+
+    Query.prototype.keypress = function(e) {
+        if (e.which == 8) {
+            this.filter = this.filter.substr(0, this.filter.length - 1);
+            this.lazyRender();
+        } else if (e.which == 13 && this.filter) {
+            $('.link:first').trigger('click');
+        } else if (e.charCode && this.isFilterable()) {
+            this.filter += String.fromCharCode(e.charCode);
+            this.lazyRender();
         }
     };
 
-    Query.prototype.selectCounty = function(e) {
+    Query.prototype.filtered = function(list) {
+        if (!this.filter) return list;
+        var matcher = new RegExp(this.filter.replace(/[-[\]{}()+?.,\\^$|#\s]/ig, "\\$&").replace(/(\\\s)+/, '.*'), 'i');
+        return _.filter(list, function(item){ return matcher.test(item[0]); });
+    };
+
+    Query.prototype.select = function(level, e) {
+        this.filter = "";
         var el = $(e.currentTarget);
-        this.county = el.attr('data-val');
-        this.countyDisplay = el.text();
+        var val = this[level] = el.attr('data-val');
+        var display = this[level + 'Display'] = el.text();
         this.render();
-        if (this.summarylevel == 'subdivision') {
+        if (level == 'state') {
+            if (this.summarylevel == 'tract' || this.summarylevel == 'county' || this.summarylevel == 'subdivision') {
+                this.loadCounties();
+            } else if (this.summarylevel == 'place') {
+                this.loadPlaces();
+            }
+        } else if (level == 'county' && this.summarylevel == 'subdivision') {
             this.loadSubdivisions();
         }
-    };
-
-    Query.prototype.selectPlace = function(e) {
-        var el = $(e.currentTarget);
-        this.place = el.attr('data-val');
-        this.placeDisplay = el.text();
-        this.render();
     };
 
     Query.prototype.loadCounties = function() {
@@ -72,7 +91,6 @@ $(function(){
     };
 
     Query.prototype.loadSubdivisions = function() {
-        alert(this.county);
         $.getJSON('/internal/subdivisions_for_county/' + this.county + '.json', _.bind(function(response) {
             this.mappings.subdivisions = response;
             this.render();
@@ -82,64 +100,67 @@ $(function(){
     // ------------------------- Data ---------------------------------
 
     Query.prototype.mappings = {
+
+        summarylevels: ['tract', 'place', 'subdivision', 'county', 'state', 'nation'],
+
         states: [
-            ["AK", "Alaska"],
-	        ["AL", "Alabama"],
-	        ["AR", "Arkansas"],
-	        ["AZ", "Arizona"],
-	        ["CA", "California"],
-	        ["CO", "Colorado"],
-	        ["CT", "Connecticut"],
-	        ["DC", "District of Columbia"],
-	        ["DE", "Delaware"],
-	        ["FL", "Florida"],
-	        ["GA", "Georgia"],
-	        ["HI", "Hawaii"],
-	        ["IA", "Iowa"],
-	        ["ID", "Idaho"],
-	        ["IL", "Illinois"],
-	        ["IN", "Indiana"],
-	        ["KS", "Kansas"],
-	        ["KY", "Kentucky"],
-	        ["LA", "Louisiana"],
-	        ["MA", "Massachusetts"],
-	        ["MD", "Maryland"],
-	        ["ME", "Maine"],
-	        ["MI", "Michigan"],
-	        ["MN", "Minnesota"],
-	        ["MO", "Missouri"],
-	        ["MS", "Mississippi"],
-	        ["MT", "Montana"],
-	        ["NC", "North Carolina"],
-	        ["ND", "North Dakota"],
-	        ["NE", "Nebraska"],
-	        ["NH", "New Hampshire"],
-	        ["NJ", "New Jersey"],
-	        ["NM", "New Mexico"],
-	        ["NV", "Nevada"],
-	        ["NY", "New York"],
-	        ["OH", "Ohio"],
-	        ["OK", "Oklahoma"],
-	        ["OR", "Oregon"],
-	        ["PA", "Pennsylvania"],
-	        ["RI", "Rhode Island"],
-	        ["SC", "South Carolina"],
-	        ["SD", "South Dakota"],
-	        ["TN", "Tennessee"],
-	        ["TX", "Texas"],
-	        ["UT", "Utah"],
-	        ["VA", "Virginia"],
-	        ["VT", "Vermont"],
-	        ["WA", "Washington"],
-	        ["WI", "Wisconsin"],
-	        ["WV", "West Virginia"],
-	        ["WY", "Wyoming"]
+            ["Alabama"              ,"AL"],
+            ["Alaska"               ,"AK"],
+	        ["Arizona"              ,"AZ"],
+	        ["Arkansas"             ,"AR"],
+	        ["California"           ,"CA"],
+	        ["Colorado"             ,"CO"],
+	        ["Connecticut"          ,"CT"],
+	        ["District of Columbia" ,"DC"],
+	        ["Delaware"             ,"DE"],
+	        ["Florida"              ,"FL"],
+	        ["Georgia"              ,"GA"],
+	        ["Hawaii"               ,"HI"],
+	        ["Iowa"                 ,"IA"],
+	        ["Idaho"                ,"ID"],
+	        ["Illinois"             ,"IL"],
+	        ["Indiana"              ,"IN"],
+	        ["Kansas"               ,"KS"],
+	        ["Kentucky"             ,"KY"],
+	        ["Louisiana"            ,"LA"],
+	        ["Massachusetts"        ,"MA"],
+	        ["Maryland"             ,"MD"],
+	        ["Maine"                ,"ME"],
+	        ["Michigan"             ,"MI"],
+	        ["Minnesota"            ,"MN"],
+	        ["Mississippi"          ,"MS"],
+	        ["Missouri"             ,"MO"],
+	        ["Montana"              ,"MT"],
+	        ["North Carolina"       ,"NC"],
+	        ["North Dakota"         ,"ND"],
+	        ["Nebraska"             ,"NE"],
+	        ["New Hampshire"        ,"NH"],
+	        ["New Jersey"           ,"NJ"],
+	        ["New Mexico"           ,"NM"],
+	        ["Nevada"               ,"NV"],
+	        ["New York"             ,"NY"],
+	        ["Ohio"                 ,"OH"],
+	        ["Oklahoma"             ,"OK"],
+	        ["Oregon"               ,"OR"],
+	        ["Pennsylvania"         ,"PA"],
+	        ["Rhode Island"         ,"RI"],
+	        ["South Carolina"       ,"SC"],
+	        ["South Dakota"         ,"SD"],
+	        ["Tennessee"            ,"TN"],
+	        ["Texas"                ,"TX"],
+	        ["Utah"                 ,"UT"],
+	        ["Virginia"             ,"VA"],
+	        ["Vermont"              ,"VT"],
+	        ["Washington"           ,"WA"],
+	        ["Wisconsin"            ,"WI"],
+	        ["West Virginia"        ,"WV"],
+	        ["Wyoming"              ,"WY"]
         ]
     };
 
     // ------------------------- Initialization -------------------------------
 
-    var query = new Query;
+    window.query = new Query;
     query.render();
 
 });
