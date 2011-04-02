@@ -11,7 +11,7 @@ def state_fips_for_alpha(state_code):
     Dependent upon load_fips management command.
     """
     cursor = connection.cursor()
-    cursor.execute("SELECT distinct state_fips from fips_lookup where state_code = %s",[state_code])
+    cursor.execute("SELECT distinct state_fips from county_lookup where state_code = %s",[state_code])
     row = cursor.fetchone()
     return row[0]
 
@@ -43,17 +43,18 @@ def data_for_tract(state,county,tract):
     return results
 
 def get_counties_by_state(state):
-    results = []
-    cursor = connection.cursor()
-    cursor.execute('SELECT county_name, county_fips from fips_lookup where state_code = %s order by county_name asc', [state])
-    for row in cursor.fetchall():
-        results.append(row)
-    return results
+    return get_rows('SELECT county_name, county_fips, state_fips from county_lookup where state_code = %s order by county_name asc', [state])
 
 def get_places_by_state(state):
+    return get_rows('SELECT place_name, geo_id from place_lookup where state_code = %s order by place_name asc', [state])
+
+def get_subdivisions_by_county(fips):
+    return get_rows('SELECT county_subdivision_name, geo_id from county_subdivision_lookup where  = %s order by county_subdivision_name asc', [])
+
+def get_rows(query, data):
     results = []
     cursor = connection.cursor()
-    cursor.execute('SELECT place_name, geo_id from place_lookup where state_code = %s order by place_name asc', [state])
+    cursor.execute(query, data)
     for row in cursor.fetchall():
         results.append(row)
     return results
