@@ -38,6 +38,11 @@ def tracts(request, extension, state="", county="", tract=""):
 def stats(request,group):
     response = HttpResponse(mimetype='text/plain')
     response.write("You asked for %s" % group)
+    data = data_for_tract('01','001','020100')
+    from statmodels import AgeSex
+    agesex = AgeSex(census2000=data[0])
+    response.write("\nTotal 2000: %i" % agesex.total_population.census2000)
+    response.write("\nTotal 2010: %i" % agesex.total_population.census2010)
     return response
     
 def homepage(request):
