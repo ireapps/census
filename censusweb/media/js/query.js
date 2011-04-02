@@ -67,6 +67,7 @@ $(function(){
         var val = this[level] = el.attr('data-val');
         var display = this[level + 'Display'] = el.text();
         this.render();
+        if (this.isComplete()) return this.finish();
         if (level == 'state') {
             if (this.summarylevel == 'tract' || this.summarylevel == 'county' || this.summarylevel == 'subdivision') {
                 this.loadCounties();
@@ -77,6 +78,14 @@ $(function(){
             this.loadSubdivisions();
         } else if (level == 'county' && this.summarylevel == 'tract') {
             this.loadTracts();
+        }
+    };
+
+    Query.prototype.finish = function() {
+        switch (this.summarylevel) {
+            case "tract":
+                window.location = '/tracts/' + this.state + '/' + this.county.substr(2) + '/' + this.tract + '.html';
+                break;
         }
     };
 
