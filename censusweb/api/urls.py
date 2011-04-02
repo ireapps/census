@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     # County codes for states.
     #/internal/counties_for_state/CA.json
     (r'^internal/counties_for_state/(?P<state>[A-Z]{2}).json$', views.counties_for_state)
+    (r'stats/(?P<group>[-A-Za-z]+)/?$', views.stats),
 )
