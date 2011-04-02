@@ -19,8 +19,9 @@
     <% if (query.summarylevel && (query.summarylevel != 'nation') && !query.state) { %>
         in
         <span id="state-select">
-            <% _.each(query.mappings.states, function(state, i) { %>
-                <span class="link" data-val="<%= state[0] %>"><%= state[1] %></span><%= i == query.mappings.states.length - 1 ? '' : ', ' %>
+            <% var states = query.filtered(query.mappings.states); %>
+            <% _.each(states, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == states.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
     <% } else if (query.state) { %>
@@ -30,8 +31,9 @@
     <% if (query.mappings.counties && !query.county) { %>
         for
         <span id="county-select">
-            <% _.each(query.mappings.counties, function(pair, i) { %>
-                <span class="link" data-val="<%= '' + pair[2] + pair[1] %>"><%= pair[0] %></span><%= i == query.mappings.counties.length - 1 ? '' : ', ' %>
+            <% var counties = query.filtered(query.mappings.counties); %>
+            <% _.each(counties, function(pair, i) { %>
+                <span class="link" data-val="<%= '' + pair[2] + pair[1] %>"><%= pair[0] %></span><%= i == counties.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
     <% } else if (query.county) { %>
@@ -41,8 +43,9 @@
     <% if (query.mappings.places && !query.place) { %>
         for
         <span id="place-select">
-            <% _.each(query.mappings.places, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == query.mappings.places.length - 1 ? '' : ', ' %>
+            <% var places = query.filtered(query.mappings.places); %>
+            <% _.each(places, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == places.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
     <% } else if (query.place) { %>
@@ -52,8 +55,9 @@
     <% if (query.mappings.subdivisions && !query.subdivision) { %>
         for
         <span id="subdivision-select">
-            <% _.each(query.mappings.subdivisions, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == query.mappings.subdivisions.length - 1 ? '' : ', ' %>
+            <% var subdivisions = query.filtered(query.mappings.subdivisions); %>
+            <% _.each(subdivisions, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == subdivisions.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
     <% } else if (query.subdivision) { %>
