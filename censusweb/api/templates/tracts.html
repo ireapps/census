@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
+{% load helpertags %}
 
 {% block content %}
+
+<img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" />
 
 <h2>{% block title %}Tracts for {{ state }} {{ county }} {{ tract }} {% endblock %}</h2>
 
