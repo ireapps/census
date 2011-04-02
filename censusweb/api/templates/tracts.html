@@ -9,6 +9,11 @@
     <tr class="title">
         <th colspan="6">{% block title %}Tract #{{ tract }} - {{ county }}, {{ state }} {% endblock %}</th>
     </tr>
+{% for row in report %}
+    {% if row.header %}
+    <tr>
+        <th class="section" colspan="6">{{ row.label }}</th>
+    </tr>
     <tr class="header">
         <th class="first">Subject</th>
         <th>2000 Total</th>
@@ -17,24 +22,16 @@
         <th>2010 Percent</th>
         <th class="last">Delta</th>
     </tr>
-{% for row in report %}
-    <tr class="{% cycle odd,even %}">
-    {% if row.header %}
-        <th class="first">{{ row.label }}</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th class="last"></th>
     {% else %}
+    <tr class="{% cycle odd,even %} indent-{{ row.indent }}">
         <td class="first">{{ row.label }}</td>
         <td class="code">{{ row.census2000|default_if_none:"" }}</td>
         <td class="code">{{ row.pct2000|default_if_none:"" }}</td>
         <td class="code">{{ row.census2010|default_if_none:"" }}</td>
         <td class="code">{{ row.pct2010|default_if_none:"" }}</td>
         <td class="code last">{{ row.delta|default_if_none:"" }}</td>
-    {% endif %}
     </tr>
+    {% endif %}
 {% endfor %}
 </table>
 
