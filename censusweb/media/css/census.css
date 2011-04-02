@@ -18,11 +18,16 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
     font-size: 30px;
 }
+.link {
+    cursor: pointer;
+    color: #0000ff;
+    text-decoration: underline;
+}
 
 /*-------------------------------- Layout ------------------------------------*/
 
 #container {
-    margin: 50px 0 0 50px;
+    margin: 50px;
 }
 
 #logo {

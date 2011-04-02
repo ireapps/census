@@ -6,38 +6,10 @@
 {% block content %}
 
 <div id="search">
-  Find data for
-
-  <select id="summarylevel-select">
-    <option value="tract">Tracts</option>
-    <option value="place">Places</option>
-    <option value="mcd">County Subdivisions</option>
-    <option value="county">Counties</option>
-    <option value="">States</option>
-  </select>
-
-  <span id="state-select-wrap">
-    in
-    {% include "_state_select.html" %}
-  </span>
-
-  <span id="county-select-wrap" class="hidden">
-
-  </span>
   
-  <button>GO</button>
-
 </div>
 
-<script id="county-select-template" type="x-js-template">
-  for
-  <select>
-    <option value="all">All Counties</option>
-    <% _.each(counties, function(pair) { %>
-      <option value="<%= pair[1] %>"><%= pair[0] %></option>
-    <% }); %>
-  </select>
-</script>
+{% include "_query_builder.html" %}
 
 <script src="{% build_media_url '/js/homepage.js' %}"></script>
 

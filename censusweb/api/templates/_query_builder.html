@@ -1,0 +1,44 @@
+{% load helpertags %}
+
+<script id="query-template" type="x-js-template">
+
+    <% if (query.summarylevel) { %>
+        Find data for <b><%= query.summarylevelDisplay %></b>
+    <% } else { %>
+        Find data for
+        <span id="summarylevel-select">
+          <span class="link" data-val="tract">Tracts</span>,
+          <span class="link" data-val="place">Places</span>,
+          <span class="link" data-val="subdivision">County Subdivisions</span>,
+          <span class="link" data-val="county">Counties</span>,
+          <span class="link" data-val="state">States</span>, or
+          <span class="link" data-val="nation">the USA</span>.
+      </span>
+    <% } %>
+
+    <% if (query.summarylevel && !query.state) { %>
+        in
+        <span id="state-select">
+            <% _.each(Query.mappings.states, function(state, i) { %>
+                <span class="link" data-val="<%= state[0] %>"><%= state[1] %></span><%= i == Query.mappings.states.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.state) { %>
+        in <b><%= query.stateDisplay %></b>
+    <% } %>
+
+    <span id="county-select-wrap" class="hidden">
+
+    </span>
+
+    <% if (query.counties) { %>
+        for
+        <select>
+            <option value="all">All Counties</option>
+            <% _.each(counties, function(pair) { %>
+                <option value="<%= pair[1] %>"><%= pair[0] %></option>
+            <% }); %>
+        </select>
+    <% } %>
+
+</script>
