@@ -55,7 +55,7 @@ $(function(){
 
     Query.prototype.filtered = function(list) {
         if (!this.filter) return list;
-        var matcher = new RegExp(this.filter.replace(/[-[\]{}()+?.,\\^$|#\s]/ig, "\\$&"), 'i');
+        var matcher = new RegExp(this.filter.replace(/[-[\]{}()+?.,\\^$|#\s]/ig, "\\$&").replace(/(\\\s)+/, '.*'), 'i');
         return _.filter(list, function(item){ return matcher.test(item[0]); });
     };
 
