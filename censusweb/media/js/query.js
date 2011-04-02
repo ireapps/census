@@ -12,7 +12,8 @@ $(function(){
 
     Query.prototype.render = function() {
         $("#search").html(this.template({query: this}));
-        $('#filter-help').toggle(!!this.isFilterable());
+        $('#filter-help').toggle(!!this.shouldShowFilterHelp());
+        $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
         $("#summarylevel-select .link").click(_.bind(this.select, this, 'summarylevel'));
         $("#state-select .link").click(_.bind(this.select, this, 'state'));
         $('#county-select .link').click(_.bind(this.select, this, 'county'));
@@ -28,12 +29,25 @@ $(function(){
         return this.summarylevel == 'nation' || this[this.summarylevel];
     };
 
+    Query.prototype.shouldShowFilterHelp = function() {
+        return this.isFilterable() && !this.filter;
+    };
+
     Query.prototype.isFilterable = function() {
         return !!this.summarylevel && !this.isComplete();
     };
 
+    Query.prototype.filterDisplay = function() {
+        return 'Results matching "' + this.filter + '"';
+    };
+
     Query.prototype.keypress = function(e) {
-        if (e.charCode) {
+        if (e.which == 8) {
+            this.filter = this.filter.substr(0, this.filter.length - 1);
+            this.lazyRender();
+        } else if (e.which == 13 && this.filter) {
+            $('.link:first').trigger('click');
+        } else if (e.charCode && this.isFilterable()) {
             this.filter += String.fromCharCode(e.charCode);
             this.lazyRender();
         }

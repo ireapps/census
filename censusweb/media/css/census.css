@@ -9,6 +9,9 @@ body, html {
 .interface {
     font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
 }
+.code {
+    font-family: Menlo, Consolas, Monaco, Courier, monospace;
+}
 .hidden {
     display: none;
 }
@@ -34,13 +37,21 @@ h1 {
     margin-bottom: 25px;
 }
 
-#filter-help {
+#filter-help, #filter-display {
     position: absolute;
-    left: 410px; top: 63px;
-    font-style: italic;
-    font-size: 16px;
-    color: #333;
+    left: 410px; top: 50px;
+    font-size: 12px;
+    color: #777;
+    padding: 6px 12px;
+    border: 2px solid #ccc;
+    background: #f4f4f4;
+    border-radius: 3px;
 }
+    #filter-display {
+        border-color: #bce;
+        color: #333;
+        background: #ddeeff;
+    }
 
 #search {
     font-size: 16px;
