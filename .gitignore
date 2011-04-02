@@ -1,4 +1,5 @@
 *.pyc
 import/data
 censusweb/censusweb
+.DS_Store
 raw

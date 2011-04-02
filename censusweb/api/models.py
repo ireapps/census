@@ -60,3 +60,6 @@ def get_rows(query, data):
     for row in cursor.fetchall():
         results.append(row)
     return results
+
+
+        

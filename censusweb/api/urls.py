@@ -25,5 +25,7 @@ urlpatterns = patterns('',
 
     # Subdivisions for a given county.
     #/internal/subdivisions_for_county/IL.json
-    (r'^internal/subdivisions_for_county/(?P<county>\d{5}).json$', views.subdivisions_for_county)
+    (r'^internal/subdivisions_for_county/(?P<county>\d{5}).json$', views.subdivisions_for_county),
+
+    (r'stats/(?P<group>[-A-Za-z]+)/?$', views.stats),
 )

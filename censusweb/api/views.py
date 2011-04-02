@@ -5,6 +5,7 @@ from django.template import RequestContext
 
 import simplejson
 import csv
+import re
 
 from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county
 
@@ -34,6 +35,11 @@ def tracts(request, extension, state="", county="", tract=""):
             },
             context_instance=RequestContext(request))
 
+def stats(request,group):
+    response = HttpResponse(mimetype='text/plain')
+    response.write("You asked for %s" % group)
+    return response
+    
 def homepage(request):
     return render_to_response('homepage.html', context_instance=RequestContext(request))
 
