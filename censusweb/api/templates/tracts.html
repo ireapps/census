@@ -11,18 +11,31 @@
 <h3>{{ county }}</h3>
 <h3>{{ tract }}</h3>
 
-<table>
+<table class="report">
+    <tr class="header">
+        <th class="first">Subject</th>
+        <th>2000 Total</th>
+        <th>2000 Percent</th>
+        <th>2010 Total</th>
+        <th>2010 Percent</th>
+        <th class="last">Delta</th>
+    </tr>
 {% for row in report %}
-    <tr>
+    <tr class="{% cycle odd,even %}">
     {% if row.header %}
-        <th>{{ row.label }}</th>
+        <th class="first">{{ row.label }}</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th class="last"></th>
     {% else %}
-        <td>{{ row.label }}</td>
-        <td>{{ row.census2000 }}</td>
-        <td>{{ row.pct2000 }}</td>
-        <td>{{ row.census2010 }}</td>
-        <td>{{ row.pct2010 }}</td>
-        <td>{{ row.delta }}</td>
+        <td class="first">{{ row.label }}</td>
+        <td class="code">{{ row.census2000|default_if_none:"" }}</td>
+        <td class="code">{{ row.pct2000|default_if_none:"" }}</td>
+        <td class="code">{{ row.census2010|default_if_none:"" }}</td>
+        <td class="code">{{ row.pct2010|default_if_none:"" }}</td>
+        <td class="code last">{{ row.delta|default_if_none:"" }}</td>
     {% endif %}
     </tr>
 {% endfor %}
