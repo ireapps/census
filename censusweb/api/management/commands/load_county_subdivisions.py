@@ -28,15 +28,20 @@ class Command(BaseCommand):
                 state_code char(2),
                 geo_id char(10),
                 ansi_code char(8),
-                county_subdivision_name varchar(255)
+                county_subdivision_name varchar(255),
+                county_fips char(5)
             )
         """)
         
         reader = fancyreader(urlopen("http://www.census.gov/geo/www/gazetteer/files/Gaz_cousubs_national.txt"), delimiter='\t', encoding="ISO-8859-1")
         headers = reader.next() # junk
-        INSERT = "insert into county_subdivision_lookup (state_code, geo_id, ansi_code, county_subdivision_name) values (%s,%s,%s,%s)"
+        INSERT = "insert into county_subdivision_lookup (state_code, geo_id, ansi_code, county_subdivision_name, county_fips) values (%s,%s,%s,%s,%s)"
         for row in reader:
-            cur.execute(INSERT,row[:4])
+            #state is first two, county is next three
+            insert_me = row[:4]
+            county_fips = row[1][0:5]
+            insert_me.append(county_fips)
+            cur.execute(INSERT,insert_me)
 
         transaction.commit_unless_managed()
     
