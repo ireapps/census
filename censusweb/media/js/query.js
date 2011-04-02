@@ -45,6 +45,7 @@ $(function(){
 
     Query.prototype.keypress = function(e) {
         if (e.which == 8) {
+            e.preventDefault();
             this.filter = this.filter.substr(0, this.filter.length - 1);
             this.lazyRender();
         } else if (e.which == 13 && this.filter) {
