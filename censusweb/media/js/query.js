@@ -4,21 +4,31 @@ $(function(){
 
     window.Query = function(){
         _.bindAll(this, 'selectSummaryLevel', 'selectState', 'selectCounty',
-                        'selectPlace');
+                        'selectPlace', 'selectSubdivision');
         this.template = _.template($('#query-template').html());
     };
 
     Query.prototype.render = function() {
         $("#search").html(this.template({query: this}));
-        $('#filter-help').toggle(!!this.summarylevel);
+        $('#filter-help').toggle(!!this.summarylevel && !this.isComplete());
         $("#summarylevel-select .link").click(this.selectSummaryLevel);
         $("#state-select .link").click(this.selectState);
         $('#county-select .link').click(this.selectCounty);
         $('#place-select .link').click(this.selectPlace);
+        $('#subdivision-select .link').click(this.selectSubdivision);
+    };
+
+    Query.prototype.isCompletable = function() {
+        return (this.summarylevel && this.state);
     };
 
     Query.prototype.isComplete = function() {
-        return (this.summarylevel && this.state);
+        return (this.summarylevel == 'tract' && this.tract)             ||
+               (this.summarylevel == 'place' && this.place)             ||
+               (this.summarylevel == 'subdivision' && this.subdivision) ||
+               (this.summarylevel == 'county' && this.county)           ||
+               (this.summarylevel == 'state' && this.state)             ||
+               (this.summarylevel == 'nation');
     };
 
     Query.prototype.selectSummaryLevel = function(e) {
@@ -57,6 +67,13 @@ $(function(){
         this.render();
     };
 
+    Query.prototype.selectSubdivision = function(e) {
+        var el = $(e.currentTarget);
+        this.subdivision = el.attr('data-val');
+        this.subdivisionDisplay = el.text();
+        this.render();
+    };
+
     Query.prototype.loadCounties = function() {
         $.getJSON('/internal/counties_for_state/' + this.state + '.json', _.bind(function(response) {
             this.mappings.counties = response;
@@ -72,7 +89,6 @@ $(function(){
     };
 
     Query.prototype.loadSubdivisions = function() {
-        alert(this.county);
         $.getJSON('/internal/subdivisions_for_county/' + this.county + '.json', _.bind(function(response) {
             this.mappings.subdivisions = response;
             this.render();
@@ -83,10 +99,10 @@ $(function(){
 
     Query.prototype.mappings = {
         states: [
+            ["AL", "Alabama"],
             ["AK", "Alaska"],
-	        ["AL", "Alabama"],
-	        ["AR", "Arkansas"],
 	        ["AZ", "Arizona"],
+	        ["AR", "Arkansas"],
 	        ["CA", "California"],
 	        ["CO", "Colorado"],
 	        ["CT", "Connecticut"],
@@ -107,8 +123,8 @@ $(function(){
 	        ["ME", "Maine"],
 	        ["MI", "Michigan"],
 	        ["MN", "Minnesota"],
-	        ["MO", "Missouri"],
 	        ["MS", "Mississippi"],
+	        ["MO", "Missouri"],
 	        ["MT", "Montana"],
 	        ["NC", "North Carolina"],
 	        ["ND", "North Dakota"],
