@@ -89,7 +89,25 @@ h1 {
         }
         .report tr.odd td {
             background: #f3f6fa;
-            border: 1px solid #eee; border-left: 0; border-right: 0;
+            border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+        }
+            .report tr.odd td.first {
+                border-left: 1px solid #aaa;
+            }
+            .report tr:last-child td {
+                border-bottom-color: #aaa;
+            }
+        .report th.section {
+            padding: 8px 0 8px 10px;
+            font-size: 16px;
+            border-bottom: 1px solid #ccc;
+            background: #e3e6ea;
+        }
+        .report tr.indent-0 td.first {
+            font-weight: bold;
+        }
+        .report tr.indent-1 td.first {
+            padding-left: 25px;
         }
         .report tr.title th {
             font-size: 22px;
@@ -99,10 +117,10 @@ h1 {
             color: #333;
         }
         .report tr.header th {
+            background: #fffff3;
             border-bottom: 1px solid #ccc;
         }
         .report td.first, .report th.first {
-            font-weight: bold;
             color: #000;
             padding: 5px 50px 5px 10px;
             border-right: 1px solid #ccc !important;
