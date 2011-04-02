@@ -10,5 +10,10 @@
 
 {% for row in data %}
 <h2>{{ row.name }}</h2>
+<pre>
+{% for k, v in row.items %}
+{{ k }} - {{ v }}
+{% endfor %}
+</pre>
 {% endfor %}
 {% endblock %}
