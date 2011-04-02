@@ -10,6 +10,8 @@ class AggregateStatistic(object):
         self.label = label
         self.census2010 = None
         self.census2000 = None
+        self.pct2010 = 100 # will we have rounding error issues?
+        self.pct2000 = 100 # will we have rounding error issues?
         self.delta = None
         self.stats = []
 
