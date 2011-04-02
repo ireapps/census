@@ -6,6 +6,7 @@ $(function(){
         _.bindAll(this, 'selectSummaryLevel', 'selectState', 'selectCounty',
                         'selectPlace', 'selectSubdivision');
         this.template = _.template($('#query-template').html());
+        this.filter = null;
     };
 
     Query.prototype.render = function() {
@@ -23,12 +24,7 @@ $(function(){
     };
 
     Query.prototype.isComplete = function() {
-        return (this.summarylevel == 'tract' && this.tract)             ||
-               (this.summarylevel == 'place' && this.place)             ||
-               (this.summarylevel == 'subdivision' && this.subdivision) ||
-               (this.summarylevel == 'county' && this.county)           ||
-               (this.summarylevel == 'state' && this.state)             ||
-               (this.summarylevel == 'nation');
+        return this.summarylevel == 'nation' || this[this.summarylevel];
     };
 
     Query.prototype.selectSummaryLevel = function(e) {
@@ -98,6 +94,9 @@ $(function(){
     // ------------------------- Data ---------------------------------
 
     Query.prototype.mappings = {
+
+        summarylevels: ['tract', 'place', 'subdivision', 'county', 'state', 'nation'],
+
         states: [
             ["AL", "Alabama"],
             ["AK", "Alaska"],
