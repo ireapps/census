@@ -76,3 +76,19 @@ h1 {
         font-size: 16px;
         margin: 0 3px;
     }
+
+.report {
+    margin-top: 25px;
+}
+    .report td, .report th {
+        color: #333;
+        padding: 0 10px 10px 10px;
+    }
+        .report th {
+            font-weight: bold;
+        }
+        .report td.first, .report th.first {
+            color: #000;
+            padding: 0 50px 10px 0;
+            border-right: 1px solid #aaa;
+        }
