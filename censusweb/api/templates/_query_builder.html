@@ -1,0 +1,85 @@
+{% load helpertags %}
+
+<script id="query-template" type="x-js-template">
+
+    <% if (query.summarylevel) { %>
+        Find data for <b><%= query.summarylevelDisplay %></b>
+    <% } else { %>
+        Find data for
+        <span id="summarylevel-select">
+          <span class="link" data-val="tract">Tracts</span>,
+          <span class="link" data-val="place">Places</span>,
+          <span class="link" data-val="subdivision">County Subdivisions</span>,
+          <span class="link" data-val="county">Counties</span>,
+          <span class="link" data-val="state">States</span>, or
+          <span class="link" data-val="nation">the USA</span>.
+      </span>
+    <% } %>
+
+    <% if (query.summarylevel && (query.summarylevel != 'nation') && !query.state) { %>
+        in
+        <span id="state-select">
+            <% var states = query.filtered(query.mappings.states); %>
+            <% _.each(states, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == states.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.state) { %>
+        in <b><%= query.stateDisplay %></b>
+    <% } %>
+
+    <% if (query.mappings.counties && !query.county) { %>
+        for
+        <span id="county-select">
+            <% var counties = query.filtered(query.mappings.counties); %>
+            <% _.each(counties, function(pair, i) { %>
+                <span class="link" data-val="<%= '' + pair[2] + pair[1] %>"><%= pair[0] %></span><%= i == counties.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.county) { %>
+        - <b><%= query.countyDisplay %></b>.
+    <% } %>
+
+    <% if (query.mappings.places && !query.place) { %>
+        for
+        <span id="place-select">
+            <% var places = query.filtered(query.mappings.places); %>
+            <% _.each(places, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == places.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.place) { %>
+        - <b><%= query.placeDisplay %></b>.
+    <% } %>
+
+    <% if (query.mappings.subdivisions && !query.subdivision) { %>
+        for
+        <span id="subdivision-select">
+            <% var subdivisions = query.filtered(query.mappings.subdivisions); %>
+            <% _.each(subdivisions, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == subdivisions.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.subdivision) { %>
+        - <b><%= query.subdivisionDisplay %></b>.
+    <% } %>
+
+    <% if (query.mappings.tracts && !query.tract) { %>
+        for
+        <span id="tract-select">
+            <% var tracts = query.filtered(query.mappings.tracts); %>
+            <% _.each(tracts, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == tracts.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.tract) { %>
+        - <b><%= query.tractDisplay %></b>.
+    <% } %>
+
+    <% if (query.isCompletable()) { %>
+        <button>Go</button>
+    <% } %>
+
+    <div id="help-link">Huh?</div>
+
+</script>

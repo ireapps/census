@@ -19,24 +19,32 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """
         Create a lookup table based on data.
-        explanation: http://www.census.gov/geo/www/gazetteer/gazetteer2010_layout.html#places
+        explanation: http://www.census.gov/geo/www/gazetteer/gazetteer2010_layout.html#cousub
         """
         cur = connection.cursor()
-        cur.execute("drop table if exists place_lookup")
+        cur.execute("drop table if exists county_subdivision_lookup")
         cur.execute("""
-            create table place_lookup (
+            create table county_subdivision_lookup (
                 state_code char(2),
-                geo_id char(7),
+                geo_id char(10),
                 ansi_code char(8),
-                place_name varchar(255)
+                county_subdivision_name varchar(255),
+                state_fips char(2),
+                county_fips char(3)
             )
         """)
         
-        reader = fancyreader(urlopen("http://www.census.gov/geo/www/gazetteer/files/Gaz_places_national.txt"), delimiter='\t', encoding="ISO-8859-1")
+        reader = fancyreader(urlopen("http://www.census.gov/geo/www/gazetteer/files/Gaz_cousubs_national.txt"), delimiter='\t', encoding="ISO-8859-1")
         headers = reader.next() # junk
-        INSERT = "insert into place_lookup (state_code, geo_id, ansi_code, place_name) values (%s,%s,%s,%s)"
+        INSERT = "insert into county_subdivision_lookup (state_code, geo_id, ansi_code, county_subdivision_name, state_fips, county_fips) values (%s,%s,%s,%s,%s,%s)"
         for row in reader:
-            cur.execute(INSERT,row[:4])
+            #state is first two, county is next three
+            insert_me = row[:4]
+            state_fips = row[1][0:2]
+            county_fips = row[1][2:5]
+            insert_me.append(state_fips)
+            insert_me.append(county_fips)
+            cur.execute(INSERT,insert_me)
 
         transaction.commit_unless_managed()
     

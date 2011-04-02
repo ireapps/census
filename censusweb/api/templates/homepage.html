@@ -5,40 +5,59 @@
 
 {% block content %}
 
-<div id="search">
-  Find data for
-
-  <select id="summarylevel-select">
-    <option value="tract">Tracts</option>
-    <option value="place">Places</option>
-    <option value="mcd">County Subdivisions</option>
-    <option value="county">Counties</option>
-    <option value="">States</option>
-  </select>
-
-  <span id="state-select-wrap">
-    in
-    {% include "_state_select.html" %}
-  </span>
-
-  <span id="county-select-wrap" class="hidden">
-
-  </span>
-  
-  <button>GO</button>
-
+<div id="filter-help" class="code hidden">
+    Start typing to filter&hellip;
 </div>
 
-<script id="county-select-template" type="x-js-template">
-  for
-  <select>
-    <option value="all">All Counties</option>
-    <% _.each(counties, function(pair) { %>
-      <option value="<%= pair[1] %>"><%= pair[0] %></option>
-    <% }); %>
-  </select>
-</script>
+<div id="filter-display" class="code hidden">
+    
+</div>
 
-<script src="{% build_media_url '/js/homepage.js' %}"></script>
+<img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" />
+
+<div id="search"></div>
+
+<dl id="help" class="hidden">
+    <!-- <dt>What is this?</dt>
+    <dd>
+    </dd> -->
+    <dt>Census Tracts</dt>
+    <dd>
+        Vary in size but averages 4,000 people. Designed to remain relatively 
+        stable across decades to allow comparisons. Statistical areas defined by 
+        the Census Bureau with local input.
+    <dd>
+    <dt>Places</dt>
+    <dd>
+        1. What most people call cities or towns. A locality incorporated under 
+        state law that acts as a local government. <br />
+        2. An unincorporated area that 
+        is well-known locally. Defined by state officals under Census Bureau 
+        rules and called a "census designated place." "CDP" is added to its name.
+    <dd>
+    <dt>County Subdivisions</dt>
+    <dd>
+        In 12 states (CT, MA, ME, MI, MN, NH, NJ, NY, PA, RI, VT, WI), they are 
+        fully functioning local governments. In 16 states (AR, IL, IN, IA, KS, 
+        LA, MD, MS, MO, NE, NC, ND, OH, SD, VA, WV) they have limited 
+        governmental powers. In these 28 states, types include townships, 
+        towns, villages, boroughs, districts and other forms. In 21 states 
+        (AL, AZ, CA, CO, DE, FL, GA, HI, ID, KY, MT, NV, NM, OK, OR, SC, TN, 
+        TX, UT, WA, WY) they have no legal or government roles. In these 
+        states, they are called "census county divisions" and "CCD" is added 
+        to their name.
+    <dd>
+    <dt>Counties (Parishes in LA)</dt>
+    <dd>
+        The primary subdivisions of states. To cover the full country, this 
+        includes Virginia's cities and Baltimore, St. Louis and Carson City, 
+        Nev., which sit outside counties; the District of Columbia; and the 
+        boroughs, census areas and related areas in Alaska.
+    <dd>
+</dl>
+
+{% include "_query_builder.html" %}
+
+<script src="{% build_media_url '/js/query.js' %}"></script>
 
 {% endblock %}
