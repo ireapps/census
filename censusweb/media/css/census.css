@@ -79,16 +79,27 @@ h1 {
 
 .report {
     margin-top: 25px;
+    border: 1px solid #aaa;
 }
     .report td, .report th {
         color: #333;
-        padding: 0 10px 10px 10px;
+        padding: 5px 15px 5px 15px;
     }
         .report th {
             font-weight: bold;
         }
+        .report tr.odd td {
+            background: #f3f6fa;
+        }
+        .report tr.header th {
+            border-bottom: 1px solid #aaa;
+        }
         .report td.first, .report th.first {
+            font-weight: bold;
             color: #000;
-            padding: 0 50px 10px 0;
+            padding: 5px 50px 5px 10px;
+            border-right: 1px solid #aaa;
+        }
+        .report td.last, .report th.last {
             border-right: 1px solid #aaa;
         }
