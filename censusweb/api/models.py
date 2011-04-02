@@ -49,3 +49,6 @@ def get_counties_by_state(state):
     for row in cursor.fetchall():
         results.append(row)
     return results
+
+
+        

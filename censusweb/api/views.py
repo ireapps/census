@@ -5,6 +5,7 @@ from django.template import RequestContext
 
 import simplejson
 import csv
+import re
 
 from models import data_for_tract, get_counties_by_state
 # Create your views here.
@@ -35,35 +36,9 @@ def tracts(request, extension, state="", county="", tract=""):
             },
             context_instance=RequestContext(request))
 
-def stat_group_config(group):
-    import csv
-    import os.path
-    from django.conf import settings
-    path = os.path.join(settings.SITE_ROOT,'config/statgroups','%s.csv' % group)
-    print path
-    return list(csv.reader(open(path)))
-    
 def stats(request,group):
-    state, county, tract = ['MS','001','000100']
-    data = data_for_tract(state, county, tract)
-    conf = stat_group_config(group)
-    
     response = HttpResponse(mimetype='text/plain')
-    response.write("There are %i rows of data\n\n" % len(data))
-    w = csv.writer(response)
-    output_rows = []
-    for i,conf_row in enumerate(conf):
-        stat = conf_row[-1]
-        row = conf_row[:-1]
-        if i == 0:
-            header = [''] * len(row)
-        for data_row in data:
-            row.append(data_row[stat.lower()])
-            if i == 0: header.append(stat.lower())
-        if i == 0: output_rows.append(header)
-        output_rows.append(row)
-    
-    w.writerows(output_rows)
+    response.write("You asked for %s" % group)
     return response
     
 def homepage(request):
