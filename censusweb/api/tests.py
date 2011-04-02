@@ -31,6 +31,10 @@ class StatisticTest(TestCase):
         agg.add(s)
         stats.append(s)
 
+        s = Statistic('stat 4 non-atomic',census2010=100,census2000=50,atomic=False)
+        agg.add(s)
+        stats.append(s)
+
         self.assertEqual(8, agg.census2010)
         self.assertEqual(17, agg.census2000)
         self.assertEqual(float(8+17)/17,agg.delta)
@@ -44,3 +48,23 @@ class StatisticTest(TestCase):
 
         s = Statistic('stat 2',census2010=5,census2000=10)
         self.assertEqual(-.5,s.delta)
+
+
+    def test_indent(self):
+        agg = AggregateStatistic("Aggregate Statistic Label")
+        stats = []
+        s = Statistic('stat 1',census2010=5,census2000=10)
+        agg.add(s)
+        stats.append(s)
+
+        s = Statistic('stat 2',census2000=5,census2010=2)
+        agg.add(s)
+        stats.append(s)
+
+        s = Statistic('stat 3',census2010=1,census2000=2)
+        agg.add(s)
+        stats.append(s)
+
+        self.assertEqual(0, agg.indent)
+        for kid in agg.children:
+            self.assertEqual(agg.indent + 1, kid.indent)
