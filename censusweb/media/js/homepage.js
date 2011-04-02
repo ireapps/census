@@ -3,7 +3,7 @@ $(function(){
     // ------------------------- Query Model ---------------------------------
 
     window.Query = function(){
-        _.bindAll(this, 'selectSummaryLevel', 'selectState');
+        _.bindAll(this, 'selectSummaryLevel', 'selectState', 'selectCounty');
         this.template = _.template($('#query-template').html());
     };
 
@@ -11,6 +11,11 @@ $(function(){
         $("#search").html(this.template({query: this}));
         $("#summarylevel-select .link").click(this.selectSummaryLevel);
         $("#state-select .link").click(this.selectState);
+        $('#county-select .link').click(this.selectCounty);
+    };
+
+    Query.prototype.isComplete = function() {
+        return (this.summarylevel && this.state);
     };
 
     Query.prototype.selectSummaryLevel = function(e) {
@@ -26,6 +31,13 @@ $(function(){
         this.stateDisplay = el.text();
         this.render();
         this.loadCounties();
+    };
+
+    Query.prototype.selectCounty = function(e) {
+        var el = $(e.currentTarget);
+        this.county = el.attr('data-val');
+        this.countyDisplay = el.text();
+        this.render();
     };
 
     Query.prototype.loadCounties = function() {
