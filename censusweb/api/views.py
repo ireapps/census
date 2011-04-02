@@ -8,10 +8,14 @@ import csv
 import re
 
 from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county, get_tracts_by_county
+from statmodels import AgeSex, Report
 
 def tracts(request, extension, state="", county="", tract=""):
 
     data = data_for_tract(state,county,tract)
+    agesex = AgeSex(census2000=data[0])
+    report = Report()
+    report.add(agesex)
 
     if extension == 'json':
         return HttpResponse(simplejson.dumps(data), mimetype='application/json')
@@ -31,7 +35,7 @@ def tracts(request, extension, state="", county="", tract=""):
                 'county': county,
                 'tract': tract,
                 'extension': extension,
-                'data': data,
+                'report': report,
             },
             context_instance=RequestContext(request))
 
