@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
+{% load helpertags %}
 
 {% block content %}
+
+<img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" />
 
 <h2>{% block title %}Tracts for {{ state }} {{ county }} {{ tract }} {% endblock %}</h2>
 
@@ -10,16 +13,18 @@
 
 <table>
 {% for row in report %}
-  <tr>
-  {% if row.header %}
-    <th>{{ row.label }}</th>
-  {% else %}
-    <td>{{ row.label }}</td>
-    <td>{{ row.census2000 }}</td>
-    <td>{{ row.census2010 }}</td>
-    <td>{{ row.delta }}</td>
-  {% endif %}
-  </tr>
+    <tr>
+    {% if row.header %}
+        <th>{{ row.label }}</th>
+    {% else %}
+        <td>{{ row.label }}</td>
+        <td>{{ row.census2000 }}</td>
+        <td>{{ row.pct2000 }}</td>
+        <td>{{ row.census2010 }}</td>
+        <td>{{ row.pct2010 }}</td>
+        <td>{{ row.delta }}</td>
+    {% endif %}
+    </tr>
 {% endfor %}
 </table>
 
