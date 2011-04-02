@@ -6,16 +6,16 @@ from django.template import RequestContext
 import simplejson
 import csv
 
-from models import data_for_tract
+from models import data_for_tract, get_counties_by_state
 # Create your views here.
-    
+
 def tracts(request, extension, state="", county="", tract=""):
-    
+
     data = data_for_tract(state,county,tract)
-    
+
     if extension == 'json':
         return HttpResponse(simplejson.dumps(data), mimetype='application/json')
-    
+
     elif extension == 'csv':
         response = HttpResponse(mimetype='text/csv')
         filename = "%s%s%s.csv" % (state,county,tract)
@@ -23,7 +23,7 @@ def tracts(request, extension, state="", county="", tract=""):
         writer = csv.writer(response)
         writer.writerow(data.values())
         return response
-    
+
     else: #html
         return render_to_response('tracts.html',
             {
@@ -37,3 +37,7 @@ def tracts(request, extension, state="", county="", tract=""):
 
 def homepage(request):
     return render_to_response('homepage.html', context_instance=RequestContext(request))
+
+def counties_for_state(request, state=""):
+    counties = get_counties_by_state(state)
+    return HttpResponse(simplejson.dumps(counties), mimetype='application/json')

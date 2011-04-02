@@ -25,3 +25,7 @@ h1 {
     width: 960px;
     margin: 50px 0 0 50px;
 }
+
+#logo {
+    margin-bottom: 15px;
+}
