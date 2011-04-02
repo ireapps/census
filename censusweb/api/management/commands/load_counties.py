@@ -22,7 +22,7 @@ class Command(BaseCommand):
         explanation: http://www.census.gov/geo/www/ansi/download.html
         """
         cur = connection.cursor()
-        cur.execute("drop table if exists fips_lookup")
+        cur.execute("drop table if exists county_lookup")
         # State,State ANSI,County ANSI,County Name,ANSI Cl
         cur.execute("""
             create table county_lookup (
