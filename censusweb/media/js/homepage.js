@@ -3,7 +3,8 @@ $(function(){
     // ------------------------- Query Model ---------------------------------
 
     window.Query = function(){
-        _.bindAll(this, 'selectSummaryLevel', 'selectState', 'selectCounty');
+        _.bindAll(this, 'selectSummaryLevel', 'selectState', 'selectCounty',
+                        'selectPlace');
         this.template = _.template($('#query-template').html());
     };
 
@@ -12,6 +13,7 @@ $(function(){
         $("#summarylevel-select .link").click(this.selectSummaryLevel);
         $("#state-select .link").click(this.selectState);
         $('#county-select .link').click(this.selectCounty);
+        $('#place-select .link').click(this.selectPlace);
     };
 
     Query.prototype.isComplete = function() {
@@ -30,7 +32,11 @@ $(function(){
         this.state = el.attr('data-val');
         this.stateDisplay = el.text();
         this.render();
-        this.loadCounties();
+        if (this.summarylevel == 'tract' || this.summarylevel == 'county') {
+            this.loadCounties();
+        } else if (this.summarylevel == 'place') {
+            this.loadPlaces();
+        }
     };
 
     Query.prototype.selectCounty = function(e) {
@@ -40,19 +46,30 @@ $(function(){
         this.render();
     };
 
+    Query.prototype.selectPlace = function(e) {
+        var el = $(e.currentTarget);
+        this.place = el.attr('data-val');
+        this.placeDisplay = el.text();
+        this.render();
+    };
+
     Query.prototype.loadCounties = function() {
         $.getJSON('/internal/counties_for_state/' + this.state + '.json', _.bind(function(response) {
-            this.counties = response;
+            this.mappings.counties = response;
             this.render();
         }, this));
     };
 
-    var query = new Query;
-    query.render();
+    Query.prototype.loadPlaces = function() {
+        $.getJSON('/internal/places_for_state/' + this.state + '.json', _.bind(function(response) {
+            this.mappings.places = response;
+            this.render();
+        }, this));
+    };
 
     // ------------------------- Data ---------------------------------
 
-    Query.mappings = {
+    Query.prototype.mappings = {
         states: [
             ["AK", "Alaska"],
 	        ["AL", "Alabama"],
@@ -107,5 +124,10 @@ $(function(){
 	        ["WY", "Wyoming"]
         ]
     };
+
+    // ------------------------- Initialization -------------------------------
+
+    var query = new Query;
+    query.render();
 
 });

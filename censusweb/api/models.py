@@ -49,3 +49,11 @@ def get_counties_by_state(state):
     for row in cursor.fetchall():
         results.append(row)
     return results
+
+def get_places_by_state(state):
+    results = []
+    cursor = connection.cursor()
+    cursor.execute('SELECT place_name, geo_id from place_lookup where state_code = %s order by place_name asc', [state])
+    for row in cursor.fetchall():
+        results.append(row)
+    return results

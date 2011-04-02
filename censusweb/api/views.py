@@ -6,7 +6,7 @@ from django.template import RequestContext
 import simplejson
 import csv
 
-from models import data_for_tract, get_counties_by_state
+from models import data_for_tract, get_counties_by_state, get_places_by_state
 # Create your views here.
 
 def tracts(request, extension, state="", county="", tract=""):
@@ -41,3 +41,7 @@ def homepage(request):
 def counties_for_state(request, state=""):
     counties = get_counties_by_state(state)
     return HttpResponse(simplejson.dumps(counties), mimetype='application/json')
+
+def places_for_state(request, state=""):
+    places = get_places_by_state(state)
+    return HttpResponse(simplejson.dumps(places), mimetype='application/json')
