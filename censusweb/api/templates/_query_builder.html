@@ -31,7 +31,7 @@
         for
         <span id="county-select">
             <% _.each(query.mappings.counties, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == query.mappings.counties.length - 1 ? '' : ', ' %>
+                <span class="link" data-val="<%= '' + pair[1] + pair[2] %>"><%= pair[0] %></span><%= i == query.mappings.counties.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
     <% } else if (query.county) { %>

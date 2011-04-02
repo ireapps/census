@@ -33,7 +33,7 @@ $(function(){
         this.state = el.attr('data-val');
         this.stateDisplay = el.text();
         this.render();
-        if (this.summarylevel == 'tract' || this.summarylevel == 'county') {
+        if (this.summarylevel == 'tract' || this.summarylevel == 'county' || this.summarylevel == 'subdivision') {
             this.loadCounties();
         } else if (this.summarylevel == 'place') {
             this.loadPlaces();
@@ -45,6 +45,9 @@ $(function(){
         this.county = el.attr('data-val');
         this.countyDisplay = el.text();
         this.render();
+        if (this.summarylevel == 'subdivision') {
+            this.loadSubdivisions();
+        }
     };
 
     Query.prototype.selectPlace = function(e) {
@@ -64,6 +67,14 @@ $(function(){
     Query.prototype.loadPlaces = function() {
         $.getJSON('/internal/places_for_state/' + this.state + '.json', _.bind(function(response) {
             this.mappings.places = response;
+            this.render();
+        }, this));
+    };
+
+    Query.prototype.loadSubdivisions = function() {
+        alert(this.county);
+        $.getJSON('/internal/subdivisions_for_county/' + this.county + '.json', _.bind(function(response) {
+            this.mappings.subdivisions = response;
             this.render();
         }, this));
     };
