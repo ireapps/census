@@ -10,16 +10,18 @@
 
 <table>
 {% for row in report %}
-  <tr>
-  {% if row.header %}
-    <th>{{ row.label }}</th>
-  {% else %}
-    <td>{{ row.label }}</td>
-    <td>{{ row.census2000 }}</td>
-    <td>{{ row.census2010 }}</td>
-    <td>{{ row.delta }}</td>
-  {% endif %}
-  </tr>
+    <tr>
+    {% if row.header %}
+        <th>{{ row.label }}</th>
+    {% else %}
+        <td>{{ row.label }}</td>
+        <td>{{ row.census2000 }}</td>
+        <td>{{ row.pct2000 }}</td>
+        <td>{{ row.census2010 }}</td>
+        <td>{{ row.pct2010 }}</td>
+        <td>{{ row.delta }}</td>
+    {% endif %}
+    </tr>
 {% endfor %}
 </table>
 
