@@ -1,11 +1,44 @@
 {% extends 'base.html' %}
+{% load helpertags %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 
-<div class="intro">
-  A collection of ...
+<div id="search">
+  Find
+
+  <select id="summarylevel-select">
+    <option value="tract">tracts</option>
+    <option value="place">places</option>
+    <option value="mcd">MCDs</option>
+    <option value="county">counties</option>
+    <option value="">states</option>
+  </select>
+
+  <span id="state-select-wrap">
+    in
+    {% include "_state_select.html" %}
+  </span>
+
+  <span id="county-select-wrap" class="hidden">
+
+  </span>
+  
+  <button>GO</button>
+
 </div>
+
+<script id="county-select-template" type="x-js-template">
+  for
+  <select>
+    <option value="all">All Counties</option>
+    <% _.each(counties, function(pair) { %>
+      <option value="<%= pair[1] %>"><%= pair[0] %></option>
+    <% }); %>
+  </select>
+</script>
+
+<script src="{% build_media_url '/js/homepage.js' %}"></script>
 
 {% endblock %}

@@ -13,5 +13,9 @@ urlpatterns = patterns('',
     #/tracts/IL.json
     #/tracts/IL/123.json
     #/tracts/IL/123/12345.json
-    (r'tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{6}))?\.(?P<extension>json|csv|html)$', views.tracts)
+    (r'^tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{6}))?\.(?P<extension>json|csv|html)$', views.tracts),
+
+    # County codes for states.
+    #/internal/counties_for_state/CA.json
+    (r'^internal/counties_for_state/(?P<state>[A-Z]{2}).json$', views.counties_for_state)
 )
