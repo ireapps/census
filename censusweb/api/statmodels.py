@@ -10,8 +10,6 @@ class AggregateStatistic(object):
         self.label = label
         self.census2010 = None
         self.census2000 = None
-        self.pct2010 = 100 # will we have rounding error issues?
-        self.pct2000 = 100 # will we have rounding error issues?
         self.delta = None
         self.stats = []
 
@@ -28,6 +26,18 @@ class AggregateStatistic(object):
             self.delta = float(self.census2010 + self.census2000) / self.census2000
         else:
             self.delta = None
+
+    @property
+    def pct2010(self):
+        if self.census2010: return 100 # will we have rounding error issues?
+        return None
+
+    @property
+    def pct2000(self):
+        if self.census2000: return 100 # will we have rounding error issues?
+        return None
+
+
 
     @property
     def children(self):
