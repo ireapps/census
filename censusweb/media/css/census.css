@@ -31,7 +31,15 @@ h1 {
 }
 
 #logo {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+#filter-help {
+    position: absolute;
+    left: 410px; top: 63px;
+    font-style: italic;
+    font-size: 16px;
+    color: #333;
 }
 
 #search {
