@@ -25,25 +25,18 @@ $(function(){
         this.state = el.attr('data-val');
         this.stateDisplay = el.text();
         this.render();
+        this.loadCounties();
+    };
+
+    Query.prototype.loadCounties = function() {
+        $.getJSON('/internal/counties_for_state/' + this.state + '.json', _.bind(function(response) {
+            this.counties = response;
+            this.render();
+        }, this));
     };
 
     var query = new Query;
     query.render();
-
-    // ------------------------- UI Glue ---------------------------------
-
-    // When a state is selected, grab and render the list of counties.
-    // $('#state-select').change(function() {
-    //     var stateCode = $(this).val();
-    //     if (stateCode) {
-    //         $.getJSON('/internal/counties_for_state/' + stateCode + '.json', function(response) {
-    //             var html = countyTemplate({counties: response});
-    //             $('#county-select-wrap').show().html(html);
-    //         });
-    //     } else {
-    //         $('#county-select-wrap').hide();
-    //     }
-    // });
 
     // ------------------------- Data ---------------------------------
 

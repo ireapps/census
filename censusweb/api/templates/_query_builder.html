@@ -33,12 +33,11 @@
 
     <% if (query.counties) { %>
         for
-        <select>
-            <option value="all">All Counties</option>
-            <% _.each(counties, function(pair) { %>
-                <option value="<%= pair[1] %>"><%= pair[0] %></option>
+        <span id="county-select">
+            <% _.each(query.counties, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == query.counties.length - 1 ? '' : ', ' %>
             <% }); %>
-        </select>
+        </span>
     <% } %>
 
 </script>
