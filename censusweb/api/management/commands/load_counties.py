@@ -25,7 +25,7 @@ class Command(BaseCommand):
         cur.execute("drop table if exists fips_lookup")
         # State,State ANSI,County ANSI,County Name,ANSI Cl
         cur.execute("""
-            create table fips_lookup (
+            create table county_lookup (
                 state_code char(2),
                 state_fips char(2),
                 county_fips char(3),
@@ -36,7 +36,7 @@ class Command(BaseCommand):
         
         reader = csv.reader(urlopen("http://www.census.gov/geo/www/ansi/national.txt"))
         headers = reader.next() # junk
-        INSERT = "insert into fips_lookup (state_code, state_fips, county_fips, county_name, ansi_class) values (%s,%s,%s,%s,%s)"
+        INSERT = "insert into county_lookup (state_code, state_fips, county_fips, county_name, ansi_class) values (%s,%s,%s,%s,%s)"
         for row in reader:
             cur.execute(INSERT,row)
 
