@@ -78,7 +78,6 @@ h1 {
     }
 
 .report {
-    margin-top: 25px;
     border: 1px solid #aaa;
 }
     .report td, .report th {
@@ -90,15 +89,23 @@ h1 {
         }
         .report tr.odd td {
             background: #f3f6fa;
+            border: 1px solid #eee; border-left: 0; border-right: 0;
+        }
+        .report tr.title th {
+            font-size: 22px;
+            font-weight: bold;
+            border: 1px solid #aaa; border-bottom-color: #ccc;
+            padding: 12px 0 12px 10px;
+            color: #333;
         }
         .report tr.header th {
-            border-bottom: 1px solid #aaa;
+            border-bottom: 1px solid #ccc;
         }
         .report td.first, .report th.first {
             font-weight: bold;
             color: #000;
             padding: 5px 50px 5px 10px;
-            border-right: 1px solid #aaa;
+            border-right: 1px solid #ccc !important;
         }
         .report td.last, .report th.last {
             border-right: 1px solid #aaa;

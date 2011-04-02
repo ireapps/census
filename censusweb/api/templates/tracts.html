@@ -5,13 +5,10 @@
 
 <img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" />
 
-<h2>{% block title %}Tracts for {{ state }} {{ county }} {{ tract }} {% endblock %}</h2>
-
-<h3>{{ state }}</h3>
-<h3>{{ county }}</h3>
-<h3>{{ tract }}</h3>
-
 <table class="report">
+    <tr class="title">
+        <th colspan="6">{% block title %}Tract #{{ tract }} - {{ county }}, {{ state }} {% endblock %}</th>
+    </tr>
     <tr class="header">
         <th class="first">Subject</th>
         <th>2000 Total</th>
