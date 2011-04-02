@@ -7,7 +7,7 @@ import simplejson
 import csv
 import re
 
-from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county
+from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county, get_tracts_by_county
 
 def tracts(request, extension, state="", county="", tract=""):
 
@@ -44,7 +44,7 @@ def stats(request,group):
     response.write("\nTotal 2000: %i" % agesex.total_population.census2000)
     response.write("\nTotal 2010: %i" % agesex.total_population.census2010)
     return response
-    
+
 def homepage(request):
     return render_to_response('homepage.html', context_instance=RequestContext(request))
 
@@ -59,3 +59,7 @@ def places_for_state(request, state=""):
 def subdivisions_for_county(request, county=""):
     subdivisions = get_subdivisions_by_county(county)
     return HttpResponse(simplejson.dumps(subdivisions), mimetype='application/json')
+
+def tracts_for_county(request, county=""):
+    tracts = get_tracts_by_county(county)
+    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')

@@ -20,6 +20,7 @@ $(function(){
         $('#county-select .link').click(_.bind(this.select, this, 'county'));
         $('#place-select .link').click(_.bind(this.select, this, 'place'));
         $('#subdivision-select .link').click(_.bind(this.select, this, 'subdivision'));
+        $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
     };
 
     Query.prototype.isCompletable = function() {
@@ -74,6 +75,8 @@ $(function(){
             }
         } else if (level == 'county' && this.summarylevel == 'subdivision') {
             this.loadSubdivisions();
+        } else if (level == 'county' && this.summarylevel == 'tract') {
+            this.loadTracts();
         }
     };
 
@@ -99,6 +102,13 @@ $(function(){
     Query.prototype.loadSubdivisions = function() {
         $.getJSON('/internal/subdivisions_for_county/' + this.county + '.json', _.bind(function(response) {
             this.mappings.subdivisions = response;
+            this.render();
+        }, this));
+    };
+
+    Query.prototype.loadTracts = function() {
+        $.getJSON('/internal/tracts_for_county/' + this.county + '.json', _.bind(function(response) {
+            this.mappings.tracts = response;
             this.render();
         }, this));
     };
