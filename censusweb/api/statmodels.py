@@ -8,6 +8,7 @@ class AggregateStatistic(object):
     """Collect a number of statistics so that a total and pct can be computed."""
     def __init__(self,label):
         self.label = label
+        self.indent = 0
         self.census2010 = None
         self.census2000 = None
         self.stats = []
@@ -115,7 +116,13 @@ class Statistic(object):
         if self.census2010 and self.census2000:
             return float(self.census2010 - self.census2000)/self.census2000
         return None
-            
+
+    @property
+    def indent(self):
+        try:
+            return self.parent.indent + 1
+        except: return 0
+
 class Report(object):
     """Encapsulate any number of StatsBundles (where are multiple places going?)"""
     def __init__(self):
@@ -174,6 +181,7 @@ class AgeSex(StatsBundle):
             ('Age 75 to 79 years','p012023'),
             ('Age 80 to 84 years','p012024'),
             ('Age 85 years and over','p012025'),
+            
         ),
         'female': (
             # ('Age Total','p012026'),
