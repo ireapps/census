@@ -7,7 +7,7 @@ import simplejson
 import csv
 import re
 
-from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county, get_tracts_by_county
+from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county, get_tracts_by_county, get_state_name, get_county_name
 from statmodels import AgeSex, Report
 
 def tracts(request, extension, state="", county="", tract=""):
@@ -31,8 +31,8 @@ def tracts(request, extension, state="", county="", tract=""):
     else: #html
         return render_to_response('tracts.html',
             {
-                'state': state,
-                'county': county,
+                'state': get_state_name(state),
+                'county': get_county_name(county),
                 'tract': tract,
                 'extension': extension,
                 'report': report,
