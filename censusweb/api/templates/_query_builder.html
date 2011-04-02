@@ -1,0 +1,56 @@
+{% load helpertags %}
+
+<script id="query-template" type="x-js-template">
+
+    <% if (query.summarylevel) { %>
+        Find data for <b><%= query.summarylevelDisplay %></b>
+    <% } else { %>
+        Find data for
+        <span id="summarylevel-select">
+          <span class="link" data-val="tract">Tracts</span>,
+          <span class="link" data-val="place">Places</span>,
+          <span class="link" data-val="subdivision">County Subdivisions</span>,
+          <span class="link" data-val="county">Counties</span>,
+          <span class="link" data-val="state">States</span>, or
+          <span class="link" data-val="nation">the USA</span>.
+      </span>
+    <% } %>
+
+    <% if (query.summarylevel && !query.state) { %>
+        in
+        <span id="state-select">
+            <% _.each(query.mappings.states, function(state, i) { %>
+                <span class="link" data-val="<%= state[0] %>"><%= state[1] %></span><%= i == query.mappings.states.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.state) { %>
+        in <b><%= query.stateDisplay %></b>
+    <% } %>
+
+    <% if (query.mappings.counties && !query.county) { %>
+        for
+        <span id="county-select">
+            <% _.each(query.mappings.counties, function(pair, i) { %>
+                <span class="link" data-val="<%= '' + pair[1] + pair[2] %>"><%= pair[0] %></span><%= i == query.mappings.counties.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.county) { %>
+        - <b><%= query.countyDisplay %></b>.
+    <% } %>
+
+    <% if (query.mappings.places && !query.place) { %>
+        for
+        <span id="place-select">
+            <% _.each(query.mappings.places, function(pair, i) { %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == query.mappings.places.length - 1 ? '' : ', ' %>
+            <% }); %>
+        </span>
+    <% } else if (query.place) { %>
+        - <b><%= query.placeDisplay %></b>.
+    <% } %>
+
+    <% if (query.isComplete()) { %>
+        <button>Go</button>
+    <% } %>
+
+</script>

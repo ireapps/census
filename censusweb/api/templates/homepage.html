@@ -5,40 +5,18 @@
 
 {% block content %}
 
-<div id="search">
-  Find
-
-  <select id="summarylevel-select">
-    <option value="tract">tracts</option>
-    <option value="place">places</option>
-    <option value="mcd">MCDs</option>
-    <option value="county">counties</option>
-    <option value="">states</option>
-  </select>
-
-  <span id="state-select-wrap">
-    in
-    {% include "_state_select.html" %}
-  </span>
-
-  <span id="county-select-wrap" class="hidden">
-
-  </span>
-  
-  <button>GO</button>
-
+<div id="filter-help" class="serif hidden">
+    Type to filter results&hellip;
 </div>
 
-<script id="county-select-template" type="x-js-template">
-  for
-  <select>
-    <option value="all">All Counties</option>
-    <% _.each(counties, function(pair) { %>
-      <option value="<%= pair[1] %>"><%= pair[0] %></option>
-    <% }); %>
-  </select>
-</script>
+<img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" />
 
-<script src="{% build_media_url '/js/homepage.js' %}"></script>
+<div id="search">
+  
+</div>
+
+{% include "_query_builder.html" %}
+
+<script src="{% build_media_url '/js/query.js' %}"></script>
 
 {% endblock %}

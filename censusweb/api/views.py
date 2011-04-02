@@ -7,8 +7,7 @@ import simplejson
 import csv
 import re
 
-from models import data_for_tract, get_counties_by_state
-# Create your views here.
+from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county
 
 def tracts(request, extension, state="", county="", tract=""):
 
@@ -47,3 +46,11 @@ def homepage(request):
 def counties_for_state(request, state=""):
     counties = get_counties_by_state(state)
     return HttpResponse(simplejson.dumps(counties), mimetype='application/json')
+
+def places_for_state(request, state=""):
+    places = get_places_by_state(state)
+    return HttpResponse(simplejson.dumps(places), mimetype='application/json')
+
+def subdivisions_for_county(request, county=""):
+    subdivisions = get_subdivisions_by_county(county)
+    return HttpResponse(simplejson.dumps(subdivisions), mimetype='application/json')

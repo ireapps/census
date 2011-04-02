@@ -18,16 +18,28 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
     font-size: 30px;
 }
+.link {
+    cursor: pointer;
+    color: #0000ff;
+    text-decoration: underline;
+}
 
 /*-------------------------------- Layout ------------------------------------*/
 
 #container {
-    width: 960px;
-    margin: 50px 0 0 50px;
+    margin: 50px;
 }
 
 #logo {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+#filter-help {
+    position: absolute;
+    left: 410px; top: 63px;
+    font-style: italic;
+    font-size: 16px;
+    color: #333;
 }
 
 #search {
