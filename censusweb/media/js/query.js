@@ -3,7 +3,7 @@ $(function(){
     // ------------------------- Query Model ---------------------------------
 
     window.Query = function(){
-        _.bindAll(this, 'keypress', 'render');
+        _.bindAll(this, 'keypress', 'render', 'showHelp');
         this.template = _.template($('#query-template').html());
         this.lazyRender = _.debounce(this.render, 50);
         this.filter = '';
@@ -14,6 +14,7 @@ $(function(){
         $("#search").html(this.template({query: this}));
         $('#filter-help').toggle(!!this.shouldShowFilterHelp());
         $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
+        $('#help-link').click(this.showHelp);
         $("#summarylevel-select .link").click(_.bind(this.select, this, 'summarylevel'));
         $("#state-select .link").click(_.bind(this.select, this, 'state'));
         $('#county-select .link').click(_.bind(this.select, this, 'county'));
@@ -74,6 +75,11 @@ $(function(){
         } else if (level == 'county' && this.summarylevel == 'subdivision') {
             this.loadSubdivisions();
         }
+    };
+
+    Query.prototype.showHelp = function(e) {
+        $(e.currentTarget).hide();
+        $('#help').removeClass('hidden');
     };
 
     Query.prototype.loadCounties = function() {
