@@ -10,22 +10,18 @@ class AggregateStatistic(object):
         self.label = label
         self.census2010 = None
         self.census2000 = None
-        self.delta = None
         self.stats = []
 
     def add(self,stat):
         self.stats.append(stat)
-        if stat.census2010: 
-            try: self.census2010 += stat.census2010
-            except TypeError: self.census2010 = stat.census2010
-        if stat.census2000: 
-            try: self.census2000 += stat.census2000
-            except TypeError: self.census2000 = stat.census2000
         stat.parent = self
-        if self.census2000 and self.census2010:
-            self.delta = float(self.census2010 + self.census2000) / self.census2000
-        else:
-            self.delta = None
+        if stat.atomic:
+            if stat.census2010: 
+                try: self.census2010 += stat.census2010
+                except TypeError: self.census2010 = stat.census2010
+            if stat.census2000: 
+                try: self.census2000 += stat.census2000
+                except TypeError: self.census2000 = stat.census2000
 
     @property
     def pct2010(self):
@@ -37,7 +33,13 @@ class AggregateStatistic(object):
         if self.census2000: return 100 # will we have rounding error issues?
         return None
 
-
+    @property
+    def delta(self):
+        if self.census2000 and self.census2010:
+            return float(self.census2010 + self.census2000) / self.census2000
+        else:
+            return None
+        
 
     @property
     def children(self):
@@ -57,19 +59,21 @@ class AggregateStatistic(object):
         return self.label
 
 class Statistic(object):
-    """Wrap a logical statistical value for a place, offering values for multiple censuses"""
-    def __init__(self, label, census2010=None, census2000=None, full_label=None):
+    """Wrap a logical statistical value for a place, offering values for multiple censuses.
+       A statistic which should be included in an Aggregate Statistic for logical grouping purposes
+       but not used to increment the total of that Aggregate should be have a False value for atomic.
+    """
+    def __init__(self, label, census2010=None, census2000=None, full_label=None, atomic=True):
         super(Statistic, self).__init__()
         self.label = label
-        self.delta = None
+        self.atomic = atomic
+
         if full_label is not None:
             self.full_label = full_label
         else:
             self.full_label =  self.label
         self.census2010 = census2010
         self.census2000 = census2000
-        if census2010 is not None and census2000 is not None:
-            self.delta = float(census2010 + census2000) / census2000
         # children?
 
     def __repr__(self):
@@ -106,6 +110,12 @@ class Statistic(object):
         except:
             return None
 
+    @property
+    def delta(self):
+        if self.census2010 and self.census2000:
+            return float(self.census2010 - self.census2000)/self.census2000
+        return None
+            
 class Report(object):
     """Encapsulate any number of StatsBundles (where are multiple places going?)"""
     def __init__(self):
@@ -154,10 +164,12 @@ class AgeSex(StatsBundle):
             ('Age 45 to 49 years','p012015'),
             ('Age 50 to 54 years','p012016'),
             ('Age 55 to 59 years','p012017'),
-            ('Age 60 and 61 years','p012018'),
-            ('Age 62 to 64 years','p012019'),
-            ('Age 65 and 66 years','p012020'),
-            ('Age 67 to 69 years','p012021'),
+            # ('Age 60 and 61 years','p012018'),
+            # ('Age 62 to 64 years','p012019'),
+            ('Age 60 to 64 years',['p012018','p012019']),
+            # ('Age 65 and 66 years','p012020'),
+            # ('Age 67 to 69 years','p012021'),
+            ('Age 65 to 69 years',['p012020','p012021']),
             ('Age 70 to 74 years','p012022'),
             ('Age 75 to 79 years','p012023'),
             ('Age 80 to 84 years','p012024'),
@@ -182,10 +194,12 @@ class AgeSex(StatsBundle):
             ('Age 45 to 49 years','p012039'),
             ('Age 50 to 54 years','p012040'),
             ('Age 55 to 59 years','p012041'),
-            ('Age 60 and 61 years','p012042'),
-            ('Age 62 to 64 years','p012043'),
-            ('Age 65 and 66 years','p012044'),
-            ('Age 67 to 69 years','p012045'),
+            # ('Age 60 and 61 years','p012042'),
+            # ('Age 62 to 64 years','p012043'),
+            ('Age 60 to 64 years',['p012042','p012043']),
+            # ('Age 65 and 66 years','p012044'),
+            # ('Age 67 to 69 years','p012045'),
+            ('Age 65 to 69 years',['p012044','p012045']),
             ('Age 70 to 74 years','p012046'),
             ('Age 75 to 79 years','p012047'),
             ('Age 80 to 84 years','p012048'),
@@ -246,3 +260,9 @@ class AgeSex(StatsBundle):
         for child in self.female_population:
             yield child
 
+class Race(StatsBundle):
+    """docstring for Race"""
+    def __init__(self, arg):
+        super(Race, self).__init__()
+        self.arg = arg
+        
