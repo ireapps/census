@@ -7,6 +7,7 @@ import simplejson
 import csv
 import re
 
+import help_text
 from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county, get_tracts_by_county, get_state_name, get_county_name
 from statmodels import AgeSex, Report
 
@@ -60,7 +61,11 @@ def stats(request,group):
     return response
 
 def homepage(request):
-    return render_to_response('homepage.html', context_instance=RequestContext(request))
+    return render_to_response('homepage.html',
+    {
+        'help_text': help_text,
+    },
+    context_instance=RequestContext(request))
 
 def counties_for_state(request, state=""):
     counties = get_counties_by_state(state)

@@ -1,3 +1,4 @@
+import help_text
 from models import get_state_name, get_county_name
 
 def compute_value(d,value):
@@ -187,18 +188,6 @@ class AgeSex(StatsBundle):
         TODO: Will we pass in multiple args for different comparison years?
     """
     
-    help_text = """
-At invenire oportere erroribus mea. Pri ne odio patrioque adolescens, his
-ex esse aeterno takimata. Cum at eros conclusionemque, sea et novum nobis.
-Ne sea liber nostrum lobortis, odio nisl omittam ex nam. Zzril placerat
-nec id, mutat omnes utamur ut sed.
-
-Nonumy regione pri no. Has ad moderatius philosophia. Ius quod signiferumque
-ne. Modo quaestio reprehendunt at eum. Fabulas alienum percipit an eum,
-id quo facilisi conclusionemque, sit amet soluta at. Usu ullum ancillae
-dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
-        """
-    
     stat_factories = { # for Age/Sex the column headers are the same for 2010 and 2000 census.
         'male': (
             # ('Age Total','p012002'),
@@ -303,11 +292,12 @@ dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
             # sumsf('62 years and over', ['p012019', 'p012020', 'p012021', 'p012022', 'p012023', 'p012024', 'p012025', 'p012043', 'p012044', 'p012045', 'p012046', 'p012047', 'p012048', 'p012049'],  '65 and 66 years', ['p012020', 'p012044']),
             # sumsf('65 years and over', ['p012020', 'p012021', 'p012022', 'p012023', 'p012024', 'p012025', 'p012044', 'p012045', 'p012046', 'p012047', 'p012048', 'p012049']),
         )
-
     }
 
     def __init__(self, census2010=None,census2000=None):
         super(AgeSex, self).__init__(census2010=census2010,census2000=census2000,name="Sex and Age")
+        
+        self.help_text = help_text.reports["SEX AND AGE"]
 
         self.male_population = AggregateStatistic("Male population")
         for factory in self.stat_factories['male']:

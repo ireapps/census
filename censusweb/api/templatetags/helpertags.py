@@ -2,6 +2,7 @@ from django import template
 from django.conf import settings
 from urlparse import urljoin
 from urllib import quote_plus
+from api.help_text import reports
 
 register = template.Library()
 
@@ -20,3 +21,7 @@ def build_media_url(uri):
             return urljoin(settings.MEDIA_URL,uri)
     else:
         return uri
+        
+@register.simple_tag
+def help_text(key):
+    return reports[key]
