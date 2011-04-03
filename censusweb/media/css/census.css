@@ -6,7 +6,7 @@ body, html {
 .serif {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;
 }
-.interface {
+.interface, .button {
     font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
 }
 .code {
@@ -25,6 +25,21 @@ h1 {
     cursor: pointer;
     color: #aa0000;
     text-decoration: underline;
+}
+.button {
+    cursor: pointer;
+    background: #999;
+    background: -webkit-gradient(linear, left top, left bottom, from(#bbb), to(#777));
+    background: -moz-linear-gradient(top, #bbb, #777);
+    padding: 3px 10px;
+    -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;
+    -webkit-box-shadow: rgba(0,0,0,0.7) 0 1px 1px; -moz-box-shadow: rgba(0,0,0,0.7) 0 1px 1px; box-shadow: rgba(0,0,0,0.7) 0 1px 1px;
+    text-shadow: rgba(0,0,0,0.4) 0 1px 0;
+    color: #fff;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+    vertical-align: text-bottom;
 }
 
 /*-------------------------------- Layout ------------------------------------*/
@@ -70,12 +85,18 @@ h1 {
 
 #search {
     font-size: 16px;
-    line-height: 22px;
+    line-height: 26px;
 }
     #search select {
         font-size: 16px;
         margin: 0 3px;
     }
+
+#proceed {
+    position: absolute;
+    margin-left: 5px;
+    margin-top: -2px;
+}
 
 .report {
     border: 1px solid #aaa;

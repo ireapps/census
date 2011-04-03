@@ -44,7 +44,6 @@ class AggregateStatistic(object):
         else:
             return None
 
-
     @property
     def children(self):
         for kid in self.stats:
@@ -153,73 +152,114 @@ class StatsBundle(object):
         self.census2000 = census2000
         self.name = name
 
+class StatisticFactory(object):
+    def __init__(self, label, full_label=None,atomic=True):
+        self.label = label
+        self.full_label = full_label
+        self.atomic = atomic
+    
+class ssf(StatisticFactory):
+    """ssf == SimpleStatisticFactory. When called with dicts for census years and produces Statistic objects which simply fish out a dict value."""
+    def __init__(self, label, column,full_label=None,atomic=True):
+        super(ssf, self).__init__(label, full_label=None,atomic=True)
+        self.column = column
+        
+    def __call__(self,census2010=None,census2000=None):
+        if census2010:
+            census2010 = int(census2010[self.column])
+        if census2000:
+            census2000 = int(census2000[self.column])
+        return Statistic(self.label, census2010=census2010, census2000=census2000, full_label=self.full_label, atomic=self.atomic)
 
+class sumsf(StatisticFactory):
+    def __init__(self, label, columns, full_label=None,atomic=True):
+        super(sumsf, self).__init__(label, full_label=None,atomic=True)
+        self.columns = columns
+
+    def __call__(self,census2010=None,census2000=None):
+        if census2010:
+            census2010 = sum(map(int,[census2010[x] for x in self.columns]))
+        if census2000:
+            census2000 = sum(map(int,[census2000[x] for x in self.columns]))
+        return Statistic(self.label, census2010=census2010, census2000=census2000, full_label=self.full_label, atomic=self.atomic)
+        
 class AgeSex(StatsBundle):
     """Wrapper for a bundle of place statistics that exposes the age/sex stats.
         TODO: Will we pass in multiple args for different comparison years?
     """
     
-    labels_and_keys = { # for Age/Sex the column headers are the same for 2010 and 2000 census.
+    stat_factories = { # for Age/Sex the column headers are the same for 2010 and 2000 census.
         'male': (
             # ('Age Total','p012002'),
-            ('Age Under 5 years','p012003'),
-            ('Age 5 to 9 years','p012004'),
-            ('Age 10 to 14 years','p012005'),
+            ssf('Age Under 5 years','p012003'),
+            ssf('Age 5 to 9 years','p012004'),
+            ssf('Age 10 to 14 years','p012005'),
             # ('Age 15 to 17 years','p012006'),
             # ('Age 18 and 19 years','p012007'),
-            ('Age 15 to 19 years',['p012006','p012007']),
+            sumsf('Age 15 to 19 years',['p012006','p012007']),
             # ('Age 20 years','p012008'),
             # ('Age 21 years','p012009'),
             # ('Age 22 to 24 years','p012010'),
-            ('Age 20 to 24 years',['p012008','p012009','p012010']),
-            ('Age 25 to 29 years','p012011'),
-            ('Age 30 to 34 years','p012012'),
-            ('Age 35 to 39 years','p012013'),
-            ('Age 40 to 44 years','p012014'),
-            ('Age 45 to 49 years','p012015'),
-            ('Age 50 to 54 years','p012016'),
-            ('Age 55 to 59 years','p012017'),
+            sumsf('Age 20 to 24 years',['p012008','p012009','p012010']),
+            ssf('Age 25 to 29 years','p012011'),
+            ssf('Age 30 to 34 years','p012012'),
+            ssf('Age 35 to 39 years','p012013'),
+            ssf('Age 40 to 44 years','p012014'),
+            ssf('Age 45 to 49 years','p012015'),
+            ssf('Age 50 to 54 years','p012016'),
+            ssf('Age 55 to 59 years','p012017'),
             # ('Age 60 and 61 years','p012018'),
             # ('Age 62 to 64 years','p012019'),
-            ('Age 60 to 64 years',['p012018','p012019']),
+            sumsf('Age 60 to 64 years',['p012018','p012019']),
             # ('Age 65 and 66 years','p012020'),
             # ('Age 67 to 69 years','p012021'),
-            ('Age 65 to 69 years',['p012020','p012021']),
-            ('Age 70 to 74 years','p012022'),
-            ('Age 75 to 79 years','p012023'),
-            ('Age 80 to 84 years','p012024'),
-            ('Age 85 years and over','p012025'),
+            sumsf('Age 65 to 69 years',['p012020','p012021']),
+            ssf('Age 70 to 74 years','p012022'),
+            ssf('Age 75 to 79 years','p012023'),
+            ssf('Age 80 to 84 years','p012024'),
+            ssf('Age 85 years and over','p012025'),
 
+            # ('Age 18 years and over',
+            #     ['P012007', 'P012008', 'P012009', 'P012010', 'P012011', 'P012012', 'P012013', 'P012014', 'P012015', 'P012016', 'P012017', 'P012018', 'P012019', 'P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025'], False),
+            # ('Age 21 years and over', ['P012009', 'P012010', 'P012011', 'P012012', 'P012013', 'P012014', 'P012015', 'P012016', 'P012017', 'P012018', 'P012019', 'P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025'], False),
+            # ('Age 62 years and over', ['P012019', 'P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025'], False)
+            # ('Age 65 years and over', ['P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025'], False)
         ),
         'female': (
             # ('Age Total','p012026'),
-            ('Age Under 5 years','p012027'),
-            ('Age 5 to 9 years','p012028'),
-            ('Age 10 to 14 years','p012029'),
+            ssf('Age Under 5 years','p012027'),
+            ssf('Age 5 to 9 years','p012028'),
+            ssf('Age 10 to 14 years','p012029'),
             # ('Age 15 to 17 years','p012030'),
             # ('Age 18 and 19 years','p012031'),
-            ('Age 15 to 19 years',['p012030','p012031']),
+            sumsf('Age 15 to 19 years',['p012030','p012031']),
             # ('Age 20 years','p012032'),
             # ('Age 21 years','p012033'),
             # ('Age 22 to 24 years','p012034'),
-            ('Age 20 to 24 years',['p012032','p012033','p012034']),
-            ('Age 25 to 29 years','p012035'),
-            ('Age 30 to 34 years','p012036'),
-            ('Age 35 to 39 years','p012037'),
-            ('Age 40 to 44 years','p012038'),
-            ('Age 45 to 49 years','p012039'),
-            ('Age 50 to 54 years','p012040'),
-            ('Age 55 to 59 years','p012041'),
+            sumsf('Age 20 to 24 years',['p012032','p012033','p012034']),
+            ssf('Age 25 to 29 years','p012035'),
+            ssf('Age 30 to 34 years','p012036'),
+            ssf('Age 35 to 39 years','p012037'),
+            ssf('Age 40 to 44 years','p012038'),
+            ssf('Age 45 to 49 years','p012039'),
+            ssf('Age 50 to 54 years','p012040'),
+            ssf('Age 55 to 59 years','p012041'),
             # ('Age 60 and 61 years','p012042'),
             # ('Age 62 to 64 years','p012043'),
-            ('Age 60 to 64 years',['p012042','p012043']),
+            sumsf('Age 60 to 64 years',['p012042','p012043']),
             # ('Age 65 and 66 years','p012044'),
             # ('Age 67 to 69 years','p012045'),
-            ('Age 65 to 69 years',['p012044','p012045']),
-            ('Age 70 to 74 years','p012046'),
-            ('Age 75 to 79 years','p012047'),
-            ('Age 80 to 84 years','p012048'),
-            ('Age 85 years and over','p012049'),
+            sumsf('Age 65 to 69 years',['p012044','p012045']),
+            ssf('Age 70 to 74 years','p012046'),
+            ssf('Age 75 to 79 years','p012047'),
+            ssf('Age 80 to 84 years','p012048'),
+            ssf('Age 85 years and over','p012049'),
+
+            # ('Age 18 years and over',
+            #     ['P012031', 'P012032', 'P012033', 'P012034', 'P012035', 'P012036', 'P012037', 'P012038', 'P012039', 'P012040', 'P012041', 'P012042', 'P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False),
+            # ('Age 21 years and over', ['P012033', 'P012034', 'P012035', 'P012036', 'P012037', 'P012038', 'P012039', 'P012040', 'P012041', 'P012042', 'P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False),
+            # ('Age 62 years and over', ['P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False)
+            # ('Age 65 years and over', ['P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False)
         )
     }
 
@@ -229,44 +269,38 @@ class AgeSex(StatsBundle):
         self.help_text = help_text.reports["SEX AND AGE"]
 
         self.male_population = AggregateStatistic("Male population")
-        for label, value in self.labels_and_keys['male']:
-            stat = Statistic(label,
-                             census2010=compute_value(self.census2010,value),
-                             census2000=compute_value(self.census2000,value),
-                             full_label="Male %s" % label)
-            self.male_population.add(stat)
+        for factory in self.stat_factories['male']:
+            self.male_population.add(factory(census2010=self.census2010,census2000=self.census2000))
 
         self.female_population = AggregateStatistic("Female population")
-        for label, value in self.labels_and_keys['female']:
-            stat = Statistic(label,
-                             census2010=compute_value(self.census2010,value),
-                             census2000=compute_value(self.census2000,value),
-                             full_label="Female %s" % label)
-            self.female_population.add(stat)
+        for factory in self.stat_factories['female']:
+            self.female_population.add(factory(census2010=self.census2010,census2000=self.census2000))
 
-        self.total_population = AggregateStatistic("Total population")
-        female_lookup = dict(self.labels_and_keys['female'])
-        for label, value in self.labels_and_keys['male']:
-            fvalue = female_lookup[label]
-            tot2010 = tot2000 = None
-            try: tot2010 = compute_value(self.census2010,value) + compute_value(self.census2010,fvalue)
-            except TypeError: pass
-            try: tot2000 = compute_value(self.census2000,value) + compute_value(self.census2000,fvalue)
-            except TypeError: pass
 
-            stat = Statistic(label,
-                             census2010=tot2010,
-                             census2000=tot2000,
-                             full_label="Total %s" % label)
-            self.total_population.add(stat)
+        # TODO: explicitly articulate total population properties. remove the various things that are male_population, female_population, total_population into a single bundle, maybe? (how will indents work then? Still need aggregates)
+        # self.total_population = AggregateStatistic("Total population")
+        # female_lookup = dict(self.stat_factories['female'])
+        # for label, value in self.stat_factories['male']:
+        #     fvalue = female_lookup[label]
+        #     tot2010 = tot2000 = None
+        #     try: tot2010 = compute_value(self.census2010,value) + compute_value(self.census2010,fvalue)
+        #     except TypeError: pass
+        #     try: tot2000 = compute_value(self.census2000,value) + compute_value(self.census2000,fvalue)
+        #     except TypeError: pass
+        # 
+        #     stat = Statistic(label, 
+        #                      census2010=tot2010,
+        #                      census2000=tot2000,
+        #                      full_label="Total %s" % label)
+        #     self.total_population.add(stat)
 
     def __repr__(self):
         return self.name
 
     def __iter__(self):
-        yield self.total_population
-        for child in self.total_population:
-            yield child
+        # yield self.total_population
+        # for child in self.total_population:
+        #     yield child
 
         yield self.male_population
         for child in self.male_population:

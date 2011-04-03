@@ -245,7 +245,9 @@ def create_database(func=run):
     """
     Creates the user and database for this project.
     """
-    func('echo "CREATE USER %(project_name)s WITH PASSWORD \'%(database_password)s\';" | psql postgres' % env)
+    func('createuser -s %(project_name)s' % env)
+    func('echo "ALTER USER %(project_name)s with password %(database_password)s" | psql postgres' % env)
+    func('echo "GRANT ALL PRIVILEGES TO %(project_name)s;" | psql postgres' % env)
     func('createdb -O %(project_name)s %(project_name)s -T template_postgis' % env)
     
 def destroy_database(func=run):
@@ -323,8 +325,8 @@ def local_bootstrap():
     create_database(local)
 
     # Normal bootstrap
-    local('python manage.py syncdb --noinput')
-
+    # local('python manage.py syncdb --noinput')
+    local('psql censusweb < data/psql/dump.sql')
     # Bootstrap with south
     # local('python manage.py syncdb --all --noinput')
     # local('python manage.py migrate --fake')
