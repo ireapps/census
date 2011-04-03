@@ -261,6 +261,37 @@ class AgeSex(StatsBundle):
             # ('Age 62 years and over', ['P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False)
             # ('Age 65 years and over', ['P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False)
         )
+        'total': (
+            sumsf('Total', ['P012002', 'P012026']),
+            sumsf('Under 5 years', ['P012003', 'P012027']),
+            sumsf('5 to 9 years', ['P012004', 'P012028']),
+            sumsf('10 to 14 years', ['P012005', 'P012029']),
+            sumsf('15 to 17 years', ['P012006', 'P012030']),
+            sumsf('15 to 19 years', ['P012006', 'P012007', 'P012030', 'P012031']),
+            sumsf('18 and 19 years', ['P012007', 'P012031']),
+            sumsf('20 to 24 years', ['P012008', 'P012009', 'P012010', 'P012032', 'P012033', 'P012034']),
+            sumsf('20 years', ['P012008', 'P012032']),
+            sumsf('21 years', ['P012009', 'P012033']),
+            sumsf('22 to 24 years', ['P012010', 'P012034']),
+            sumsf('25 to 29 years', ['P012011', 'P012035']),
+            sumsf('30 to 34 years', ['P012012', 'P012036']),
+            sumsf('35 to 39 years', ['P012013', 'P012037']),
+            sumsf('40 to 44 years', ['P012014', 'P012038']),
+            sumsf('45 to 49 years', ['P012015', 'P012039']),
+            sumsf('50 to 54 years', ['P012016', 'P012040']),
+            sumsf('55 to 59 years', ['P012017', 'P012041']),
+            sumsf('60 and 61 years', ['P012018', 'P012042']),
+            sumsf('60 to 64 years', ['P012018', 'P012019', 'P012042', 'P012043']),
+            sumsf('62 to 64 years', ['P012019', 'P012043']),
+            sumsf('62 years and over', ['P012019', 'P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025', 'P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'],  '65 and 66 years', ['P012020', 'P012044']),
+            sumsf('65 to 69 years', ['P012020', 'P012021', 'P012044', 'P012045']),
+            sumsf('65 years and over', ['P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049']),
+            sumsf('67 to 69 years', ['P012021', 'P012045']),
+            sumsf('70 to 74 years', ['P012022', 'P012046']),
+            sumsf('75 to 79 years', ['P012023', 'P012047']),
+            sumsf('80 to 84 years', ['P012024', 'P012048']),
+            sumsf('85 years and over', ['P012025', 'P012049']),
+        )
     }
 
     def __init__(self, census2010=None,census2000=None):
@@ -272,27 +303,13 @@ class AgeSex(StatsBundle):
         for factory in self.stat_factories['male']:
             self.male_population.add(factory(census2010=self.census2010,census2000=self.census2000))
 
-        self.female_population = AggregateStatistic("Female population")
-        for factory in self.stat_factories['female']:
-            self.female_population.add(factory(census2010=self.census2010,census2000=self.census2000))
+            self.female_population = AggregateStatistic("Female population")
+            for factory in self.stat_factories['female']:
+                self.female_population.add(factory(census2010=self.census2010,census2000=self.census2000))
 
-
-        # TODO: explicitly articulate total population properties. remove the various things that are male_population, female_population, total_population into a single bundle, maybe? (how will indents work then? Still need aggregates)
-        # self.total_population = AggregateStatistic("Total population")
-        # female_lookup = dict(self.stat_factories['female'])
-        # for label, value in self.stat_factories['male']:
-        #     fvalue = female_lookup[label]
-        #     tot2010 = tot2000 = None
-        #     try: tot2010 = compute_value(self.census2010,value) + compute_value(self.census2010,fvalue)
-        #     except TypeError: pass
-        #     try: tot2000 = compute_value(self.census2000,value) + compute_value(self.census2000,fvalue)
-        #     except TypeError: pass
-        # 
-        #     stat = Statistic(label, 
-        #                      census2010=tot2010,
-        #                      census2000=tot2000,
-        #                      full_label="Total %s" % label)
-        #     self.total_population.add(stat)
+            self.total_population = AggregateStatistic("Total population")
+            for factory in self.stat_factories['total']:
+                self.total_population.add(factory(census2010=self.census2010,census2000=self.census2000))
 
     def __repr__(self):
         return self.name
