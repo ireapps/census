@@ -131,3 +131,10 @@ h1 {
         .report td.last, .report th.last {
             border-right: 1px solid #aaa;
         }
+
+        .report span.help_text {
+            color:#A00;
+            font-size:14px;
+            cursor:pointer;
+            text-decoration:underline;
+        }
