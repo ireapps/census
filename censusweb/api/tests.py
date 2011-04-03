@@ -6,7 +6,7 @@ Replace this with more appropriate tests for your application.
 """
 
 from unittest import TestCase
-from statmodels import Statistic, AggregateStatistic
+from statmodels import Statistic, AggregateStatistic, ssf, sumsf
 
 class StatisticTest(TestCase):
     def test_sums(self):
@@ -68,3 +68,25 @@ class StatisticTest(TestCase):
         self.assertEqual(0, agg.indent)
         for kid in agg.children:
             self.assertEqual(agg.indent + 1, kid.indent)
+            
+    def test_ssf(self):
+        "Test ssf (SimpleStatisticFactory)"
+        label = 'my label'
+        column = 'col'
+        factory = ssf(label, column)
+        s = factory(census2010={column: 5})
+        self.assertTrue(type(s) == Statistic)
+        self.assertEqual(label, s.label)
+        self.assertEqual(5,s.census2010)
+        self.assertTrue(s.census2000 is None)
+        
+    def test_sumsf(self):
+        "test sumsf (SummingStatisticFactory)"
+        label = 'another label'
+        columns = ['col1', 'col2', 'col3']
+        factory = sumsf(label, columns)
+        s = factory(census2010={'col1': 5, 'col2': 3, 'col3': 1, 'col4': 0})
+        self.assertTrue(type(s) == Statistic)
+        self.assertEqual(label, s.label)
+        self.assertEqual(9,s.census2010)
+        self.assertTrue(s.census2000 is None)
