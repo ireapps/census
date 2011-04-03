@@ -5,7 +5,7 @@ $(function(){
     window.Query = Backbone.Model.extend({
 
         initialize: function() {
-            _.bindAll(this, 'keypress', 'render', 'showHelp', 'loadNext');
+            _.bindAll(this, 'keypress', 'render', 'showHelp', 'loadNext', 'go');
             this.template = _.template($('#query-template').html());
             this.lazyRender = _.debounce(this.render, 50);
             this.filter = '';
@@ -25,6 +25,7 @@ $(function(){
             $('#place-select .link').click(_.bind(this.select, this, 'place'));
             $('#subdivision-select .link').click(_.bind(this.select, this, 'subdivision'));
             $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
+            $('.button.go').click(this.go);
         },
 
         isCompletable: function() {
@@ -63,8 +64,12 @@ $(function(){
                 e.preventDefault();
                 this.filter = this.filter.substr(0, this.filter.length - 1);
                 this.lazyRender();
-            } else if (e.which == 13 && this.filter) {
-                $('.link:first').trigger('click');
+            } else if (e.which == 13) {
+                if (this.filter) {
+                    $('.link:first').trigger('click');
+                } else if (this.isCompletable()) {
+                    this.go();
+                }
             } else if (e.charCode && this.isFilterable()) {
                 this.filter += String.fromCharCode(e.charCode);
                 this.lazyRender();
@@ -84,13 +89,12 @@ $(function(){
             var val = attrs[level] = el.attr('data-val');
             var display = attrs[level + 'Display'] = el.text();
             this.currentLevel = level;
-            this.controller.saveLocation('query/' + this.location());
             this.set(attrs);
+            this.controller.saveLocation('query/' + this.location());
         },
 
         loadNext: function() {
             var level = this.currentLevel;
-            if (this.isComplete()) return this.finish();
             if (level == 'state') {
                 if (_.include(['tract', 'county', 'subdivision'], this.get('summarylevel'))) {
                     this.loadCounties();
@@ -104,7 +108,7 @@ $(function(){
             }
         },
 
-        finish: function() {
+        go: function() {
             window.location = '/data/' + this.location() + '.html';
         },
 
