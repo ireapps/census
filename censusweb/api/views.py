@@ -32,7 +32,10 @@ def data(request, slugs, extension):
         reports.append(report)
 
     if extension == 'json':
-        return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+        json = []
+        for report in reports:
+            json.append(report.as_json())
+        return HttpResponse(simplejson.dumps(json), mimetype='application/json')
 
     elif extension == 'csv':
         response = HttpResponse(mimetype='text/csv')

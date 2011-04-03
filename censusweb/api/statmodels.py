@@ -143,6 +143,9 @@ class Report(object):
             yield { 'label': bundle.name, 'header': True, 'help_text': bundle.help_text }
             for item in bundle:
                 yield item
+    
+    def as_json(self):
+        return {'gimme more data': self.tract_id}
 
 class StatsBundle(object):
     """docstring for StatsBundle"""
