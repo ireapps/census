@@ -5,11 +5,13 @@ $(function(){
     window.Query = Backbone.Model.extend({
 
         initialize: function() {
-            _.bindAll(this, 'keypress', 'render', 'showHelp');
+            _.bindAll(this, 'keypress', 'render', 'showHelp', 'loadNext');
             this.template = _.template($('#query-template').html());
             this.lazyRender = _.debounce(this.render, 50);
             this.filter = '';
             $(document.body).keypress(this.keypress);
+            this.bind('change', this.render);
+            this.bind('change', this.loadNext);
         },
 
         render: function() {
@@ -81,9 +83,13 @@ $(function(){
             var el = $(e.currentTarget);
             var val = attrs[level] = el.attr('data-val');
             var display = attrs[level + 'Display'] = el.text();
+            this.currentLevel = level;
             this.controller.saveLocation('query/' + this.location());
             this.set(attrs);
-            this.render();
+        },
+
+        loadNext: function() {
+            var level = this.currentLevel;
             if (this.isComplete()) return this.finish();
             if (level == 'state') {
                 if (_.include(['tract', 'county', 'subdivision'], this.get('summarylevel'))) {
