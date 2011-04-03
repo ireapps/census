@@ -140,7 +140,7 @@ class Report(object):
 
     def __iter__(self):
         for bundle in self.bundles:
-            yield { 'label': bundle.name, 'header': True }
+            yield { 'label': bundle.name, 'header': True, 'help_text': bundle.help_text }
             for item in bundle:
                 yield item
 
@@ -157,6 +157,19 @@ class AgeSex(StatsBundle):
     """Wrapper for a bundle of place statistics that exposes the age/sex stats.
         TODO: Will we pass in multiple args for different comparison years?
     """
+    
+    help_text = """
+At invenire oportere erroribus mea. Pri ne odio patrioque adolescens, his
+ex esse aeterno takimata. Cum at eros conclusionemque, sea et novum nobis.
+Ne sea liber nostrum lobortis, odio nisl omittam ex nam. Zzril placerat
+nec id, mutat omnes utamur ut sed.
+
+Nonumy regione pri no. Has ad moderatius philosophia. Ius quod signiferumque
+ne. Modo quaestio reprehendunt at eum. Fabulas alienum percipit an eum,
+id quo facilisi conclusionemque, sit amet soluta at. Usu ullum ancillae
+dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
+        """
+    
     labels_and_keys = { # for Age/Sex the column headers are the same for 2010 and 2000 census.
         'male': (
             # ('Age Total','p012002'),

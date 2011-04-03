@@ -16,7 +16,7 @@
             {% for row in report %}
                 {% if row.header %}
                 <tr>
-                    <th class="section" colspan="6">{{ row.label }}</th>
+                    <th class="section" colspan="6">{{ row.label }} <span class="help_text" onclick="alert('{{ row.help_text|escapejs }}');">Huh?</span></th>
                 </tr>
                 <tr class="header">
                     <th class="first">Subject</th>
