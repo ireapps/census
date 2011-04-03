@@ -2,8 +2,8 @@
 
 <script id="query-template" type="x-js-template">
 
-    <% if (query.summarylevel) { %>
-        Find data for <b><%= query.summarylevelDisplay %></b>
+    <% if (query.get('summarylevel')) { %>
+        Find data for <b><%= query.get('summarylevelDisplay') %></b>
     <% } else { %>
         Find data for
         <span id="summarylevel-select">
@@ -16,7 +16,7 @@
       </span>
     <% } %>
 
-    <% if (query.summarylevel && (query.summarylevel != 'nation') && !query.state) { %>
+    <% if (query.get('summarylevel') && (query.get('summarylevel') != 'nation') && !query.get('state')) { %>
         in
         <span id="state-select">
             <% var states = query.filtered(query.mappings.states); %>
@@ -24,11 +24,11 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == states.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.state) { %>
-        in <b><%= query.stateDisplay %></b>
+    <% } else if (query.get('state')) { %>
+        in <b><%= query.get('stateDisplay') %></b>
     <% } %>
 
-    <% if (query.mappings.counties && !query.county) { %>
+    <% if (query.mappings.counties && !query.get('county')) { %>
         for
         <span id="county-select">
             <% var counties = query.filtered(query.mappings.counties); %>
@@ -36,11 +36,11 @@
                 <span class="link" data-val="<%= '' + pair[2] + pair[1] %>"><%= pair[0] %></span><%= i == counties.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.county) { %>
-        - <b><%= query.countyDisplay %></b>.
+    <% } else if (query.get('county')) { %>
+        - <b><%= query.get('countyDisplay') %></b>.
     <% } %>
 
-    <% if (query.mappings.places && !query.place) { %>
+    <% if (query.mappings.places && !query.get('place')) { %>
         for
         <span id="place-select">
             <% var places = query.filtered(query.mappings.places); %>
@@ -48,11 +48,11 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == places.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.place) { %>
-        - <b><%= query.placeDisplay %></b>.
+    <% } else if (query.get('place')) { %>
+        - <b><%= query.get('placeDisplay') %></b>.
     <% } %>
 
-    <% if (query.mappings.subdivisions && !query.subdivision) { %>
+    <% if (query.mappings.subdivisions && !query.get('subdivision')) { %>
         for
         <span id="subdivision-select">
             <% var subdivisions = query.filtered(query.mappings.subdivisions); %>
@@ -60,11 +60,11 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == subdivisions.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.subdivision) { %>
-        - <b><%= query.subdivisionDisplay %></b>.
+    <% } else if (query.get('subdivision')) { %>
+        - <b><%= query.get('subdivisionDisplay') %></b>.
     <% } %>
 
-    <% if (query.mappings.tracts && !query.tract) { %>
+    <% if (query.mappings.tracts && !query.get('tract')) { %>
         for
         <span id="tract-select">
             <% var tracts = query.filtered(query.mappings.tracts); %>
@@ -72,8 +72,8 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == tracts.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.tract) { %>
-        - <b><%= query.tractDisplay %></b>.
+    <% } else if (query.get('tract')) { %>
+        - <b><%= query.get('tractDisplay') %></b>.
     <% } %>
 
     <% if (query.isCompletable()) { %>

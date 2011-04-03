@@ -1,9 +1,11 @@
+from models import get_state_name, get_county_name
+
 def compute_value(d,value):
     if d is None: return None
     if isinstance(value,basestring):
         return int(d[value])
     return sum(map(int,[d[x] for x in value]))
-        
+
 class AggregateStatistic(object):
     """Collect a number of statistics so that a total and pct can be computed."""
     def __init__(self,label):
@@ -17,10 +19,10 @@ class AggregateStatistic(object):
         self.stats.append(stat)
         stat.parent = self
         if stat.atomic:
-            if stat.census2010: 
+            if stat.census2010:
                 try: self.census2010 += stat.census2010
                 except TypeError: self.census2010 = stat.census2010
-            if stat.census2000: 
+            if stat.census2000:
                 try: self.census2000 += stat.census2000
                 except TypeError: self.census2000 = stat.census2000
 
@@ -124,16 +126,20 @@ class Statistic(object):
 
 class Report(object):
     """Encapsulate any number of StatsBundles (where are multiple places going?)"""
-    def __init__(self):
+    def __init__(self, state_code=None, county_fips=None, tract_id=None):
         super(Report, self).__init__()
         self.bundles = []
-    
+
+        self.state_name = get_state_name(state_code)
+        self.county_name = get_county_name(county_fips)
+        self.tract_id = tract_id
+
     def add(self,bundle):
         self.bundles.append(bundle)
-        
+
     def __iter__(self):
         for bundle in self.bundles:
-            yield { 'label': bundle.name, 'header': True }
+            yield { 'label': bundle.name, 'header': True, 'help_text': bundle.help_text }
             for item in bundle:
                 yield item
 
@@ -144,7 +150,6 @@ class StatsBundle(object):
         self.census2010 = census2010
         self.census2000 = census2000
         self.name = name
-
 
 class StatisticFactory(object):
     def __init__(self, label, full_label=None,atomic=True):
@@ -181,7 +186,20 @@ class AgeSex(StatsBundle):
     """Wrapper for a bundle of place statistics that exposes the age/sex stats.
         TODO: Will we pass in multiple args for different comparison years?
     """
-    labels_and_keys = { # for Age/Sex the column headers are the same for 2010 and 2000 census.
+    
+    help_text = """
+At invenire oportere erroribus mea. Pri ne odio patrioque adolescens, his
+ex esse aeterno takimata. Cum at eros conclusionemque, sea et novum nobis.
+Ne sea liber nostrum lobortis, odio nisl omittam ex nam. Zzril placerat
+nec id, mutat omnes utamur ut sed.
+
+Nonumy regione pri no. Has ad moderatius philosophia. Ius quod signiferumque
+ne. Modo quaestio reprehendunt at eum. Fabulas alienum percipit an eum,
+id quo facilisi conclusionemque, sit amet soluta at. Usu ullum ancillae
+dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
+        """
+    
+    stat_factories = { # for Age/Sex the column headers are the same for 2010 and 2000 census.
         'male': (
             # ('Age Total','p012002'),
             ssf('Age Under 5 years','p012003'),
@@ -217,7 +235,6 @@ class AgeSex(StatsBundle):
             # ('Age 21 years and over', ['P012009', 'P012010', 'P012011', 'P012012', 'P012013', 'P012014', 'P012015', 'P012016', 'P012017', 'P012018', 'P012019', 'P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025'], False),
             # ('Age 62 years and over', ['P012019', 'P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025'], False)
             # ('Age 65 years and over', ['P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025'], False)
-            
         ),
         'female': (
             # ('Age Total','p012026'),
@@ -256,32 +273,25 @@ class AgeSex(StatsBundle):
             # ('Age 65 years and over', ['P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False)
         )
     }
-    
-    
-    
+
+
+
     def __init__(self, census2010=None,census2000=None):
         super(AgeSex, self).__init__(census2010=census2010,census2000=census2000,name="Sex and Age")
 
         self.male_population = AggregateStatistic("Male population")
-        for label, value in self.labels_and_keys['male']:
-            stat = Statistic(label, 
-                             census2010=compute_value(self.census2010,value), 
-                             census2000=compute_value(self.census2000,value), 
-                             full_label="Male %s" % label)
-            self.male_population.add(stat)
+        for factory in self.stat_factories['male']:
+            self.male_population.add(factory(census2010=self.census2010,census2000=self.census2000))
 
         self.female_population = AggregateStatistic("Female population")
-        for label, value in self.labels_and_keys['female']:
-            stat = Statistic(label, 
-                             census2010=compute_value(self.census2010,value), 
-                             census2000=compute_value(self.census2000,value),
-                             full_label="Female %s" % label)
-            self.female_population.add(stat)
+        for factory in self.stat_factories['female']:
+            self.female_population.add(factory(census2010=self.census2010,census2000=self.census2000))
+
 
         # TODO: explicitly articulate total population properties. remove the various things that are male_population, female_population, total_population into a single bundle, maybe? (how will indents work then? Still need aggregates)
         # self.total_population = AggregateStatistic("Total population")
-        # female_lookup = dict(self.labels_and_keys['female'])
-        # for label, value in self.labels_and_keys['male']:
+        # female_lookup = dict(self.stat_factories['female'])
+        # for label, value in self.stat_factories['male']:
         #     fvalue = female_lookup[label]
         #     tot2010 = tot2000 = None
         #     try: tot2010 = compute_value(self.census2010,value) + compute_value(self.census2010,fvalue)
@@ -296,12 +306,12 @@ class AgeSex(StatsBundle):
         #     self.total_population.add(stat)
 
     def __repr__(self):
-        return self.name    
-        
+        return self.name
+
     def __iter__(self):
-        yield self.total_population
-        for child in self.total_population:
-            yield child
+        # yield self.total_population
+        # for child in self.total_population:
+        #     yield child
 
         yield self.male_population
         for child in self.male_population:
@@ -316,4 +326,3 @@ class Race(StatsBundle):
     def __init__(self, arg):
         super(Race, self).__init__()
         self.arg = arg
-        

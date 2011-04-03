@@ -9,11 +9,17 @@ urlpatterns = patterns('',
     # The Homepage.
     (r'^$', views.homepage),
 
+    # Data
+    #/data/tract-AL-003-010100.html
+    #/data/state-AL.html
+    #/data/tract-AL-003-010100/tract-AL-003-010120/state-AL.html
+    (r'^data/(?P<slugs>(/?tract-[A-Z]{2}(-\d{3})?(-\d{6})?)+)\.(?P<extension>json|csv|html)$', views.data),
+
     # Tracts
     #/tracts/IL.json
     #/tracts/IL/123.json
     #/tracts/IL/123/12345.json
-    (r'^tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{6}))?\.(?P<extension>json|csv|html)$', views.tracts),
+    # (r'^tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{6}))?\.(?P<extension>json|csv|html)$', views.tracts),
 
     # County codes for states.
     #/internal/counties_for_state/CA.json
