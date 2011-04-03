@@ -271,37 +271,37 @@ dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
             # ('Age 21 years and over', ['P012033', 'P012034', 'P012035', 'P012036', 'P012037', 'P012038', 'P012039', 'P012040', 'P012041', 'P012042', 'P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False),
             # ('Age 62 years and over', ['P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False)
             # ('Age 65 years and over', ['P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'], False)
-        )
+        ),
         'total': (
-            sumsf('Total', ['P012002', 'P012026']),
-            sumsf('Under 5 years', ['P012003', 'P012027']),
-            sumsf('5 to 9 years', ['P012004', 'P012028']),
-            sumsf('10 to 14 years', ['P012005', 'P012029']),
-            sumsf('15 to 17 years', ['P012006', 'P012030']),
-            sumsf('15 to 19 years', ['P012006', 'P012007', 'P012030', 'P012031']),
-            sumsf('18 and 19 years', ['P012007', 'P012031']),
-            sumsf('20 to 24 years', ['P012008', 'P012009', 'P012010', 'P012032', 'P012033', 'P012034']),
-            sumsf('20 years', ['P012008', 'P012032']),
-            sumsf('21 years', ['P012009', 'P012033']),
-            sumsf('22 to 24 years', ['P012010', 'P012034']),
-            sumsf('25 to 29 years', ['P012011', 'P012035']),
-            sumsf('30 to 34 years', ['P012012', 'P012036']),
-            sumsf('35 to 39 years', ['P012013', 'P012037']),
-            sumsf('40 to 44 years', ['P012014', 'P012038']),
-            sumsf('45 to 49 years', ['P012015', 'P012039']),
-            sumsf('50 to 54 years', ['P012016', 'P012040']),
-            sumsf('55 to 59 years', ['P012017', 'P012041']),
-            sumsf('60 and 61 years', ['P012018', 'P012042']),
-            sumsf('60 to 64 years', ['P012018', 'P012019', 'P012042', 'P012043']),
-            sumsf('62 to 64 years', ['P012019', 'P012043']),
-            sumsf('62 years and over', ['P012019', 'P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025', 'P012043', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049'],  '65 and 66 years', ['P012020', 'P012044']),
-            sumsf('65 to 69 years', ['P012020', 'P012021', 'P012044', 'P012045']),
-            sumsf('65 years and over', ['P012020', 'P012021', 'P012022', 'P012023', 'P012024', 'P012025', 'P012044', 'P012045', 'P012046', 'P012047', 'P012048', 'P012049']),
-            sumsf('67 to 69 years', ['P012021', 'P012045']),
-            sumsf('70 to 74 years', ['P012022', 'P012046']),
-            sumsf('75 to 79 years', ['P012023', 'P012047']),
-            sumsf('80 to 84 years', ['P012024', 'P012048']),
-            sumsf('85 years and over', ['P012025', 'P012049']),
+            # sumsf('Total', ['p012002', 'p012026']),
+            sumsf('Under 5 years', ['p012003', 'p012027']),
+            sumsf('5 to 9 years', ['p012004', 'p012028']),
+            sumsf('10 to 14 years', ['p012005', 'p012029']),
+            # sumsf('15 to 17 years', ['p012006', 'p012030']),
+            # sumsf('18 and 19 years', ['p012007', 'p012031']),
+            sumsf('15 to 19 years', ['p012006', 'p012007', 'p012030', 'p012031']),
+            sumsf('20 to 24 years', ['p012008', 'p012009', 'p012010', 'p012032', 'p012033', 'p012034']),
+            # sumsf('20 years', ['p012008', 'p012032']),
+            # sumsf('21 years', ['p012009', 'p012033']),
+            # sumsf('22 to 24 years', ['p012010', 'p012034']),
+            sumsf('25 to 29 years', ['p012011', 'p012035']),
+            sumsf('30 to 34 years', ['p012012', 'p012036']),
+            sumsf('35 to 39 years', ['p012013', 'p012037']),
+            sumsf('40 to 44 years', ['p012014', 'p012038']),
+            sumsf('45 to 49 years', ['p012015', 'p012039']),
+            sumsf('50 to 54 years', ['p012016', 'p012040']),
+            sumsf('55 to 59 years', ['p012017', 'p012041']),
+            sumsf('60 to 64 years', ['p012018', 'p012019', 'p012042', 'p012043']),
+            # sumsf('60 and 61 years', ['p012018', 'p012042']),
+            # sumsf('62 to 64 years', ['p012019', 'p012043']),
+            sumsf('65 to 69 years', ['p012020', 'p012021', 'p012044', 'p012045']),
+            sumsf('67 to 69 years', ['p012021', 'p012045']),
+            sumsf('70 to 74 years', ['p012022', 'p012046']),
+            sumsf('75 to 79 years', ['p012023', 'p012047']),
+            sumsf('80 to 84 years', ['p012024', 'p012048']),
+            sumsf('85 years and over', ['p012025', 'p012049']),
+            # sumsf('62 years and over', ['p012019', 'p012020', 'p012021', 'p012022', 'p012023', 'p012024', 'p012025', 'p012043', 'p012044', 'p012045', 'p012046', 'p012047', 'p012048', 'p012049'],  '65 and 66 years', ['p012020', 'p012044']),
+            # sumsf('65 years and over', ['p012020', 'p012021', 'p012022', 'p012023', 'p012024', 'p012025', 'p012044', 'p012045', 'p012046', 'p012047', 'p012048', 'p012049']),
         )
 
     }
@@ -325,9 +325,9 @@ dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
         return self.name
 
     def __iter__(self):
-        # yield self.total_population
-        # for child in self.total_population:
-        #     yield child
+        yield self.total_population
+        for child in self.total_population:
+            yield child
 
         yield self.male_population
         for child in self.male_population:
