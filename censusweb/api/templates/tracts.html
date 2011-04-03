@@ -5,34 +5,42 @@
 
 <img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" />
 
-<table class="report">
-    <tr class="title">
-        <th colspan="6">{% block title %}Tract #{{ tract }} - {{ county }}, {{ state }} {% endblock %}</th>
-    </tr>
-{% for row in report %}
-    {% if row.header %}
+<table class="reports">
     <tr>
-        <th class="section" colspan="6">{{ row.label }}</th>
+        {% for report in reports %}
+        <td>
+            <table class="report">
+                <tr class="title">
+                    <th colspan="6">Tract #{{ report.tract_id }} - {{ report.county_name }}, {{ report.state_name }}</th>
+                </tr>
+            {% for row in report %}
+                {% if row.header %}
+                <tr>
+                    <th class="section" colspan="6">{{ row.label }}</th>
+                </tr>
+                <tr class="header">
+                    <th class="first">Subject</th>
+                    <th>2000 Total</th>
+                    <th>2000 Percent</th>
+                    <th>2010 Total</th>
+                    <th>2010 Percent</th>
+                    <th class="last">Delta</th>
+                </tr>
+                {% else %}
+                <tr class="{% cycle odd,even %} indent-{{ row.indent }}">
+                    <td class="first">{{ row.label }}</td>
+                    <td class="code">{{ row.census2000|default_if_none:"" }}</td>
+                    <td class="code">{{ row.pct2000|default_if_none:"" }}</td>
+                    <td class="code">{{ row.census2010|default_if_none:"" }}</td>
+                    <td class="code">{{ row.pct2010|default_if_none:"" }}</td>
+                    <td class="code last">{{ row.delta|default_if_none:"" }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </table>
+        </td>
+        {% endfor %}
     </tr>
-    <tr class="header">
-        <th class="first">Subject</th>
-        <th>2000 Total</th>
-        <th>2000 Percent</th>
-        <th>2010 Total</th>
-        <th>2010 Percent</th>
-        <th class="last">Delta</th>
-    </tr>
-    {% else %}
-    <tr class="{% cycle odd,even %} indent-{{ row.indent }}">
-        <td class="first">{{ row.label }}</td>
-        <td class="code">{{ row.census2000|default_if_none:"" }}</td>
-        <td class="code">{{ row.pct2000|default_if_none:"" }}</td>
-        <td class="code">{{ row.census2010|default_if_none:"" }}</td>
-        <td class="code">{{ row.pct2010|default_if_none:"" }}</td>
-        <td class="code last">{{ row.delta|default_if_none:"" }}</td>
-    </tr>
-    {% endif %}
-{% endfor %}
 </table>
 
 {% endblock %}

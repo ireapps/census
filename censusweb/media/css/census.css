@@ -79,6 +79,7 @@ h1 {
 
 .report {
     border: 1px solid #aaa;
+    margin-right:25px;
 }
     .report td, .report th {
         color: #333;
@@ -117,12 +118,14 @@ h1 {
             color: #333;
         }
         .report tr.header th {
+            white-space: nowrap;
             background: #fffff3;
             border-bottom: 1px solid #ccc;
         }
         .report td.first, .report th.first {
             color: #000;
             padding: 5px 50px 5px 10px;
+            white-space: nowrap;
             border-right: 1px solid #ccc !important;
         }
         .report td.last, .report th.last {

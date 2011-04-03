@@ -10,12 +10,25 @@ import re
 from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county, get_tracts_by_county, get_state_name, get_county_name
 from statmodels import AgeSex, Report
 
-def tracts(request, extension, state="", county="", tract=""):
+def data(request, slugs, extension):
 
-    data = data_for_tract(state,county,tract)
-    agesex = AgeSex(census2000=data[0])
-    report = Report()
-    report.add(agesex)
+    summaries = []
+    for slug in slugs.split("/"):
+        summarylevel,state,county,tract = slug.split("-")
+        summaries.append({
+             "summarylevel": summarylevel,
+             "state": state,
+             "county": county,
+             "tract": tract
+        })
+
+    reports = []
+    for summary in summaries:
+        data = data_for_tract(summary["state"],summary["county"],summary["tract"])
+        agesex = AgeSex(census2000=data[0])
+        report = Report(summary["state"], summary["county"], summary["tract"])
+        report.add(agesex)
+        reports.append(report)
 
     if extension == 'json':
         return HttpResponse(simplejson.dumps(data), mimetype='application/json')
@@ -31,11 +44,8 @@ def tracts(request, extension, state="", county="", tract=""):
     else: #html
         return render_to_response('tracts.html',
             {
-                'state': get_state_name(state),
-                'county': get_county_name(county),
-                'tract': tract,
                 'extension': extension,
-                'report': report,
+                'reports': reports,
             },
             context_instance=RequestContext(request))
 

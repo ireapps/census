@@ -85,7 +85,7 @@ $(function(){
     Query.prototype.finish = function() {
         switch (this.summarylevel) {
             case "tract":
-                window.location = '/tracts/' + this.state + '/' + this.county.substr(2) + '/' + this.tract + '.html';
+                window.location = '/data/tract-' + this.state + '-' + this.county.substr(2) + '-' + this.tract + '.html';
                 break;
         }
     };
