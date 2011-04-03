@@ -26,11 +26,11 @@ $(function(){
         },
 
         isCompletable: function() {
-            return (this.summarylevel && this.state);
+            return (this.get('summarylevel') && this.get('state'));
         },
 
         isComplete: function() {
-            return this.summarylevel == 'nation' || this[this.summarylevel];
+            return !!(this.get('summarylevel') == 'nation' || this.get(this.get('summarylevel')));
         },
 
         shouldShowFilterHelp: function() {
@@ -38,7 +38,7 @@ $(function(){
         },
 
         isFilterable: function() {
-            return !!this.summarylevel && !this.isComplete();
+            return !!this.get('summarylevel') && !this.isComplete();
         },
 
         filterDisplay: function() {
@@ -46,13 +46,13 @@ $(function(){
         },
 
         location: function() {
-            if (!this.summarylevel) return '';
-            var parts = [this.summarylevel];
-            if (this.state)         parts.push(this.state);
-            if (this.county)        parts.push(this.county.substr(2));
-            if (this.subdivision)   parts.push(this.subdivision);
-            if (this.place)         parts.push(this.place);
-            if (this.tract)         parts.push(this.tract);
+            if (!this.get('summarylevel')) return '';
+            var parts = [this.get('summarylevel')];
+            if (this.get('state'))         parts.push(this.get('state'));
+            if (this.get('county'))        parts.push(this.get('county').substr(2));
+            if (this.get('subdivision'))   parts.push(this.get('subdivision'));
+            if (this.get('place'))         parts.push(this.get('place'));
+            if (this.get('tract'))         parts.push(this.get('tract'));
             return parts.join('-');
         },
 
@@ -77,31 +77,29 @@ $(function(){
 
         select: function(level, e) {
             this.filter = "";
+            var attrs = {};
             var el = $(e.currentTarget);
-            var val = this[level] = el.attr('data-val');
-            var display = this[level + 'Display'] = el.text();
+            var val = attrs[level] = el.attr('data-val');
+            var display = attrs[level + 'Display'] = el.text();
             this.controller.saveLocation('query/' + this.location());
+            this.set(attrs);
             this.render();
             if (this.isComplete()) return this.finish();
             if (level == 'state') {
-                if (this.summarylevel == 'tract' || this.summarylevel == 'county' || this.summarylevel == 'subdivision') {
+                if (_.include(['tract', 'county', 'subdivision'], this.get('summarylevel'))) {
                     this.loadCounties();
-                } else if (this.summarylevel == 'place') {
+                } else if (this.get('summarylevel') == 'place') {
                     this.loadPlaces();
                 }
-            } else if (level == 'county' && this.summarylevel == 'subdivision') {
+            } else if (level == 'county' && this.get('summarylevel') == 'subdivision') {
                 this.loadSubdivisions();
-            } else if (level == 'county' && this.summarylevel == 'tract') {
+            } else if (level == 'county' && this.get('summarylevel') == 'tract') {
                 this.loadTracts();
             }
         },
 
         finish: function() {
-            switch (this.summarylevel) {
-                case "tract":
-                    window.location = '/data/tract-' + this.state + '-' + this.county.substr(2) + '-' + this.tract + '.html';
-                    break;
-            }
+            window.location = '/data/' + this.location() + '.html';
         },
 
         showHelp: function(e) {
@@ -110,28 +108,28 @@ $(function(){
         },
 
         loadCounties: function() {
-            $.getJSON('/internal/counties_for_state/' + this.state + '.json', _.bind(function(response) {
+            $.getJSON('/internal/counties_for_state/' + this.get('state') + '.json', _.bind(function(response) {
                 this.mappings.counties = response;
                 this.render();
             }, this));
         },
 
         loadPlaces: function() {
-            $.getJSON('/internal/places_for_state/' + this.state + '.json', _.bind(function(response) {
+            $.getJSON('/internal/places_for_state/' + this.get('state') + '.json', _.bind(function(response) {
                 this.mappings.places = response;
                 this.render();
             }, this));
         },
 
         loadSubdivisions: function() {
-            $.getJSON('/internal/subdivisions_for_county/' + this.county + '.json', _.bind(function(response) {
+            $.getJSON('/internal/subdivisions_for_county/' + this.get('county') + '.json', _.bind(function(response) {
                 this.mappings.subdivisions = response;
                 this.render();
             }, this));
         },
 
         loadTracts: function() {
-            $.getJSON('/internal/tracts_for_county/' + this.county + '.json', _.bind(function(response) {
+            $.getJSON('/internal/tracts_for_county/' + this.get('county') + '.json', _.bind(function(response) {
                 this.mappings.tracts = response;
                 this.render();
             }, this));
