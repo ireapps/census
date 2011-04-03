@@ -29,7 +29,7 @@ class DataImporter:
         fields_and_values = self._tablize_headers(data_and_headers)
         return fields_and_values
             
-    #private methods
+    #protected methods
     def _create_tables(self,fields_and_values):
         create_sql = "create table %s (%s)" % (self.table_name, ",".join(fields_and_values["fields"]))
         self.cur.execute(create_sql)
@@ -63,13 +63,15 @@ class DataImporter:
             
     def _tablize_headers(self, data_and_headers):
         for i,node in enumerate(data_and_headers["data_line"]):
-            datatype = self._of_type(node, data_and_headers["headers"][i])
-            data_and_headers["fields"].append(header.replace(" ", "_") + datatype[1])
+            header = data_and_headers["headers"][i].replace(" ", "_")
+            data_and_headers["headers"][i] = header
+            datatype = self._of_type(node, header)
+            data_and_headers["fields"].append(header + datatype[1])
             data_and_headers["types"].append(datatype[0])
         return data_and_headers
        
     def _of_type(self,node,header):
-        SPECIAL_HEADERS = ["Summary Level", "Geographic Component", "State FIPS", "Place FIPS", "County FIPS", "Tract", "Zip", "Block", "Name"]
+        SPECIAL_HEADERS = ["Summary_Level", "Geographic_Component", "State_FIPS", "Place_FIPS", "County_FIPS", "Tract", "Zip", "Block", "Name"]
         if header in SPECIAL_HEADERS:
             return ("s"," VARCHAR(255)")
         elif re.search('^-?\d+\.\d+$', node):
