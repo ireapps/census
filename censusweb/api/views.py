@@ -14,6 +14,7 @@ from statmodels import AgeSex, Report
 def data(request, slugs, extension):
 
     summaries = []
+    filename = ""
     for slug in slugs.split("/"):
         summarylevel,state,county,tract = slug.split("-")
         summaries.append({
@@ -22,6 +23,8 @@ def data(request, slugs, extension):
              "county": county,
              "tract": tract
         })
+        filename += "%s_" % slug
+    filename = filename[:-1]
 
     reports = []
     for summary in summaries:
@@ -39,10 +42,10 @@ def data(request, slugs, extension):
 
     elif extension == 'csv':
         response = HttpResponse(mimetype='text/csv')
-        filename = "%s%s%s.csv" % (state,county,tract)
         response['Content-Disposition'] = 'attachment; filename=' + filename
         writer = csv.writer(response)
-        writer.writerow(data.values())
+        for report in reports:
+            writer.writerows(report.as_csv())
         return response
 
     else: #html

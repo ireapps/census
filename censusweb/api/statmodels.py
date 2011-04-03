@@ -146,6 +146,9 @@ class Report(object):
     
     def as_json(self):
         return {'gimme more data': self.tract_id}
+    
+    def as_csv(self):
+        return [[self.tract_id]]
 
 class StatsBundle(object):
     """docstring for StatsBundle"""
