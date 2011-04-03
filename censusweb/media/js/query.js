@@ -45,6 +45,17 @@ $(function(){
             return 'Results matching "' + this.filter + '"';
         },
 
+        location: function() {
+            if (!this.summarylevel) return '';
+            var parts = [this.summarylevel];
+            if (this.state)         parts.push(this.state);
+            if (this.county)        parts.push(this.county.substr(2));
+            if (this.subdivision)   parts.push(this.subdivision);
+            if (this.place)         parts.push(this.place);
+            if (this.tract)         parts.push(this.tract);
+            return parts.join('-');
+        },
+
         keypress: function(e) {
             if (e.which == 8) {
                 e.preventDefault();
@@ -69,6 +80,7 @@ $(function(){
             var el = $(e.currentTarget);
             var val = this[level] = el.attr('data-val');
             var display = this[level + 'Display'] = el.text();
+            this.controller.saveLocation('query/' + this.location());
             this.render();
             if (this.isComplete()) return this.finish();
             if (level == 'state') {
@@ -187,9 +199,24 @@ $(function(){
         }
     });
 
+    var QueryController = Backbone.Controller.extend({
+
+        routes: {
+            "query/*query": "loadQuery"
+        },
+
+        loadQuery: function(query) {
+            // No-op, for now.
+        }
+
+    });
+
     // ------------------------- Initialization -------------------------------
 
     window.query = new Query;
     query.render();
+
+    query.controller = new QueryController;
+    Backbone.history.start();
 
 });
