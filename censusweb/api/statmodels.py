@@ -1,3 +1,4 @@
+import help_text
 from models import get_state_name, get_county_name
 
 def compute_value(d,value):
@@ -158,18 +159,6 @@ class AgeSex(StatsBundle):
         TODO: Will we pass in multiple args for different comparison years?
     """
     
-    help_text = """
-At invenire oportere erroribus mea. Pri ne odio patrioque adolescens, his
-ex esse aeterno takimata. Cum at eros conclusionemque, sea et novum nobis.
-Ne sea liber nostrum lobortis, odio nisl omittam ex nam. Zzril placerat
-nec id, mutat omnes utamur ut sed.
-
-Nonumy regione pri no. Has ad moderatius philosophia. Ius quod signiferumque
-ne. Modo quaestio reprehendunt at eum. Fabulas alienum percipit an eum,
-id quo facilisi conclusionemque, sit amet soluta at. Usu ullum ancillae
-dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
-        """
-    
     labels_and_keys = { # for Age/Sex the column headers are the same for 2010 and 2000 census.
         'male': (
             # ('Age Total','p012002'),
@@ -234,10 +223,10 @@ dissentiet te, cu cum equidem gloriatur, prima facilisi delicata no est.
         )
     }
 
-
-
     def __init__(self, census2010=None,census2000=None):
         super(AgeSex, self).__init__(census2010=census2010,census2000=census2000,name="Sex and Age")
+        
+        self.help_text = help_text.reports["SEX AND AGE"]
 
         self.male_population = AggregateStatistic("Male population")
         for label, value in self.labels_and_keys['male']:
