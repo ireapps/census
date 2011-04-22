@@ -3,11 +3,11 @@
 
 {% block content %}
 
-<div class="query-builder-buttons">
+<nav>
     <span class="button more-data">Add another geography to compare</span>
-</div>
-<div class="query-builder-popup">
-  <div id="search"></div>
+</nav>
+<div class="query-builder-popup hidden">
+    {% include "_query_builder.html" %}
 </div>
 
 <script type="text/javascript">
@@ -69,7 +69,5 @@
         {% endfor %}
     </tr>
 </table>
-
-{% include "_query_builder.html" %}
 
 {% endblock %}

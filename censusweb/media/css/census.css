@@ -49,12 +49,11 @@ h1 {
 }
 
 #logo {
-    margin-bottom: 25px;
 }
 
 #help-link, #help {
     font-size: 16px;
-    margin-top: 25px;
+    margin-top: 20px;
 }
     #help dt {
         color: #000;
@@ -68,8 +67,7 @@ h1 {
     }
 
 #filter-help, #filter-display {
-    position: absolute;
-    left: 410px; top: 50px;
+    display:inline;
     font-size: 12px;
     color: #777;
     padding: 6px 12px;
@@ -160,11 +158,8 @@ h1 {
             text-decoration:underline;
         }
 
-.query-builder-popup {
-    display:none;
-}
-.query-builder-buttons {
-    margin-bottom:20px;
+nav {
+    margin:20px 0;
 }
 .report .button.remove-report {
     font-size: 15px;

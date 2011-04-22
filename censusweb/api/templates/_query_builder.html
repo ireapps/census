@@ -1,5 +1,18 @@
 {% load helpertags %}
 
+
+<nav>
+    <div id="filter-help" class="code hidden">
+        Start typing to filter&hellip;
+    </div>
+
+    <div id="filter-display" class="code hidden">
+    
+    </div>
+</nav>
+
+<div id="search"></div>
+
 <script src="{% build_media_url '/js/query.js' %}"></script>
 
 <script id="query-template" type="x-js-template">
