@@ -44,8 +44,8 @@ with open('ilgeo2000.csv') as f:
         xref = { 
             'FILEID': row_dict.pop('FILEID'),
             'STUSAB': row_dict.pop('STUSAB'),
-            'CHARITER': row_dict.pop('CHARITER'),
-            'CIFSN': row_dict.pop('CIFSN'),
+            #'CHARITER': row_dict.pop('CHARITER'),
+            #'CIFSN': row_dict.pop('CIFSN'),
             'LOGRECNO': row_dict.pop('LOGRECNO')
         }
 

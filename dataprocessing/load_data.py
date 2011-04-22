@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+
 from csvkit.unicsv import UnicodeCSVReader
 from pymongo import Connection
 
@@ -11,7 +13,7 @@ inserts = 0
 row_count = 0
 
 with open('il000012000.csv') as f:
-    year = 2000
+    year = '2000'
     table = 'PL1'
 
     rows = UnicodeCSVReader(f)
@@ -24,27 +26,15 @@ with open('il000012000.csv') as f:
         xref = { 
             'FILEID': row_dict.pop('FILEID'),
             'STUSAB': row_dict.pop('STUSAB'),
-            'CHARITER': row_dict.pop('CHARITER'),
-            'CIFSN': row_dict.pop('CIFSN'),
+            #'CHARITER': row_dict.pop('CHARITER'),
+            #'CIFSN': row_dict.pop('CIFSN'),
             'LOGRECNO': row_dict.pop('LOGRECNO')
         }
 
-        TKTK = """
-        db.geographies.find({ 
-            "xrefs": {
-                "$elemMatch": { 
-                    "FILEID": "uPL",
-                    "STUSAB": "IL",
-                    "CHARITER": "000",
-                    "CIFSN": "",
-                    "LOGRECNO": "0000001" }}})
-        """
-
         geography = collection.find_one(
-            '{ "xrefs": { "$elemMatch": %s } }' % xref)
+            { "xrefs": { "$elemMatch": xref } })
 
         if not geography:
-            print 'Unable to find geography for %s' % xref
             continue
 
         if year not in geography['data']:
@@ -54,8 +44,6 @@ with open('il000012000.csv') as f:
 
         collection.save(geography)
         inserts += 1
-
-        print 'Inserted xref!'
 
 print 'Row count: %i' % row_count
 print 'Inserted: %i' % inserts
