@@ -54,6 +54,8 @@ def data(request, slugs, extension):
             {
                 'extension': extension,
                 'reports': reports,
+                'csv_url': request.get_full_path().replace('.html','.csv'),
+                'json_url': request.get_full_path().replace('.html','.json'),
             },
             context_instance=RequestContext(request))
 
