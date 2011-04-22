@@ -127,10 +127,11 @@ class Statistic(object):
 
 class Report(object):
     """Encapsulate any number of StatsBundles (where are multiple places going?)"""
-    def __init__(self, state_code=None, county_fips=None, tract_id=None):
+    def __init__(self, slug, state_code=None, county_fips=None, tract_id=None):
         super(Report, self).__init__()
         self.bundles = []
 
+        self.slug = slug
         self.state_name = get_state_name(state_code)
         self.county_name = get_county_name(county_fips)
         self.tract_id = tract_id

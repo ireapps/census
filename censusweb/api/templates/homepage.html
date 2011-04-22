@@ -5,17 +5,7 @@
 
 {% block content %}
 
-<div id="filter-help" class="code hidden">
-    Start typing to filter&hellip;
-</div>
-
-<div id="filter-display" class="code hidden">
-    
-</div>
-
-<img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" />
-
-<div id="search"></div>
+{% include "_query_builder.html" %}
 
 <dl id="help" class="hidden">
     <!-- <dt>What is this?</dt>
@@ -38,9 +28,5 @@
         {% help_text "COUNTIES" %}
     <dd>
 </dl>
-
-{% include "_query_builder.html" %}
-
-<script src="{% build_media_url '/js/query.js' %}"></script>
 
 {% endblock %}
