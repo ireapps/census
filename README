@@ -1,0 +1,9 @@
+To bootstrap the web app:
+
+(Assumes you've got Python 2.6, the PostGIS stack, virtualenv and virtualenvwrapper. Installation instructions: http://blog.apps.chicagotribune.com/2010/02/17/quick-install-pythonpostgis-geo-stack-on-snow-leopard/):
+
+cd censusweb
+mkvirtualenv --no-site-packages censusweb
+pip install -r requirements.txt
+fab local_bootstrap
+./manage.py runserver
