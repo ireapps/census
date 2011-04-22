@@ -51,6 +51,10 @@ h1 {
 #logo {
 }
 
+nav {
+    margin:20px 0;
+}
+
 #help-link, #help {
     font-size: 16px;
     margin-top: 20px;
@@ -158,11 +162,8 @@ h1 {
             text-decoration:underline;
         }
 
-nav {
-    margin:20px 0;
-}
-.report .button.remove-report {
-    font-size: 15px;
-    float: right;
-    margin-right: 13px;
-}
+        .report .button.remove-report {
+            font-size: 15px;
+            float: right;
+            margin-right: 13px;
+        }
