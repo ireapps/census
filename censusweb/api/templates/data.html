@@ -3,6 +3,17 @@
 
 {% block content %}
 
+<span class="button more-data">Add another</span>
+<div class="query-builder-popup">
+  <div id="search"></div>
+</div>
+
+<script type="text/javascript">
+    $('.button.more-data').click(function(){
+        $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
+    });
+</script>
+
 <table class="reports">
     <tr>
         {% for report in reports %}
@@ -40,5 +51,7 @@
         {% endfor %}
     </tr>
 </table>
+
+{% include "_query_builder.html" %}
 
 {% endblock %}

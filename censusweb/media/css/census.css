@@ -159,3 +159,7 @@ h1 {
             cursor:pointer;
             text-decoration:underline;
         }
+
+.query-builder-popup {
+    display:none;
+}

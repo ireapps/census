@@ -1,19 +1,21 @@
 {% load helpertags %}
 <!DOCTYPE html>
 <html>
-<head>
-  <title>{% block title %}{% endblock %} - census.ire.org</title>
-  <link rel="stylesheet" href="{% build_media_url '/css/reset.css' %}" type="text/css" charset="utf-8"/>
-  <link rel="stylesheet" href="{% build_media_url '/css/census.css' %}" type="text/css" charset="utf-8"/>
-  <link rel="shortcut icon" href="{% build_media_url '/images/favicon.ico' %}" />
-  <script src="{% build_media_url '/js/jquery-1.5.2.min.js' %}"></script>
-  <script src="{% build_media_url '/js/underscore-1.1.5.js' %}"></script>
-  <script src="{% build_media_url '/js/backbone-0.3.3.min.js' %}"></script>
-</head>
-<body>
-  <div id="container">
-    <a href="/"><img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" /></a>
-    {% block content %}{% endblock %}
-  </div>
-</body>
+    <head>
+        <title>{% block title %}{% endblock %} - census.ire.org</title>
+        <link rel="stylesheet" href="{% build_media_url '/css/reset.css' %}" type="text/css" charset="utf-8"/>
+        <link rel="stylesheet" href="{% build_media_url '/css/census.css' %}" type="text/css" charset="utf-8"/>
+        <link rel="stylesheet" href="{% build_media_url '/css/Aristo/jquery-ui-1.8.7.custom.css' %}" type="text/css" charset="utf-8"/>
+        <link rel="shortcut icon" href="{% build_media_url '/images/favicon.ico' %}" />
+        <script src="{% build_media_url '/js/jquery-1.5.2.min.js' %}"></script>
+        <script src="{% build_media_url '/js/jquery-ui-1.8.11.custom.min.js' %}"></script>
+        <script src="{% build_media_url '/js/underscore-1.1.5.js' %}"></script>
+        <script src="{% build_media_url '/js/backbone-0.3.3.min.js' %}"></script>
+    </head>
+    <body>
+        <div id="container">
+            <a href="/"><img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" /></a>
+            {% block content %}{% endblock %}
+        </div>
+    </body>
 </html>
