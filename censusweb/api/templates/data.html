@@ -3,14 +3,29 @@
 
 {% block content %}
 
-<span class="button more-data">Add another</span>
+<div class="query-builder-buttons">
+    <span class="button more-data">Add another geography to compare</span>
+</div>
 <div class="query-builder-popup">
   <div id="search"></div>
 </div>
 
 <script type="text/javascript">
-    $('.button.more-data').click(function(){
-        $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
+    $(function(){
+        $('.button.more-data').click(function(){
+            $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
+        });
+        $('.button.remove-report').click(function(){
+            slug = $(this).attr('data-val');
+            newLocation = window.location.pathname.replace('/' + slug,'');
+            if (newLocation == '/data.html') {
+                //you've closed the last report, time to go home
+                window.location = '/';                
+            } else {
+                window.location = newLocation;
+            }
+
+        });
     });
 </script>
 
@@ -20,7 +35,10 @@
         <td>
             <table class="report">
                 <tr class="title">
-                    <th colspan="6">Tract #{{ report.tract_id }} - {{ report.county_name }}, {{ report.state_name }}</th>
+                    <th colspan="6">
+                        Tract #{{ report.tract_id }} - {{ report.county_name }}, {{ report.state_name }}
+                        <span class="button remove-report" data-val="{{ report.slug }}">X</span>
+                    </th>
                 </tr>
             {% for row in report %}
                 {% if row.header %}

@@ -21,7 +21,8 @@ def data(request, slugs, extension):
              "summarylevel": summarylevel,
              "state": state,
              "county": county,
-             "tract": tract
+             "tract": tract,
+             "slug": slug,
         })
         filename += "%s_" % slug
     filename = filename[:-1]
@@ -30,7 +31,7 @@ def data(request, slugs, extension):
     for summary in summaries:
         data = data_for_tract(summary["state"],summary["county"],summary["tract"])
         agesex = AgeSex(census2000=data[0])
-        report = Report(summary["state"], summary["county"], summary["tract"])
+        report = Report(summary["slug"], summary["state"], summary["county"], summary["tract"])
         report.add(agesex)
         reports.append(report)
 

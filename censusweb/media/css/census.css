@@ -163,3 +163,11 @@ h1 {
 .query-builder-popup {
     display:none;
 }
+.query-builder-buttons {
+    margin-bottom:20px;
+}
+.report .button.remove-report {
+    font-size: 15px;
+    float: right;
+    margin-right: 13px;
+}

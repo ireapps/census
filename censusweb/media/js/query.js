@@ -90,7 +90,7 @@ $(function(){
             var display = attrs[level + 'Display'] = el.text();
             this.currentLevel = level;
             this.set(attrs);
-            this.controller.saveLocation('query/' + this.location());
+            //this.controller.saveLocation('query/' + this.location());
         },
 
         loadNext: function() {
