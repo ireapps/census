@@ -49,7 +49,7 @@ def data(request, slugs, extension):
         return response
 
     else: #html
-        return render_to_response('tracts.html',
+        return render_to_response('data.html',
             {
                 'extension': extension,
                 'reports': reports,
