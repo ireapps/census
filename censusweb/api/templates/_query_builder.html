@@ -1,6 +1,5 @@
 {% load helpertags %}
 
-
 <nav>
     <div id="filter-help" class="code hidden">
         Start typing to filter&hellip;
@@ -12,6 +11,28 @@
 </nav>
 
 <div id="search"></div>
+
+<dl id="help" class="hidden">
+    <!-- <dt>What is this?</dt>
+    <dd>
+    </dd> -->
+    <dt>Census tracts</dt>
+    <dd>
+        {% help_text "TRACTS" %}
+    <dd>
+    <dt>Places</dt>
+    <dd>
+        {% help_text "PLACES" %}
+    <dd>
+    <dt>County subdivisions</dt>
+    <dd>
+        {% help_text "COUNTY SUBDIVISIONS" %} 
+    <dd>
+    <dt>Counties (parishes in LA)</dt>
+    <dd>
+        {% help_text "COUNTIES" %}
+    <dd>
+</dl>
 
 <script src="{% build_media_url '/js/query.js' %}"></script>
 
