@@ -1,35 +1,28 @@
 #!/usr/bin/env python
 
-import argparse
-
 from csvkit.unicsv import UnicodeCSVReader
 from pymongo import Connection
 
-def load_crosswalk(filename):
-    connection = Connection()
-    db = connection['census']
-    collection = db['crosswalk']
+import config
 
-    with open(filename) as f:
-        rows = UnicodeCSVReader(f)
-        headers = rows.next()
+connection = Connection()
+db = connection[config.CENSUS_DB] 
+collection = db[config.CROSSWALK_COLLECTION]
 
-        inserts = 0
-        row_count = 0
+with open(config.CROSSWALK_FILENAME) as f:
+    rows = UnicodeCSVReader(f)
+    headers = rows.next()
 
-        for row in rows:
-            row_count += 1
-            row_dict = dict(zip(headers, row))
+    inserts = 0
+    row_count = 0
 
-            collection.insert(row_dict)
-            inserts += 1
+    for row in rows:
+        row_count += 1
+        row_dict = dict(zip(headers, row))
 
-    print 'Row count: %i' % row_count
-    print 'Inserted: %i' % inserts
+        collection.insert(row_dict)
+        inserts += 1
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('filename')
-    args = parser.parse_args()
+print 'Row count: %i' % row_count
+print 'Inserted: %i' % inserts
 
-    load_crosswalk(args.filename)
