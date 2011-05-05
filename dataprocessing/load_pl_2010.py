@@ -6,13 +6,13 @@ from pymongo import Connection
 import config
 import utils
 
-YEAR = '2000'
+YEAR = '2010'
 
 connection = Connection()
 db = connection[config.CENSUS_DB] 
 collection = db[config.GEOGRAPHIES_COLLECTION]
 
-with open(config.PL_2000_FILENAME) as f:
+with open(config.PL_2010_FILENAME) as f:
     rows = UnicodeCSVReader(f)
     headers = rows.next()
 
