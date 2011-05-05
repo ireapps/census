@@ -10,8 +10,23 @@ collection = db['geographies']
 def geoid_state(r):
     return r['STATE']
 
+def geoid_county(r):
+    return r['STATE'] + r['COUNTY']
+
+def geoid_tract(r):
+    return r['STATE'] + r['COUNTY'] + r['TRACT']
+
+def geoid_place(r):
+    return r['STATE'] + r['PLACE']
+
+# TODO: Load all summary levels
 GEOID_COMPUTERS = {
+    #'000': geoid_nation,
     '040': geoid_state,
+    '050': geoid_county,
+    #'140': geoid_tract,
+    #'160': geoid_place,
+
 }
 
 inserts = 0
