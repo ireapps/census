@@ -33,9 +33,12 @@ for geography in collection.find():
                 parts = []
 
                 for g in geography_2000s:
-                    parts.append(int(float(g['data']['2000'][table][k]) * geography['xwalk'][g['geoid']]))
+                    value = float(g['data']['2000'][table][k])
+                    pct = geography['xwalk'][g['geoid']]
 
-                data[table][k] = sum(parts)
+                    parts.append(value * pct)
+
+                data[table][k] = int(sum(parts))
 
         geography['data']['2000'] = data
     # OTHER SUMLEVS - can be directly compared by geoid
