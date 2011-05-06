@@ -20,11 +20,10 @@ GEOGRAPHIES_2010_FILENAME = 'data/ilgeo2010.csv'
 PL_2010_FILENAME = 'data/il000012010.csv'
 
 # Crosswalk
-CROSSWALK_FILENAME = 'data/us2010.trf.csv'
+CROSSWALK_FILENAME = 'data/us2010trf.csv'
 
 # Mongo
 CENSUS_DB = 'census'
 GEOGRAPHIES_COLLECTION = 'geographies'
 GEOGRAPHIES_2000_COLLECTION = 'geographies_2000'
-CROSSWALK_COLLECTION = 'crosswalk'
 

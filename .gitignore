@@ -4,3 +4,4 @@ censusweb/censusweb
 .DS_Store
 raw
 dataprocessing/data
+*.swp
