@@ -22,7 +22,7 @@ with open(config.CROSSWALK_FILENAME) as f:
         
         geography = collection.find_one({ 'geoid': row_dict['GEOID10'] })
 
-        # TODO: this algorithm sourced from
+        # TODO: this algorithm sourced from notes at:
         # http://lists.reporter.org/IRE/lists/CENSUS-L/2011-02/msg00057.html
         # BUT NOT TESTED!
         pct_land_2010 = float(row_dict['AREALANDPCT10PT'])
