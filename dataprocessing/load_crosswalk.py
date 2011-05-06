@@ -22,6 +22,9 @@ with open(config.CROSSWALK_FILENAME) as f:
         
         geography = collection.find_one({ 'geoid': row_dict['GEOID10'] })
 
+        if not geography:
+            continue
+
         # TODO: this algorithm sourced from notes at:
         # http://lists.reporter.org/IRE/lists/CENSUS-L/2011-02/msg00057.html
         # BUT NOT TESTED!
@@ -34,15 +37,12 @@ with open(config.CROSSWALK_FILENAME) as f:
         else:
             pct_to_include = (pct_land_2010 * total_land_2010) / total_land_2000
 
-        if not geography:
-            continue
-
         if 'xwalk' not in geography:
             geography['xwalk'] = {} 
 
         geography['xwalk'][row_dict['GEOID10']] = pct_to_include
 
-        geography.save() 
+        collection.save(geography) 
         inserts += 1
 
 print 'Row count: %i' % row_count
