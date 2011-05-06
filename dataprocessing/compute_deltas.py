@@ -28,16 +28,16 @@ for geography in collection.find():
         if table not in geography['data']['delta']:
             geography['data']['delta'][table] = {}
         
-        #if table not in geography['data']['pct_change']:
-        geography['data']['pct_change'][table] = {}
+        if table not in geography['data']['pct_change']:
+            geography['data']['pct_change'][table] = {}
 
         for k, v in geography['data']['2010'][table].items():
             # Skip data not in both tables (added since 2000)
             if k not in geography['data']['2000'][table]:
                 continue
 
-            value_2010 = int(v)
-            value_2000 = int(geography['data']['2000'][table][k])
+            value_2010 = v
+            value_2000 = geography['data']['2000'][table][k]
 
             if value_2000 == 0:
                 continue

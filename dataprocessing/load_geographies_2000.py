@@ -27,6 +27,7 @@ with open(config.GEOGRAPHIES_2000_FILENAME) as f:
             #'metadata': {},
             #'xrefs': [],
             #'data': {}
+            #'xwalk': {}
             #'shape': ''     # TODO
         }
         row_dict = dict(zip(headers, row))

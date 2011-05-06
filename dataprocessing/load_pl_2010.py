@@ -41,7 +41,7 @@ with open(config.PL_2010_FILENAME) as f:
             if t not in tables:
                 tables[t] = {}
 
-            tables[t][k] = v
+            tables[t][k] = int(v)
 
         for k, v in tables.items():
             geography['data'][YEAR][k] = v 
