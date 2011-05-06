@@ -25,9 +25,6 @@ with open(config.CROSSWALK_FILENAME) as f:
         if not geography:
             continue
 
-        # TODO: this algorithm sourced from notes at:
-        # http://lists.reporter.org/IRE/lists/CENSUS-L/2011-02/msg00057.html
-        # BUT NOT TESTED!
         pop_pct_2000 = float(row_dict['POPPCT00']) / 100
 
         if 'xwalk' not in geography:
