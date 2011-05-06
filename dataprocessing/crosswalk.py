@@ -3,7 +3,6 @@
 from pymongo import Connection
 
 import config
-import utils
 
 connection = Connection()
 db = connection[config.CENSUS_DB]
