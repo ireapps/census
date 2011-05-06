@@ -28,19 +28,17 @@ with open(config.CROSSWALK_FILENAME) as f:
         # TODO: this algorithm sourced from notes at:
         # http://lists.reporter.org/IRE/lists/CENSUS-L/2011-02/msg00057.html
         # BUT NOT TESTED!
-        pct_land_2010 = float(row_dict['AREALANDPCT10PT'])
-        total_land_2010 = float(row_dict['AREALAND10'])
-        total_land_2000 = float(row_dict['AREALAND00'])
+        pop_pct_2000 = float(row_dict['POPPCT00'])
 
-        if total_land_2000 == 0:
-            pct_to_include = 1.0
-        else:
-            pct_to_include = (pct_land_2010 * total_land_2010) / total_land_2000
+        if pop_pct_2000 == 0:
+            continue
 
         if 'xwalk' not in geography:
             geography['xwalk'] = {} 
+        else:
+            print row_dict['GEOID10']
 
-        geography['xwalk'][row_dict['GEOID00']] = pct_to_include
+        geography['xwalk'][row_dict['GEOID00']] = pop_pct_2000
 
         collection.save(geography) 
         inserts += 1
