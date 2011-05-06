@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 
-SUMLEV_NATION = '010'
-SUMLEV_STATE = '040'
-SUMLEV_COUNTY = '050'
-SUMLEV_TRACT = '140'
-SUMLEV_PLACE = '160'
+import config
 
 def geoid_nation(r):
     # TODO
@@ -23,11 +19,11 @@ def geoid_place(r):
     return r['STATE'] + r['PLACE']
 
 GEOID_COMPUTERS = {
-    SUMLEV_NATION: geoid_nation,
-    SUMLEV_STATE: geoid_state,
-    SUMLEV_COUNTY: geoid_county,
-    SUMLEV_TRACT: geoid_tract,
-    SUMLEV_PLACE: geoid_place,
+    config.SUMLEV_NATION: geoid_nation,
+    config.SUMLEV_STATE: geoid_state,
+    config.SUMLEV_COUNTY: geoid_county,
+    config.SUMLEV_TRACT: geoid_tract,
+    config.SUMLEV_PLACE: geoid_place,
 }
 
 def find_geography_by_xref(collection, xref):
