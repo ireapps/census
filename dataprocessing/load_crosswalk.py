@@ -38,12 +38,9 @@ with open(config.CROSSWALK_FILENAME) as f:
             continue
 
         if 'xwalk' not in geography:
-            geography['xwalk'] = []
+            geography['xwalk'] = {} 
 
-        geography['xwalk'].append({
-            'geoid10': row_dict['GEOID10'],
-            'pct': pct_to_include
-            })
+        geography['xwalk'][row_dict['GEOID10']] = pct_to_include
 
         geography.save() 
         inserts += 1

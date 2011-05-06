@@ -27,7 +27,10 @@ GEOID_COMPUTERS = {
 }
 
 def find_geography_by_xref(collection, xref):
-    return collection.find_one({ "xrefs": { "$elemMatch": xref } })
+    return collection.find_one({ 'xrefs': { '$elemMatch': xref } })
+
+def find_geographies_for_xwalk(collection, geography):
+    return collection.find({ 'geoid': { '$in': geography['xwalk'].keys() } })
 
 def xref_from_row_dict(d):
     # Strip off unncessary attrs
