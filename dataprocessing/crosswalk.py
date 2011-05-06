@@ -18,7 +18,11 @@ for geography in collection.find():
 
     # TRACTS - require true crosswalk
     if geography['sumlev'] == config.SUMLEV_TRACT:
-        geography_2000s = utils.find_geographies_for_xwalk(collection_2000, geography)
+        geography_2000s = list(utils.find_geographies_for_xwalk(collection_2000, geography))
+
+        # Tract is new
+        if not geography_2000s:
+            continue
 
         data = {}
 
@@ -29,7 +33,7 @@ for geography in collection.find():
                 parts = []
 
                 for g in geography_2000s:
-                    parts.append(g['data']['2000'][table][k] * geography['xwalk'][g['geoid']])
+                    parts.append(int(float(g['data']['2000'][table][k]) * geography['xwalk'][g['geoid']]))
 
                 data[table][k] = sum(parts)
 

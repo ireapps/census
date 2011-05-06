@@ -7,7 +7,7 @@ import config
 
 connection = Connection()
 db = connection[config.CENSUS_DB] 
-collection = db[config.GEOGRAPHIES_2000_COLLECTION]
+collection = db[config.GEOGRAPHIES_COLLECTION]
 
 with open(config.CROSSWALK_FILENAME) as f:
     rows = UnicodeCSVReader(f)
@@ -40,7 +40,7 @@ with open(config.CROSSWALK_FILENAME) as f:
         if 'xwalk' not in geography:
             geography['xwalk'] = {} 
 
-        geography['xwalk'][row_dict['GEOID10']] = pct_to_include
+        geography['xwalk'][row_dict['GEOID00']] = pct_to_include
 
         collection.save(geography) 
         inserts += 1
