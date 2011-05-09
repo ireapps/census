@@ -15,6 +15,7 @@ unzip ilgeo.upl.zip
 
 wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/0File_Structure/Access2000/PL2000_Access2000.mdb
 mdb-export PL2000_Access2000.mdb PL_Part1 > PL2000_Part1.csv
+mdb-export PL2000_Access2000.mdb tables > PL2000_tables.csv
 
 rm il000012000.csv
 cat PL2000_Part1.csv > il000012000.csv
@@ -28,6 +29,7 @@ unzip il2010.pl.zip
 
 wget http://www2.census.gov/census_2010/redistricting_file--pl_94-171/PL2010_Access2003.mdb
 mdb-export PL2010_Access2003.mdb PL_Part1 >> PL2010_Part1.csv
+mdb-export PL2010_Access2003.mdb Table > PL2010_Table.csv
 
 rm il000012010.csv
 cat PL2010_Part1.csv > il000012010.csv
