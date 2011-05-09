@@ -12,7 +12,7 @@ connection = Connection()
 db = connection[config.CENSUS_DB] 
 collection = db[config.GEOGRAPHIES_COLLECTION]
 
-with open(config.PL_2010_DATA_FILENAME) as f:
+with open(config.DPSF_2010_DATA_FILENAME) as f:
     rows = UnicodeCSVReader(f)
     headers = rows.next()
 
@@ -36,12 +36,15 @@ with open(config.PL_2010_DATA_FILENAME) as f:
         tables = {}
 
         for k, v in row_dict.items():
-            t = 'PL' + k[3]
-
+            t = 'DPSF' + str(int(k[5:7]))
+    
             if t not in tables:
                 tables[t] = {}
 
-            tables[t][k] = int(v)
+            try:
+                tables[t][k] = int(v)
+            except ValueError:
+                tables[t][k] = float(v)
 
         for k, v in tables.items():
             geography['data'][YEAR][k] = v 
@@ -51,4 +54,5 @@ with open(config.PL_2010_DATA_FILENAME) as f:
 
 print 'Row count: %i' % row_count
 print 'Inserted: %i' % inserts
+
 

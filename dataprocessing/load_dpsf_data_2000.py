@@ -6,13 +6,13 @@ from pymongo import Connection
 import config
 import utils
 
-YEAR = '2010'
+YEAR = '2000'
 
 connection = Connection()
 db = connection[config.CENSUS_DB] 
 collection = db[config.GEOGRAPHIES_COLLECTION]
 
-with open(config.PL_2010_DATA_FILENAME) as f:
+with open(config.DPSF_2000_DATA_FILENAME) as f:
     rows = UnicodeCSVReader(f)
     headers = rows.next()
 
@@ -23,9 +23,12 @@ with open(config.PL_2010_DATA_FILENAME) as f:
         row_count += 1
         row_dict = dict(zip(headers, row))
 
-        xref = utils.xref_from_row_dict(row_dict)
+        if row_dict['SUMLEV'] not in utils.GEOID_COMPUTERS:
+            continue
 
-        geography = utils.find_geography_by_xref(collection, xref) 
+        geoid = utils.GEOID_COMPUTERS[row_dict['SUMLEV']](row_dict)
+
+        geography = collection.find_one({ 'geoid': geoid }) 
 
         if not geography:
             continue
@@ -33,15 +36,16 @@ with open(config.PL_2010_DATA_FILENAME) as f:
         if YEAR not in geography['data']:
             geography['data'][YEAR] = {}
 
-        tables = {}
+        tables = {'DP1': {}}
+
+        for k in ['RECTYP','SUMLEV','GEOCOMP','STATE','COUNTY','COUSUB','PLACE','CONCIT','MSACMSA','PMSA','AIANHH','ANRC','CD106','FUNCSTAT','AREANAME']:
+            row_dict.pop(k)
 
         for k, v in row_dict.items():
-            t = 'PL' + k[3]
-
-            if t not in tables:
-                tables[t] = {}
-
-            tables[t][k] = int(v)
+            try:
+                tables['DP1'][k] = int(v)
+            except ValueError:
+                tables['DP1'][k] = float(v)
 
         for k, v in tables.items():
             geography['data'][YEAR][k] = v 
@@ -51,4 +55,5 @@ with open(config.PL_2010_DATA_FILENAME) as f:
 
 print 'Row count: %i' % row_count
 print 'Inserted: %i' % inserts
+
 

@@ -35,7 +35,16 @@ cat il000012010.pl >> il000012010.csv
 
 in2csv -f fixed -s ../census2010_geo_schema.csv ilgeo2010.pl > ilgeo2010.csv
 
-# 2010 - Rhode Island - DP1
+# 2000 - Rhode Island - DPSF
+
+wget http://www2.census.gov/census_2000/datasets/demographic_profile/Rhode_Island/2kh44.zip
+unzip 2kh44.zip
+
+rm ri000012000.csv
+echo "RECTYP,SUMLEV,GEOCOMP,STATE,COUNTY,COUSUB,PLACE,CONCIT,MSACMSA,PMSA,AIANHH,ANRC,CD106,FUNCSTAT,AREANAME,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V15,V16,V17,V18,V19,V20,V21,V22,V23,V24,V25,V26,V27,V28,V29,V30,V31,V32,V33,V34,V35,V36,V37,V38,V39,V40,V41,V42,V43,V44,V45,V46,V47,V48,V49,V50,V51,V52,V53,V54,V55,V56,V57,V58,V59,V60,V61,V62,V63,V64,V65,V66,V67,V68,V69,V70,V71,V72,V73,V74,V75,V76,V77,V78,V79,V80,V81,V82,V83,V84,V85,V86,V87,V88,V89,V90,V91,V92,V93,V94,V95,V96" > ri000012000.csv
+cat 2kh44.csv >> ri000012000.csv
+
+# 2010 - Rhode Island - DPSF
 
 wget http://www2.census.gov/census_2010/03-Demographic_Profile/Rhode_Island/ri2010.dp.zip
 unzip ri2010.dp.zip
