@@ -6,7 +6,7 @@ rm -r data
 mkdir data
 cd data
 
-# 2000
+# 2000 - Illinois - PL1 and PL2
 wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/Illinois/il00001.upl.zip
 unzip il00001.upl.zip
 
@@ -15,7 +15,6 @@ unzip ilgeo.upl.zip
 
 wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/0File_Structure/Access2000/PL2000_Access2000.mdb
 mdb-export PL2000_Access2000.mdb PL_Part1 > PL2000_Part1.csv
-mdb-export PL2000_Access2000.mdb PL_Geo_Header > PL2000_Geo_Header.csv
 
 rm il000012000.csv
 cat PL2000_Part1.csv > il000012000.csv
@@ -23,19 +22,33 @@ cat il00001.upl >> il000012000.csv
 
 in2csv -f fixed -s ../census2000_geo_schema.csv ilgeo.upl > ilgeo2000.csv
 
-# 2010
+# 2010 - Illinois - PL1 and PL2
 wget http://www2.census.gov/census_2010/redistricting_file--pl_94-171/Illinois/il2010.pl.zip
 unzip il2010.pl.zip
 
 wget http://www2.census.gov/census_2010/redistricting_file--pl_94-171/PL2010_Access2003.mdb
 mdb-export PL2010_Access2003.mdb PL_Part1 >> PL2010_Part1.csv
-mdb-export PL2010_Access2003.mdb PL_Geo_Header >> PL2010_Geo_Header.csv
 
 rm il000012010.csv
 cat PL2010_Part1.csv > il000012010.csv
 cat il000012010.pl >> il000012010.csv
 
 in2csv -f fixed -s ../census2010_geo_schema.csv ilgeo2010.pl > ilgeo2010.csv
+
+# 2010 - Rhode Island - DP1
+
+wget http://www2.census.gov/census_2010/03-Demographic_Profile/Rhode_Island/ri2010.dp.zip
+unzip ri2010.dp.zip
+
+wget http://www2.census.gov/census_2010/03-Demographic_Profile/DPSF2010_Access2003.mdb
+mdb-export DPSF2010_Access2003.mdb Part1 > DPSF2010_Part1.csv
+mdb-export DPSF2010_Access2003.mdb Geo_Header > DPSF2010_Geo_Header.csv
+
+rm ri000012010.csv
+cat DPSF2010_Part1.csv > ri000012010.csv
+cat ri000012010.dp >> ri000012010.csv
+
+in2csv -f fixed -s ../census2010_geo_schema.csv rigeo2010.dp > rigeo2010.csv
 
 # Crosswalk
 

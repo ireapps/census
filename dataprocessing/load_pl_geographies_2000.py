@@ -10,7 +10,7 @@ connection = Connection()
 db = connection[config.CENSUS_DB]
 collection = db[config.GEOGRAPHIES_2000_COLLECTION]
 
-with open(config.GEOGRAPHIES_2000_FILENAME) as f:
+with open(config.PL_2000_GEOGRAPHIES_FILENAME) as f:
     rows = UnicodeCSVReader(f)
     headers = rows.next()
 
