@@ -2,7 +2,8 @@
 
 # See batch.sh for notes.
 
-# echo "use census; db.dropDatabase();" | mongo
+echo "use census; 
+db.dropDatabase();" | mongo
 
 ./fetch_test_data.sh
 
@@ -20,3 +21,5 @@
 
 ./crosswalk.py
 ./compute_deltas.py
+
+./tests.py
