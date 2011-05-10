@@ -51,6 +51,9 @@ with open(config.PL_2010_LABELS_FILENAME) as f:
                     'universe': '',
                     'labels': {}
                 }
+                
+                # Remove existing table
+                collection.remove({ 'key': table['key'], 'year': table['year'] })
 
                 hierarchy = []
                 last_key = ''
@@ -60,7 +63,9 @@ with open(config.PL_2010_LABELS_FILENAME) as f:
 
             # Universe definition
             if text.startswith('Universe'):
-                table['universe'] = text
+                match = re.match('^Universe:\s+(.*)', text)
+
+                table['universe'] = match.group(1) 
 
                 continue
 

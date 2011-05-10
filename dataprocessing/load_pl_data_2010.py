@@ -36,7 +36,7 @@ with open(config.PL_2010_DATA_FILENAME) as f:
         tables = {}
 
         for k, v in row_dict.items():
-            t = 'PL' + k[3]
+            t = 'P' + k[3]
 
             if t not in tables:
                 tables[t] = {}
