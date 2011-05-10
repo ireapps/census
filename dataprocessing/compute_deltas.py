@@ -20,6 +20,10 @@ for geography in collection.find():
     if 'pct_change' not in geography['data']:
         geography['data']['pct_change'] = {}
 
+    # Skip geographies which did not have data in 2000 (e.g. newly established places)
+    if '2000' not in geography['data']:
+        continue
+
     for table in geography['data']['2010']:
         # Skip tables not in both years
         if table not in geography['data']['2000']:

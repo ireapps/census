@@ -43,7 +43,7 @@ with open(FILENAME) as f:
         tables = {}
 
         for k, v in row_dict.items():
-            t = 'PL' + k[3]
+            t = k[0] + k[3]
 
             if t not in tables:
                 tables[t] = {}

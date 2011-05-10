@@ -48,6 +48,8 @@ for geography in collection.find():
         if not geography_2000:
             print 'Couldn\'t find matching 2000 geography for %s (%s)' % (geography['metadata']['NAME'], geography['geoid'])
 
+            continue
+
         geography['data']['2000'] = geography_2000['data']['2000']
 
     collection.save(geography)

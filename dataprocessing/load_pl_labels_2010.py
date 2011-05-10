@@ -99,6 +99,8 @@ with open(FILENAME) as f:
             'parent': parent
         }
 
+        inserts += 1
+
         last_key = key
 
     # Save final table
