@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 
 import re
+import sys
 
 from csvkit.unicsv import UnicodeCSVReader
 from pymongo import Connection
 
 import config
+
+if len(sys.argv) < 2:
+    sys.exit('You must provide the filename of a CSV as an argument to this script.')
+
+FILENAME = sys.argv[1]
 
 YEAR = '2010'
 
@@ -13,7 +19,7 @@ connection = Connection()
 db = connection[config.CENSUS_DB]
 collection = db[config.LABELS_COLLECTION]
 
-with open(config.PL_2010_LABELS_FILENAME) as f:
+with open(FILENAME) as f:
     rows = UnicodeCSVReader(f)
     headers = rows.next()
 
