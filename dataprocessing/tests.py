@@ -26,6 +26,12 @@ class TestSimpleGeographies(unittest.TestCase):
         self.assertEqual(state['sumlev'], '040')
         self.assertEqual(state['metadata']['NAME'], 'Delaware')
 
+        # TODO:
+        # Test that an arbitrary value in 2000 is correct
+        # Test that the same value in 2010 is correct
+        # Test that the same value has a correct delta
+        # Test that the same value has a correct pct_change
+
     def test_county(self):
         # TODO
         pass
