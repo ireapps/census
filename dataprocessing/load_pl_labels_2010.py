@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
+import re
+
 from csvkit.unicsv import UnicodeCSVReader
 from pymongo import Connection
 
 import config
-import utils
+
+YEAR = '2010'
 
 connection = Connection()
 db = connection[config.CENSUS_DB]
@@ -17,22 +20,78 @@ with open(config.PL_2010_LABELS_FILENAME) as f:
     inserts = 0
     row_count = 0
 
+    table = None 
+    hierarchy = []
+    last_key = ''
+    last_indent = 0
+
     for row in rows:
         row_count += 1
 
-        text, key, table = row
+        text, key, table_id = row
 
-        # Skip empty rows and table headers
         if not key.strip():
-            continue
+            # Skip empty spacer lines
+            if not text.strip():
+                continue
+            
+            # Table name row
+            if re.match('^[A-Z]+[0-9]+.\s+', text):
+                # Save previous table
+                if table:
+                    collection.save(table)
 
-        whitespace = 0
+                match = re.match('^([A-Z]+[0-9]+).\s+(.*?)\s+\[([0-9]+)\]', text)
 
-        while text[whitespace] == ' ':
-            whitespace += 1
+                table = {
+                    'name': match.group(2),
+                    'key': match.group(1),
+                    'year': '2010', 
+                    'size': int(match.group(3)),
+                    'universe': '',
+                    'labels': {}
+                }
 
-        print whitespace
+                hierarchy = []
+                last_key = ''
+                last_indent = 0
 
+                continue
+
+            # Universe definition
+            if text.startswith('Universe'):
+                table['universe'] = text
+
+                continue
+
+        whitespace_count = 0
+
+        while text[whitespace_count] == ' ':
+            whitespace_count += 1
+
+        # Census uses 2-space indents to denote hierarchy
+        indent = whitespace_count / 2
+
+        if indent > last_indent:
+            hierarchy.append(last_key)
+        elif indent < last_indent:
+            hierarchy.pop()
+
+        if hierarchy:
+            parent = hierarchy[-1]
+        else:
+            parent = None
+
+        table['labels'][key] = {
+            'text': text.strip().strip(':'),
+            'indent': indent,
+            'parent': parent
+        }
+
+        last_key = key
+
+    # Save final table
+    collection.save(table)
 
 print 'Row count: %i' % row_count
 print 'Inserted: %i' % inserts
