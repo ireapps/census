@@ -1,15 +1,12 @@
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core import serializers
-from django.shortcuts import get_object_or_404, render_to_response
-from django.template import RequestContext
-
 import simplejson
 import csv
-import re
+
+from django.http import HttpResponse
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 import help_text
-from models import data_for_tract, get_counties_by_state, get_places_by_state, get_subdivisions_by_county, get_tracts_by_county, get_state_name, get_county_name
-from statmodels import AgeSex, Report
+import mongoutils
 
 def data(request, slugs, extension):
 
@@ -77,17 +74,17 @@ def homepage(request):
     context_instance=RequestContext(request))
 
 def counties_for_state(request, state=""):
-    counties = get_counties_by_state(state)
+    counties = mongoutils.get_counties_by_state(state)
     return HttpResponse(simplejson.dumps(counties), mimetype='application/json')
 
 def places_for_state(request, state=""):
-    places = get_places_by_state(state)
+    places = mongoutils.get_places_by_state(state)
     return HttpResponse(simplejson.dumps(places), mimetype='application/json')
 
 def subdivisions_for_county(request, county=""):
-    subdivisions = get_subdivisions_by_county(county)
+    subdivisions = mongoutils.get_subdivisions_by_county(county)
     return HttpResponse(simplejson.dumps(subdivisions), mimetype='application/json')
 
 def tracts_for_county(request, county=""):
-    tracts = get_tracts_by_county(county)
+    tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')

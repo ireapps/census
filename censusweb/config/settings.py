@@ -121,6 +121,12 @@ CACHE_MIDDLEWARE_KEY_PREFIX='censusweb'
 CACHE_MIDDLEWARE_SECONDS=90 * 60 # 90 minutes
 CACHE_BACKEND="dummy:///"
 
+# Site configuration
+CENSUS_DB = 'census'
+GEOGRAPHIES_COLLECTION = 'geographies'
+GEOGRAPHIES_2000_COLLECTION = 'geographies_2000'
+LABELS_COLLECTION = 'labels'
+
 # Logging
 logging.basicConfig(
     level=logging.DEBUG,
