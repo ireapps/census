@@ -29,10 +29,6 @@ urlpatterns = patterns('',
     #/internal/places_for_state/IL.json
     (r'^internal/places_for_state/(?P<state>[A-Z]{2}).json$', views.places_for_state),
 
-    # Subdivisions for a given county.
-    #/internal/subdivisions_for_county/20193.json
-    (r'^internal/subdivisions_for_county/(?P<county>\d{5}).json$', views.subdivisions_for_county),
-
     # Tracts for a given county.
     #/internal/tracts_for_county/10101.json
     (r'^internal/tracts_for_county/(?P<county>\d{5}).json$', views.tracts_for_county),

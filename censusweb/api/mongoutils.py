@@ -69,20 +69,32 @@ def get_geographies():
     db = connection[settings.CENSUS_DB] 
     return db[settings.GEOGRAPHIES_COLLECTION]
 
-def state_fips_for_alpha(state_code):
-    # TODO
-    cursor = connection.cursor()
-    cursor.execute("SELECT distinct state_fips from county_lookup where state_code = %s",[state_code])
-    row = cursor.fetchone()
-    return row[0]
-    
-def clean_state(state):
-    # TODO
-    if not state.isdigit():
-        state = state_fips_for_alpha(state)
-    return state
+def get_counties_by_state(state):
+    geographies = get_geographies()
+
+    counties = geographies.find({ 'metadata.STATE': FIPS_CODES[state], 'sumlev': SUMLEV_COUNTY }, fields=['metadata.STATE', 'metadata.COUNTY', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
+
+    return [(c['metadata']['NAME'], c['metadata']['COUNTY'], c['metadata']['STATE']) for c in counties] 
+
+def get_places_by_state(state):
+    geographies = get_geographies()
+
+    places = geographies.find({ 'metadata.STATE': FIPS_CODES[state], 'sumlev': SUMLEV_PLACE }, fields=['metadata.STATE', 'metadata.PLACE', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
+
+    return [(p['metadata']['NAME'], p['metadata']['STATE'] + p['metadata']['PLACE']) for p in places] 
+
+def get_tracts_by_county(fips):
+    state_fips  = fips[0:2]
+    county_fips = fips[2:]
+
+    geographies = get_geographies()
+
+    tracts = geographies.find({ 'metadata.STATE': state_fips, 'metadata.COUNTY': county_fips, 'sumlev': SUMLEV_TRACT }, fields=['metadata.NAME', 'metadata.TRACT'], sort=[('metadata.NAME', ASCENDING)])
+
+    return [(t['metadata']['NAME'], t['metadata']['TRACT']) for t in tracts] 
 
 def data_for_tract(state, county, tract):
+    # TODO
     #geographies = get_geographies()
 
     #geographies.find({ 'metadata.state':  
@@ -107,46 +119,4 @@ def data_for_tract(state, county, tract):
     for row in cursor.fetchall():
         results.append(dict((desc[0], value) for desc, value in zip(cursor.description, row)))
     return results
-
-def get_counties_by_state(state):
-    geographies = get_geographies()
-
-    counties = geographies.find({ 'metadata.STATE': FIPS_CODES[state], 'sumlev': SUMLEV_COUNTY }, fields=['metadata.STATE', 'metadata.COUNTY', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
-
-    return [(c['metadata']['NAME'], c['metadata']['COUNTY'], c['metadata']['STATE']) for c in counties] 
-
-def get_places_by_state(state):
-    return get_rows('SELECT place_name, geo_id from place_lookup where state_code = %s order by place_name asc', [state])
-
-def get_subdivisions_by_county(fips):
-    state_fips  = fips[0:2]
-    county_fips = fips[2:]
-
-    return get_rows('SELECT county_subdivision_name, geo_id from county_subdivision_lookup where state_fips = %s and county_fips = %s order by county_subdivision_name asc', [state_fips, county_fips])
-
-def get_tracts_by_county(fips):
-    state_fips  = fips[0:2]
-    county_fips = fips[2:]
-
-    geographies = get_geographies()
-
-    tracts = geographies.find({ 'metadata.STATE': state_fips, 'metadata.COUNTY': county_fips, 'sumlev': SUMLEV_TRACT }, fields=['metadata.NAME', 'metadata.TRACT'], sort=[('metadata.NAME', ASCENDING)])
-
-    return [(t['metadata']['NAME'], t['metadata']['TRACT']) for t in tracts] 
-
-    #return get_rows('SELECT name, tract from tract_data where state_fips = %s and county_fips = %s order by name asc', [state_fips, county_fips])
-
-def get_rows(query, data):
-    results = []
-    cursor = connection.cursor()
-    cursor.execute(query, data)
-    for row in cursor.fetchall():
-        results.append(row)
-    return results
-    
-def get_county_name(county_fips):
-    cursor = connection.cursor()
-    cursor.execute("SELECT county_name from county_lookup where county_fips = %s",[county_fips])
-    row = cursor.fetchone()
-    return row[0]
 

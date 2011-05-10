@@ -81,10 +81,6 @@ def places_for_state(request, state=""):
     places = mongoutils.get_places_by_state(state)
     return HttpResponse(simplejson.dumps(places), mimetype='application/json')
 
-def subdivisions_for_county(request, county=""):
-    subdivisions = mongoutils.get_subdivisions_by_county(county)
-    return HttpResponse(simplejson.dumps(subdivisions), mimetype='application/json')
-
 def tracts_for_county(request, county=""):
     tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
