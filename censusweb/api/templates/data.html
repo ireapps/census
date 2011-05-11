@@ -26,9 +26,7 @@
     <tr>
         <th rowspan="2">{{ r.table }}</th>
         {% for c in r.columns %}
-        <th colspan="4">
-            {{ c }} 
-        </th>
+        <th colspan="4">{{ c }}</th>
         {% endfor %}
     <tr>
         {% for c in r.columns %}
