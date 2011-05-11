@@ -31,7 +31,6 @@ def data(request, geoids, extension):
     geographies = []
 
     for geoid in geoids.split('/'):
-        print geoid
         geographies.append(mongoutils.get_geography(geoid))
 
     tables = []
@@ -48,7 +47,7 @@ def data(request, geoids, extension):
 
         report = {
             'year': '2010',
-            'table': t,
+            'table': t + ". " + labels['name'],
             'columns': [],
             'rows': [],
         }
