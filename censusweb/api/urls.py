@@ -10,23 +10,18 @@ urlpatterns = patterns('',
     (r'^$', views.homepage),
 
     # Data
-    #/data/tract-AL-003-010100.html
-    #/data/state-AL.html
-    #/data/tract-AL-003-010100/tract-AL-003-010120/state-AL.html
+    #/data/10.html
+    #/data/10001.html
+    #/data/10001041500.html
+    #/data/10/10001/10001041500.html
     (r'^data/(?P<geoids>(/?\d+)+)\.(?P<extension>json|csv|html)$', views.data),
 
-    # Tracts
-    #/tracts/IL.json
-    #/tracts/IL/123.json
-    #/tracts/IL/123/12345.json
-    # (r'^tracts/(?P<state>[A-Z]{2})(/(?P<county>\d{3}))?(/(?P<tract>\d{6}))?\.(?P<extension>json|csv|html)$', views.tracts),
-
     # County codes for states.
-    #/internal/counties_for_state/CA.json
+    #/internal/counties_for_state/10.json
     (r'^internal/counties_for_state/(?P<state>\d{2}).json$', views.counties_for_state),
 
     # Place names for states.
-    #/internal/places_for_state/IL.json
+    #/internal/places_for_state/10.json
     (r'^internal/places_for_state/(?P<state>\d{2}).json$', views.places_for_state),
 
     # Tracts for a given county.

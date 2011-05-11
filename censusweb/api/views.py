@@ -1,10 +1,10 @@
 import simplejson
-import csv
 
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+import constants
 import help_text
 import mongoutils
 
@@ -15,22 +15,22 @@ def homepage(request):
     },
     context_instance=RequestContext(request))
 
-def counties_for_state(request, state=""):
+def counties_for_state(request, state=''):
     counties = mongoutils.get_counties_by_state(state)
     return HttpResponse(simplejson.dumps(counties), mimetype='application/json')
 
-def places_for_state(request, state=""):
+def places_for_state(request, state=''):
     places = mongoutils.get_places_by_state(state)
     return HttpResponse(simplejson.dumps(places), mimetype='application/json')
 
-def tracts_for_county(request, county=""):
+def tracts_for_county(request, county=''):
     tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
 
 def data(request, geoids, extension):
     geographies = []
 
-    for geoid in geoids.split("/"):
+    for geoid in geoids.split('/'):
         print geoid
         geographies.append(mongoutils.get_geography(geoid))
 
@@ -73,16 +73,18 @@ def data(request, geoids, extension):
             report['rows'].append((label, data))
 
         for g in geographies:
-            report['columns'].append({
-                'tract': g['metadata']['TRACT'],
-                'county': g['metadata']['COUNTY'],
-                'state': g['metadata']['STATE']
-            })
+            c = g['metadata']['NAME']
+
+            if g['sumlev'] in [constants.SUMLEV_COUNTY, constants.SUMLEV_PLACE, constants.SUMLEV_TRACT]:
+                c += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
+
+            report['columns'].append(c)
 
         reports.append(report)
 
     return render_to_response('data.html',
         {
+            'constants': constants,
             'reports': reports,
             'csv_url': request.get_full_path().replace('.html','.csv'),
             'json_url': request.get_full_path().replace('.html','.json'),

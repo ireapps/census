@@ -6,7 +6,7 @@ SUMLEV_COUNTY = '050'
 SUMLEV_TRACT = '140'
 SUMLEV_PLACE = '160'
 
-STATE_FIPS_CODES = {
+STATE_TO_FIPS_CODES = {
     'AK': '02',
     'AR': '05',
     'AZ': '04',
@@ -60,3 +60,5 @@ STATE_FIPS_CODES = {
     'WV': '54',
     'WY': '56'
 }        
+
+FIPS_CODES_TO_STATE = dict([(v, k) for k, v in STATE_TO_FIPS_CODES.items()])
