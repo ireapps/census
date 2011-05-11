@@ -9,62 +9,62 @@ import help_text
 import mongoutils
 
 def data(request, slugs, extension):
-
     summaries = []
     filename = ""
     for slug in slugs.split("/"):
-        summarylevel,state,county,tract = slug.split("-")
+        summarylevel, state, county, tract = slug.split("-")
         summaries.append({
-             "summarylevel": summarylevel,
              "state": state,
              "county": county,
              "tract": tract,
-             "slug": slug,
         })
         filename += "%s_" % slug
     filename = filename[:-1]
 
-    reports = []
+    geographies = []
+
     for summary in summaries:
-        data = data_for_tract(summary["state"],summary["county"],summary["tract"])
-        agesex = AgeSex(census2000=data[0])
-        report = Report(summary["slug"], summary["state"], summary["county"], summary["tract"])
-        report.add(agesex)
+        geographies.extend(mongoutils.get_geographies(summary["state"], summary["county"], summary["tract"]))
+
+    tables = []
+    
+    for g in geographies:
+        tables.extend(g['data']['2010'].keys())
+
+    tables = set(tables)
+
+    reports = []
+
+    for t in tables:
+        labels = mongoutils.get_labels_for_table('2010', t)
+
+        report = {
+            'year': '2010',
+            'table': t,
+            'columns': [],
+            'rows': [],
+        }
+
+        for key, label in labels['labels'].items():
+            data = [g['data']['2010'][t][key] for g in geographies]
+            report['rows'].append((label, data))
+
+        for g in geographies:
+            report['columns'].append({
+                'tract': g['metadata']['TRACT'],
+                'county': g['metadata']['COUNTY'],
+                'state': g['metadata']['STATE']
+            })
+
         reports.append(report)
 
-    if extension == 'json':
-        json = []
-        for report in reports:
-            json.append(report.as_json())
-        return HttpResponse(simplejson.dumps(json), mimetype='application/json')
-
-    elif extension == 'csv':
-        response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=' + filename
-        writer = csv.writer(response)
-        for report in reports:
-            writer.writerows(report.as_csv())
-        return response
-
-    else: #html
-        return render_to_response('data.html',
-            {
-                'extension': extension,
-                'reports': reports,
-                'csv_url': request.get_full_path().replace('.html','.csv'),
-                'json_url': request.get_full_path().replace('.html','.json'),
-            },
-            context_instance=RequestContext(request))
-
-def stats(request,group):
-    response = HttpResponse(mimetype='text/plain')
-    response.write("You asked for %s" % group)
-    data = data_for_tract('01','001','020100')
-    from statmodels import AgeSex
-    agesex = AgeSex(census2000=data[0])
-    response.write("\nTotal 2000: %i" % agesex.total_population.census2000)
-    response.write("\nTotal 2010: %i" % agesex.total_population.census2010)
-    return response
+    return render_to_response('data.html',
+        {
+            'reports': reports,
+            'csv_url': request.get_full_path().replace('.html','.csv'),
+            'json_url': request.get_full_path().replace('.html','.json'),
+        },
+        context_instance=RequestContext(request))
 
 def homepage(request):
     return render_to_response('homepage.html',

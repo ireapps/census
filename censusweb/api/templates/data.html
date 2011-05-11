@@ -6,8 +6,8 @@
 <nav>
     <span class="button more-data">Add another geography to compare</span>
     &nbsp;or download as
-    <a class="button" href="{{ csv_url }}">CSV</a>
-    <a class="button" href="{{ json_url }}">JSON</a>
+    <a class="button" href="{{ csv_url }}">CSV (TKTK)</a>
+    <a class="button" href="{{ json_url }}">JSON (TKTK)</a>
 </nav>
 <div class="query-builder-popup hidden">
     {% include "_query_builder.html" %}
@@ -32,45 +32,35 @@
     });
 </script>
 
+{% for r in reports %}
+{{ r.year }} - {{ r.table }}
 <table class="reports">
     <tr>
-        {% for report in reports %}
         <td>
             <table class="report">
                 <tr class="title">
-                    <th colspan="6">
-                        Tract #{{ report.tract_id }} - {{ report.county_name }}, {{ report.state_name }}
-                        <span class="button remove-report" data-val="{{ report.slug }}">X</span>
+                    <th>
+                        Field
                     </th>
+                    {% for c in r.columns %}
+                    <th>
+                        Tract #{{ c.tract }} - {{ c.county }}, {{ c.state }}
+                        {#<span class="button remove-report" data-val="{{ g.geoid }}">X</span>#}
+                    </th>
+                    {% endfor %}
                 </tr>
-            {% for row in report %}
-                {% if row.header %}
-                <tr>
-                    <th class="section" colspan="6">{{ row.label }} <span class="help_text" onclick="alert('{{ row.help_text|escapejs }}');">Huh?</span></th>
-                </tr>
-                <tr class="header">
-                    <th class="first">Subject</th>
-                    <th>Total<br/>2000</th>
-                    <th>%<br/>2000</th>
-                    <th>Total<br/>2010</th>
-                    <th>%<br/>2010</th>
-                    <th class="last">%<br/>chg</th>
-                </tr>
-                {% else %}
-                <tr class="{% cycle odd,even %} indent-{{ row.indent }}">
-                    <td class="first">{{ row.label }}</td>
-                    <td class="code">{{ row.census2000|default_if_none:"" }}</td>
-                    <td class="code">{{ row.pct2000|floatformat:-3|default_if_none:"" }}</td>
-                    <td class="code">{{ row.census2010|default_if_none:"" }}</td>
-                    <td class="code">{{ row.pct2010|floatformat:-3|default_if_none:"" }}</td>
-                    <td class="code last">{{ row.delta|floatformat:-3|default_if_none:"" }}</td>
-                </tr>
-                {% endif %}
+            {% for label, data in r.rows %}
+            <tr class="{% cycle odd,even %} indent-{{ row.indent }}">
+                <td class="first">{{ label.text }}</td>
+                {% for d in data %}
+                <td class="code">{{ d|default_if_none:"" }}</td>
+                {% endfor %}
+            </tr>
             {% endfor %}
             </table>
         </td>
-        {% endfor %}
     </tr>
 </table>
+{% endfor %}
 
 {% endblock %}

@@ -32,6 +32,4 @@ urlpatterns = patterns('',
     # Tracts for a given county.
     #/internal/tracts_for_county/10101.json
     (r'^internal/tracts_for_county/(?P<county>\d{5}).json$', views.tracts_for_county),
-
-    (r'stats/(?P<group>[-A-Za-z]+)/?$', views.stats),
 )
