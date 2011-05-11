@@ -24,10 +24,6 @@
     <dd>
         {% help_text "PLACES" %}
     <dd>
-    <dt>County subdivisions</dt>
-    <dd>
-        {% help_text "COUNTY SUBDIVISIONS" %} 
-    <dd>
     <dt>Counties (parishes in LA)</dt>
     <dd>
         {% help_text "COUNTIES" %}
@@ -45,7 +41,6 @@
         <span id="summarylevel-select">
           <span class="link" data-val="tract">Tracts</span>,
           <span class="link" data-val="place">Places</span>,
-          <span class="link" data-val="subdivision">County Subdivisions</span>,
           <span class="link" data-val="county">Counties</span>,
           <span class="link" data-val="state">States</span>, or
           <span class="link" data-val="nation">the USA</span>.
@@ -69,7 +64,7 @@
         <span id="county-select">
             <% var counties = query.filtered(query.mappings.counties); %>
             <% _.each(counties, function(pair, i) { %>
-                <span class="link" data-val="<%= '' + pair[2] + pair[1] %>"><%= pair[0] %></span><%= i == counties.length - 1 ? '' : ', ' %>
+                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == counties.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
     <% } else if (query.get('county')) { %>
@@ -86,18 +81,6 @@
         </span>
     <% } else if (query.get('place')) { %>
         - <b><%= query.get('placeDisplay') %></b>.
-    <% } %>
-
-    <% if (query.mappings.subdivisions && !query.get('subdivision')) { %>
-        for
-        <span id="subdivision-select">
-            <% var subdivisions = query.filtered(query.mappings.subdivisions); %>
-            <% _.each(subdivisions, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == subdivisions.length - 1 ? '' : ', ' %>
-            <% }); %>
-        </span>
-    <% } else if (query.get('subdivision')) { %>
-        - <b><%= query.get('subdivisionDisplay') %></b>.
     <% } %>
 
     <% if (query.mappings.tracts && !query.get('tract')) { %>

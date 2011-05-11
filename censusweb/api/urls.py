@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     #/data/tract-AL-003-010100.html
     #/data/state-AL.html
     #/data/tract-AL-003-010100/tract-AL-003-010120/state-AL.html
-    (r'^data/(?P<slugs>(/?tract-[A-Z]{2}(-\d{3})?(-\d{6})?)+)\.(?P<extension>json|csv|html)$', views.data),
+    (r'^data/(?P<geoids>(/?\d+)+)\.(?P<extension>json|csv|html)$', views.data),
 
     # Tracts
     #/tracts/IL.json
@@ -23,11 +23,11 @@ urlpatterns = patterns('',
 
     # County codes for states.
     #/internal/counties_for_state/CA.json
-    (r'^internal/counties_for_state/(?P<state>[A-Z]{2}).json$', views.counties_for_state),
+    (r'^internal/counties_for_state/(?P<state>\d{2}).json$', views.counties_for_state),
 
     # Place names for states.
     #/internal/places_for_state/IL.json
-    (r'^internal/places_for_state/(?P<state>[A-Z]{2}).json$', views.places_for_state),
+    (r'^internal/places_for_state/(?P<state>\d{2}).json$', views.places_for_state),
 
     # Tracts for a given county.
     #/internal/tracts_for_county/10101.json

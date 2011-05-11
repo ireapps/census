@@ -8,23 +8,31 @@ from django.template import RequestContext
 import help_text
 import mongoutils
 
-def data(request, slugs, extension):
-    summaries = []
-    filename = ""
-    for slug in slugs.split("/"):
-        summarylevel, state, county, tract = slug.split("-")
-        summaries.append({
-             "state": state,
-             "county": county,
-             "tract": tract,
-        })
-        filename += "%s_" % slug
-    filename = filename[:-1]
+def homepage(request):
+    return render_to_response('homepage.html',
+    {
+        'help_text': help_text,
+    },
+    context_instance=RequestContext(request))
 
+def counties_for_state(request, state=""):
+    counties = mongoutils.get_counties_by_state(state)
+    return HttpResponse(simplejson.dumps(counties), mimetype='application/json')
+
+def places_for_state(request, state=""):
+    places = mongoutils.get_places_by_state(state)
+    return HttpResponse(simplejson.dumps(places), mimetype='application/json')
+
+def tracts_for_county(request, county=""):
+    tracts = mongoutils.get_tracts_by_county(county)
+    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
+
+def data(request, geoids, extension):
     geographies = []
 
-    for summary in summaries:
-        geographies.extend(mongoutils.get_geographies(summary["state"], summary["county"], summary["tract"]))
+    for geoid in geoids.split("/"):
+        print geoid
+        geographies.append(mongoutils.get_geography(geoid))
 
     tables = []
     
@@ -80,22 +88,3 @@ def data(request, slugs, extension):
             'json_url': request.get_full_path().replace('.html','.json'),
         },
         context_instance=RequestContext(request))
-
-def homepage(request):
-    return render_to_response('homepage.html',
-    {
-        'help_text': help_text,
-    },
-    context_instance=RequestContext(request))
-
-def counties_for_state(request, state=""):
-    counties = mongoutils.get_counties_by_state(state)
-    return HttpResponse(simplejson.dumps(counties), mimetype='application/json')
-
-def places_for_state(request, state=""):
-    places = mongoutils.get_places_by_state(state)
-    return HttpResponse(simplejson.dumps(places), mimetype='application/json')
-
-def tracts_for_county(request, county=""):
-    tracts = mongoutils.get_tracts_by_county(county)
-    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')

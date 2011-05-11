@@ -23,7 +23,6 @@ $(function(){
             $("#state-select .link").click(_.bind(this.select, this, 'state'));
             $('#county-select .link').click(_.bind(this.select, this, 'county'));
             $('#place-select .link').click(_.bind(this.select, this, 'place'));
-            $('#subdivision-select .link').click(_.bind(this.select, this, 'subdivision'));
             $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
             $('.button.go').click(this.go);
         },
@@ -50,13 +49,13 @@ $(function(){
 
         location: function() {
             if (!this.get('summarylevel')) return '';
-            var parts = [this.get('summarylevel')];
-            if (this.get('state'))         parts.push(this.get('state'));
-            if (this.get('county'))        parts.push(this.get('county').substr(2));
-            if (this.get('subdivision'))   parts.push(this.get('subdivision'));
-            if (this.get('place'))         parts.push(this.get('place'));
-            if (this.get('tract'))         parts.push(this.get('tract'));
-            return parts.join('-');
+            
+            if (this.get('tract'))         return this.get('tract');
+            if (this.get('place'))         return this.get('place');
+            if (this.get('county'))        return this.get('county');
+            if (this.get('state'))         return this.get('state');
+
+            return '';
         },
 
         keypress: function(e) {
@@ -96,13 +95,11 @@ $(function(){
         loadNext: function() {
             var level = this.currentLevel;
             if (level == 'state') {
-                if (_.include(['tract', 'county', 'subdivision'], this.get('summarylevel'))) {
+                if (_.include(['tract', 'county'], this.get('summarylevel'))) {
                     this.loadCounties();
                 } else if (this.get('summarylevel') == 'place') {
                     this.loadPlaces();
                 }
-            } else if (level == 'county' && this.get('summarylevel') == 'subdivision') {
-                this.loadSubdivisions();
             } else if (level == 'county' && this.get('summarylevel') == 'tract') {
                 this.loadTracts();
             }
@@ -137,13 +134,6 @@ $(function(){
             }, this));
         },
 
-        loadSubdivisions: function() {
-            $.getJSON('/internal/subdivisions_for_county/' + this.get('county') + '.json', _.bind(function(response) {
-                this.mappings.subdivisions = response;
-                this.render();
-            }, this));
-        },
-
         loadTracts: function() {
             $.getJSON('/internal/tracts_for_county/' + this.get('county') + '.json', _.bind(function(response) {
                 this.mappings.tracts = response;
@@ -155,60 +145,60 @@ $(function(){
 
         mappings: {
 
-            summarylevels: ['tract', 'place', 'subdivision', 'county', 'state', 'nation'],
+            summarylevels: ['tract', 'place', 'county', 'state', 'nation'],
 
             states: [
-                ["Alabama"              ,"AL"],
-                ["Alaska"               ,"AK"],
-	            ["Arizona"              ,"AZ"],
-	            ["Arkansas"             ,"AR"],
-	            ["California"           ,"CA"],
-	            ["Colorado"             ,"CO"],
-	            ["Connecticut"          ,"CT"],
-	            ["District of Columbia" ,"DC"],
-	            ["Delaware"             ,"DE"],
-	            ["Florida"              ,"FL"],
-	            ["Georgia"              ,"GA"],
-	            ["Hawaii"               ,"HI"],
-	            ["Iowa"                 ,"IA"],
-	            ["Idaho"                ,"ID"],
-	            ["Illinois"             ,"IL"],
-	            ["Indiana"              ,"IN"],
-	            ["Kansas"               ,"KS"],
-	            ["Kentucky"             ,"KY"],
-	            ["Louisiana"            ,"LA"],
-	            ["Massachusetts"        ,"MA"],
-	            ["Maryland"             ,"MD"],
-	            ["Maine"                ,"ME"],
-	            ["Michigan"             ,"MI"],
-	            ["Minnesota"            ,"MN"],
-	            ["Mississippi"          ,"MS"],
-	            ["Missouri"             ,"MO"],
-	            ["Montana"              ,"MT"],
-	            ["North Carolina"       ,"NC"],
-	            ["North Dakota"         ,"ND"],
-	            ["Nebraska"             ,"NE"],
-	            ["New Hampshire"        ,"NH"],
-	            ["New Jersey"           ,"NJ"],
-	            ["New Mexico"           ,"NM"],
-	            ["Nevada"               ,"NV"],
-	            ["New York"             ,"NY"],
-	            ["Ohio"                 ,"OH"],
-	            ["Oklahoma"             ,"OK"],
-	            ["Oregon"               ,"OR"],
-	            ["Pennsylvania"         ,"PA"],
-	            ["Rhode Island"         ,"RI"],
-	            ["South Carolina"       ,"SC"],
-	            ["South Dakota"         ,"SD"],
-	            ["Tennessee"            ,"TN"],
-	            ["Texas"                ,"TX"],
-	            ["Utah"                 ,"UT"],
-	            ["Virginia"             ,"VA"],
-	            ["Vermont"              ,"VT"],
-	            ["Washington"           ,"WA"],
-	            ["Wisconsin"            ,"WI"],
-	            ["West Virginia"        ,"WV"],
-	            ["Wyoming"              ,"WY"]
+                ["Alabama"              ,"01"],
+                ["Alaska"               ,"02"],
+	            ["Arizona"              ,"04"],
+	            ["Arkansas"             ,"05"],
+	            ["California"           ,"06"],
+	            ["Colorado"             ,"08"],
+	            ["Connecticut"          ,"09"],
+	            ["District of Columbia" ,"11"],
+	            ["Delaware"             ,"10"],
+	            ["Florida"              ,"12"],
+	            ["Georgia"              ,"13"],
+	            ["Hawaii"               ,"15"],
+	            ["Iowa"                 ,"19"],
+	            ["Idaho"                ,"16"],
+	            ["Illinois"             ,"17"],
+	            ["Indiana"              ,"18"],
+	            ["Kansas"               ,"20"],
+	            ["Kentucky"             ,"21"],
+	            ["Louisiana"            ,"22"],
+	            ["Massachusetts"        ,"25"],
+	            ["Maryland"             ,"24"],
+	            ["Maine"                ,"23"],
+	            ["Michigan"             ,"26"],
+	            ["Minnesota"            ,"27"],
+	            ["Mississippi"          ,"26"],
+	            ["Missouri"             ,"29"],
+	            ["Montana"              ,"29"],
+	            ["North Carolina"       ,"37"],
+	            ["North Dakota"         ,"38"],
+	            ["Nebraska"             ,"31"],
+	            ["New Hampshire"        ,"33"],
+	            ["New Jersey"           ,"34"],
+	            ["New Mexico"           ,"35"],
+	            ["Nevada"               ,"32"],
+	            ["New York"             ,"36"],
+	            ["Ohio"                 ,"39"],
+	            ["Oklahoma"             ,"40"],
+	            ["Oregon"               ,"41"],
+	            ["Pennsylvania"         ,"42"],
+	            ["Rhode Island"         ,"44"],
+	            ["South Carolina"       ,"45"],
+	            ["South Dakota"         ,"46"],
+	            ["Tennessee"            ,"47"],
+	            ["Texas"                ,"48"],
+	            ["Utah"                 ,"49"],
+	            ["Virginia"             ,"78"],
+	            ["Vermont"              ,"50"],
+	            ["Washington"           ,"53"],
+	            ["Wisconsin"            ,"55"],
+	            ["West Virginia"        ,"54"],
+	            ["Wyoming"              ,"56"]
             ]
         }
     });

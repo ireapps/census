@@ -9,7 +9,6 @@ SUMLEV_PLACE = '160'
 STATE_FIPS_CODES = {
     'AK': '02',
     'AR': '05',
-    'AS': '60',
     'AZ': '04',
     'AL': '01',
     'CA': '06',
@@ -30,7 +29,6 @@ STATE_FIPS_CODES = {
     'MA': '25',
     'MD': '24',
     'ME': '23',
-    'MH': '68',
     'MI': '26',
     'MN': '27',
     'MO': '29',
