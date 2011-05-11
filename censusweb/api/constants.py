@@ -6,7 +6,7 @@ SUMLEV_COUNTY = '050'
 SUMLEV_TRACT = '140'
 SUMLEV_PLACE = '160'
 
-FIPS_CODES = {
+STATE_FIPS_CODES = {
     'AK': '02',
     'AR': '05',
     'AS': '60',

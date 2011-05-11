@@ -35,7 +35,7 @@ def data(request, slugs, extension):
 
     reports = []
 
-    for t in tables:
+    for t in sorted(tables):
         labels = mongoutils.get_labels_for_table('2010', t)
 
         report = {
@@ -45,8 +45,23 @@ def data(request, slugs, extension):
             'rows': [],
         }
 
-        for key, label in labels['labels'].items():
-            data = [g['data']['2010'][t][key] for g in geographies]
+        for key, label in sorted(labels['labels'].items()):
+            data = []
+
+            for g in geographies:
+                try:
+                    data.append({
+                        '2000': g['data']['2000'][t][key],
+                        '2010': g['data']['2010'][t][key],
+                        'delta': g['data']['delta'][t][key],
+                        'pct_change': g['data']['pct_change'][t][key]
+                    })
+                # Data not available for 2000
+                except KeyError:
+                    data.append({
+                        '2010': g['data']['2010'][t][key],
+                    })
+            
             report['rows'].append((label, data))
 
         for g in geographies:

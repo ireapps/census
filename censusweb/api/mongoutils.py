@@ -16,14 +16,14 @@ def get_labels_collection():
 def get_counties_by_state(state):
     geographies = get_geographies_collection()
 
-    counties = geographies.find({ 'metadata.STATE': FIPS_CODES[state], 'sumlev': SUMLEV_COUNTY }, fields=['metadata.STATE', 'metadata.COUNTY', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
+    counties = geographies.find({ 'metadata.STATE': STATE_FIPS_CODES[state], 'sumlev': SUMLEV_COUNTY }, fields=['metadata.STATE', 'metadata.COUNTY', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
 
     return [(c['metadata']['NAME'], c['metadata']['COUNTY'], c['metadata']['STATE']) for c in counties] 
 
 def get_places_by_state(state):
     geographies = get_geographies_collection()
 
-    places = geographies.find({ 'metadata.STATE': FIPS_CODES[state], 'sumlev': SUMLEV_PLACE }, fields=['metadata.STATE', 'metadata.PLACE', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
+    places = geographies.find({ 'metadata.STATE': STATE_FIPS_CODES[state], 'sumlev': SUMLEV_PLACE }, fields=['metadata.STATE', 'metadata.PLACE', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
 
     return [(p['metadata']['NAME'], p['metadata']['STATE'] + p['metadata']['PLACE']) for p in places] 
 
@@ -41,7 +41,7 @@ def get_geographies(state, county=None, tract=None):
     geographies = get_geographies_collection()
 
     lookup = {}
-    lookup['metadata.STATE'] = FIPS_CODES[state]
+    lookup['metadata.STATE'] = STATE_FIPS_CODES[state]
 
     if county:
         lookup['metadata.COUNTY'] = county

@@ -18,48 +18,39 @@
         $('.button.more-data').click(function(){
             $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
         });
-        $('.button.remove-report').click(function(){
-            slug = $(this).attr('data-val');
-            newLocation = window.location.pathname.replace('/' + slug,'');
-            if (newLocation == '/data.html') {
-                //you've closed the last report, time to go home
-                window.location = '/';                
-            } else {
-                window.location = newLocation;
-            }
-
-        });
     });
 </script>
 
 {% for r in reports %}
 {{ r.year }} - {{ r.table }}
-<table class="reports">
+<table class="report">
     <tr>
-        <td>
-            <table class="report">
-                <tr class="title">
-                    <th>
-                        Field
-                    </th>
-                    {% for c in r.columns %}
-                    <th>
-                        Tract #{{ c.tract }} - {{ c.county }}, {{ c.state }}
-                        {#<span class="button remove-report" data-val="{{ g.geoid }}">X</span>#}
-                    </th>
-                    {% endfor %}
-                </tr>
-            {% for label, data in r.rows %}
-            <tr class="{% cycle odd,even %} indent-{{ row.indent }}">
-                <td class="first">{{ label.text }}</td>
-                {% for d in data %}
-                <td class="code">{{ d|default_if_none:"" }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-            </table>
-        </td>
+        <th rowspan="2">Field</th>
+        {% for c in r.columns %}
+        <th colspan="4">
+            Tract #{{ c.tract }} - {{ c.county }}, {{ c.state }}
+        </th>
+        {% endfor %}
+    <tr>
+        {% for c in r.columns %}
+        <th class="subhead">2000</th>
+        <th class="subhead">2010</th>
+        <th class="subhead">Delta</th>
+        <th class="subhead">% change</th>
+        {% endfor %}
     </tr>
+    </tr>
+    {% for label, data in r.rows %}
+    <tr class="{% cycle odd,even %} indent-{{ label.indent }}">
+        <td class="label">{{ label.text }}</td>
+        {% for d in data %}
+            <td class="code">{{ d.2000 }}</td>
+            <td class="code">{{ d.2010 }}</td>
+            <td class="code">{{ d.delta }}</td>
+            <td class="code {% if forloop.last %}last{% endif %}">{{ d.pct_change|floatformat:-3 }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
 </table>
 {% endfor %}
 
