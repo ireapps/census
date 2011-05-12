@@ -1,0 +1,4 @@
+*.pem
+authorized_keys
+known_hosts
+config.yml

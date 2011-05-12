@@ -1,0 +1,9 @@
+server:
+    type:     'kitchensink'
+    name:     'census'
+    hosts:    'app1, db, cron, mail, log, cache, memcache'
+    script:   'census/kitchensink.sh'
+    size:     'micro'
+    os:       'ubuntu'
+    version:  '10.10'
+    arch:     '64bit'

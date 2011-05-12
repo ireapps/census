@@ -1,0 +1,14 @@
+START=yes
+
+NFILES=131072
+
+MEMLOCK=82000
+
+INSTANCE=$(uname -n)
+
+DAEMON_OPTS="-a :80 \
+             -T :6082 \
+             -f /home/newsapps/varnish/$INSTANCE.vcl \
+             -s file,/var/lib/varnish/$INSTANCE/varnish_storage.bin,1.25G"
+
+

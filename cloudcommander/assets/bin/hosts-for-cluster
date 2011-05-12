@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+import boto
+import sys
+import os
+
+def get_servers(filters):
+
+    conn = boto.connect_ec2()
+    reservations = conn.get_all_instances(filters=filters)
+
+    servers = list()
+    for r in reservations:
+        for i in r.instances:
+            s = i.__dict__
+            s['security_groups'] = map(lambda x: x.id, r.groups)
+            servers.append(s)
+
+    return servers
+
+if __name__ == '__main__':
+
+    if len(sys.argv) == 2:
+        f = { 'tag:Cluster': os.getenv(sys.argv[1]) }
+    elif os.getenv('CLUSTER'):
+        f = { 'tag:Cluster': os.getenv('CLUSTER') }
+    else:
+        f = { 'tag:Name': os.uname()[1] }
+
+    f.update({'instance-state-name': 'running'})
+    servers = get_servers(f)
+
+    hosts = open('/etc/hosts')
+    new_hosts = list()
+    for line in hosts:
+        if line.startswith("# DON'T MESS"):
+            for line in hosts:
+                if line.startswith("# CARRY ON"):
+                    break
+        else:
+            new_hosts.append(line)
+
+    hosts_contents = hosts.read()
+    hosts.close()
+
+    if new_hosts[-1] != "\n":
+        new_hosts.append("\n")
+
+    new_hosts_contents = "".join(new_hosts) + "# DON'T MESS\n"
+    for s in servers:
+        if s['tags'].has_key('Hosts'):
+            hostnames = s['tags']['Name']+ " " + " ".join(s['tags']['Hosts'].split(','))
+            new_hosts_contents += "\t".join((s['private_ip_address'], hostnames)) + "\n"
+        else:
+            new_hosts_contents += "\t".join((s['private_ip_address'], s['tags']['Name'])) + "\n"
+    new_hosts_contents += "# CARRY ON\n"
+    
+    if new_hosts_contents != hosts_contents:
+        try:
+            hosts = open('/etc/hosts', 'w')
+            hosts.write(new_hosts_contents)
+        except IOError:
+            print "sudo %s CLUSTER_NAME" % sys.argv[0]
