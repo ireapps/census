@@ -9,8 +9,7 @@ import help_text
 import mongoutils
 
 def homepage(request):
-    return render_to_response('homepage.html',
-    {
+    return render_to_response('homepage.html', {
         'help_text': help_text,
     },
     context_instance=RequestContext(request))
