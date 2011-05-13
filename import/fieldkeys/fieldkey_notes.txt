@@ -1,0 +1,14 @@
+Notes on 2000-2010_ids.tsv
+
+For Household Type tables (e.g. P018007/P019007):
+"Husband-wife" family in 2010 is compared to "married couple" families in 2000
+
+For Family-related tables (e.g. P020005/P021005):
+"Related children" in 2010 is "Own children" in 2000
+
+P0150** (2010) / H0070** (2000)
+Universe is Households in 2010, Housing Units in 2000
+
+PCT020008 (2010) / PCT016005 (2000)
+Correctional residential facilities (105) in 2010 is "Halfway houses" in 2000
+
