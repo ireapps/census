@@ -4,7 +4,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # Database
-DATABASES['default']['HOST'] = 'db'
+DATABASES['default']['HOST'] = 'censusweb.beta.tribapps.com'
 DATABASES['default']['PORT'] = '5433'
 DATABASES['default']['USER'] = 'censusweb'
 DATABASES['default']['PASSWORD'] = 'Xy9XKembdu'

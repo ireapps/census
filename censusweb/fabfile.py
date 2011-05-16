@@ -17,7 +17,8 @@ env.path = '/home/ubuntu/sites/%(project_name)s' % env
 env.log_path = '/home/ubuntu/logs/%(project_name)s' % env
 env.env_path = '/home/ubuntu/sites/virtualenvs/%(project_name)s' % env
 env.repo_path = '%(path)s' % env
-env.apache_config_path = '/home/ubuntu/sites/apache/%(project_name)s' % env
+env.site_path = '%(repo_path)s/censusweb' % env
+env.apache_config_path = '/home/ubuntu/apache/%(project_name)s' % env
 env.python = 'python2.6'
 env.repository_url = "git@github.com:documentcloud/census.git"
 env.memcached_server_address = "cache"
@@ -121,13 +122,13 @@ def install_requirements():
     """
     Install the required packages using pip.
     """
-    run('source %(env_path)s/bin/activate; pip install -q -r %(repo_path)s/censusweb/requirements.txt' % env)
+    run('source %(env_path)s/bin/activate; pip install -q -r %(site_path)s/requirements.txt' % env)
 
 def install_apache_conf():
     """
     Install the apache site config file.
     """
-    sudo('cp %(repo_path)s/config/%(settings)s/apache %(apache_config_path)s' % env)
+    sudo('cp %(site_path)s/config/%(settings)s/apache %(apache_config_path)s' % env)
 
 def deploy_requirements_to_s3():
     """
@@ -135,7 +136,7 @@ def deploy_requirements_to_s3():
     """
     with settings(warn_only=True):
         run('s3cmd del --recursive s3://%(s3_bucket)s/%(project_name)s/%(admin_media_prefix)s/' % env)
-    run('s3cmd -P --guess-mime-type --rexclude-from=%(repo_path)s/s3exclude sync %(env_path)s/src/django/django/contrib/admin/media/ s3://%(s3_bucket)s/%(project_name)s/%(admin_media_prefix)s/' % env)
+    run('s3cmd -P --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(env_path)s/src/django/django/contrib/admin/media/ s3://%(s3_bucket)s/%(project_name)s/%(admin_media_prefix)s/' % env)
 
 
 """
@@ -162,7 +163,7 @@ def maintenance_up():
     """
     Install the Apache maintenance configuration.
     """
-    sudo('cp %(repo_path)s/config/%(settings)s/apache_maintenance %(apache_config_path)s' % env)
+    sudo('cp %(site_path)s/config/%(settings)s/apache_maintenance %(apache_config_path)s' % env)
     reboot()
 
 def gzip_assets():
@@ -170,17 +171,17 @@ def gzip_assets():
     GZips every file in the media directory and places the new file
     in the gzip directory with the same filename.
     """
-    run('cd %(repo_path)s; python gzip_assets.py' % env)
+    run('cd %(site_path)s; python gzip_assets.py' % env)
 
 def deploy_to_s3():
     """
     Deploy the latest project site media to S3.
     """
-    env.media_path = '%(repo_path)s/media/' % env
-    run(('s3cmd -P --guess-mime-type --rexclude-from=%(repot_path)s/s3exclude sync %(media_path)s s3://%(s3_bucket)s/%(project_name)s/%(site_media_prefix)s/') % env)
+    env.media_path = '%(site_path)s/media/' % env
+    run(('s3cmd -P --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(media_path)s s3://%(s3_bucket)s/%(project_name)s/%(site_media_prefix)s/') % env)
 
-    env.gzip_path = '%(repo_path)s/gzip_media/' % env
-    run(('s3cmd -P --add-header=Content-encoding:gzip --guess-mime-type --rexclude-from=%(repo_path)s/s3exclude sync %(gzip_path)s s3://%(s3_bucket)s/%(project_name)s/%(site_media_prefix)s/') % env)
+    env.gzip_path = '%(site_path)s/gzip_media/' % env
+    run(('s3cmd -P --add-header=Content-encoding:gzip --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(gzip_path)s s3://%(s3_bucket)s/%(project_name)s/%(site_media_prefix)s/') % env)
        
 def reboot(): 
     """
@@ -265,7 +266,7 @@ def load_data():
     """
     Loads data from the repository into PostgreSQL.
     """
-    run('psql -q %(project_name)s < %(repo_path)s/data/psql/dump.sql' % env)
+    run('psql -q %(project_name)s < %(site_path)s/data/psql/dump.sql' % env)
     
 def pgpool_down():
     """
@@ -340,7 +341,7 @@ def _execute_psql(query):
     Executes a PostgreSQL command using the command line interface.
     """
     env.query = query
-    run(('cd %(repo_path)s; psql -q %(project_name)s -c "%(query)s"') % env)
+    run(('cd %(site_path)s; psql -q %(project_name)s -c "%(query)s"') % env)
     
 def _confirm_branch():
     if (env.settings == 'production' and env.branch != 'stable'):

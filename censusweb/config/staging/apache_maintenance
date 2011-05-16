@@ -1,19 +1,19 @@
-<VirtualHost *:80>
+<VirtualHost *:8080>
     ServerName censusweb.beta.tribapps.com
     ServerAlias www.censusweb.beta.tribapps.com
     
     Redirect permanent /favicon.ico http://media.censusweb-beta.ire.org/media/favicon.ico
     
-    Alias /robots.txt /home/newsapps/sites/censusweb/media/robots.txt
+    Alias /robots.txt /home/ubuntu/sites/censusweb/censusweb/media/robots.txt
  
-    ErrorLog /home/newsapps/logs/censusweb.error.log
+    ErrorLog /home/ubuntu/logs/censusweb.error.log
     LogLevel warn
 
     SetEnvIf X-Forwarded-For "^.*\..*\..*\..*" is-forwarder
     LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
     LogFormat "[%h] %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio2
-    CustomLog /home/newsapps/logs/censusweb.access.log combinedio env=is-forwarder
-    CustomLog /home/newsapps/logs/censusweb.access.log combinedio2 env=!is-forwarder
+    CustomLog /home/ubuntu/logs/censusweb.access.log combinedio env=is-forwarder
+    CustomLog /home/ubuntu/logs/censusweb.access.log combinedio2 env=!is-forwarder
     
     ServerSignature Off
     
@@ -22,7 +22,7 @@
     RewriteCond %{HTTP_HOST} !^censusweb.beta.tribapps.com [NC] 
     RewriteRule ^/(.*)  http://censusweb.beta.tribapps.com/$1 [L,R]
     
-    DocumentRoot /home/newsapps/sites/censusweb/media/
+    DocumentRoot /home/ubuntu/sites/censusweb/media/
     
     RewriteCond %{REQUEST_URI} !/maintenance.html$ 
     RewriteRule $ /maintenance.html [R=302,L]
