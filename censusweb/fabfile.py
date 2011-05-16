@@ -31,6 +31,7 @@ def production():
     """
     Work on production environment
     """
+    #TKTK
     env.settings = 'production'
     env.hosts = ['db.censusweb.ire.org']
     env.user = 'newsapps'
@@ -42,10 +43,10 @@ def staging():
     Work on staging environment
     """
     env.settings = 'staging'
-    env.hosts = ['db.censusweb-beta.ire.org'] 
+    env.hosts = ['censusweb.beta.tribapps.com'] 
     env.user = 'newsapps'
-    env.s3_bucket = 'media.censusweb-beta.ire.org'
-    env.site_domain = 'censusweb.censusweb-beta.ire.org'    
+    env.s3_bucket = 'media-beta.tribapps.com'
+    env.site_domain = 'censusweb.beta.tribapps.com'    
     
 """
 Branches

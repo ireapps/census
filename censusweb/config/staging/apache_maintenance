@@ -1,6 +1,6 @@
 <VirtualHost *:80>
-    ServerName censusweb.censusweb-beta.ire.org
-    ServerAlias www.censusweb.censusweb-beta.ire.org
+    ServerName censusweb.beta.tribapps.com
+    ServerAlias www.censusweb.beta.tribapps.com
     
     Redirect permanent /favicon.ico http://media.censusweb-beta.ire.org/media/favicon.ico
     
@@ -19,8 +19,8 @@
     
     RewriteEngine on
     # canonical hostname
-    RewriteCond %{HTTP_HOST} !^censusweb.censusweb.ire.org [NC] 
-    RewriteRule ^/(.*)  http://censusweb.censusweb.ire.org/$1 [L,R]
+    RewriteCond %{HTTP_HOST} !^censusweb.beta.tribapps.com [NC] 
+    RewriteRule ^/(.*)  http://censusweb.beta.tribapps.com/$1 [L,R]
     
     DocumentRoot /home/newsapps/sites/censusweb/media/
     

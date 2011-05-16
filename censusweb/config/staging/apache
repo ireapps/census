@@ -1,6 +1,6 @@
 <VirtualHost *:80>
-    ServerName censusweb.censusweb-beta.ire.org
-    ServerAlias www.censusweb.censusweb-beta.ire.org
+    ServerName censusweb.beta.tribapps.com
+    ServerAlias www.censusweb.beta.tribapps.com
 
     SetEnv DEPLOYMENT_TARGET staging
     WSGIScriptAlias / /home/newsapps/sites/censusweb/application.wsgi
@@ -26,8 +26,8 @@
     
     RewriteEngine on
     # canonical hostname
-    RewriteCond %{HTTP_HOST} !^censusweb.censusweb-beta.ire.org [NC] 
-    RewriteRule ^/(.*)  http://censusweb.censusweb-beta.ire.org/$1 [L,R]
+    RewriteCond %{HTTP_HOST} !^censusweb.beta.tribapps.com [NC] 
+    RewriteRule ^/(.*)  http://censusweb.beta.tribapps.com/$1 [L,R]
     
     RewriteCond %{REQUEST_URI} /maintenance.html$ 
     RewriteRule $ / [R=302,L]
