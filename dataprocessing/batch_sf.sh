@@ -17,8 +17,7 @@ FAKE=$2
 
 # Load 2000 data as 2010 for testing
 if [ "$FAKE" = "FAKE" ]; then
-    # TODO: YOU ARE WORKING ON THIS
-    ./load_sf_labels_2000.py data/sf_2000_data_labels.csv
+    #./load_sf_labels_2000.py data/sf_2000_data_labels.csv
 
     ./load_sf_geographies_2010.py data/${STATE_NAME_ABBR}geo2000.csv
     ./load_crosswalk.py $STATE_FIPS $FAKE 
