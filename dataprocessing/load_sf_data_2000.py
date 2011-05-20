@@ -20,8 +20,6 @@ connection = Connection()
 db = connection[config.CENSUS_DB] 
 collection = db[config.GEOGRAPHIES_2000_COLLECTION]
 
-print 'Start: ', time.time()
-
 with open(FILENAME) as f:
     rows = UnicodeCSVReader(f)
     headers = rows.next()
@@ -61,6 +59,4 @@ with open(FILENAME) as f:
 
 print 'Row count: %i' % row_count
 print 'Inserted: %i' % inserts
-
-print 'Done: ', time.time()
 
