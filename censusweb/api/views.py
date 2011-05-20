@@ -1,6 +1,7 @@
 import simplejson
 
-from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -110,6 +111,27 @@ def labels_as_json(request,year,tables=None):
         
     return HttpResponse(simplejson.dumps(labels), mimetype='application/json')
 
+def redirect_to_family(request, geoid):
+    geography = mongoutils.get_geography(geoid)
+    
+    family = [geography['metadata']['STATE'],]
+    if geography['metadata']['COUNTY']:
+        family.append(
+            "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY']])
+        )
+    if geography['metadata']['PLACE']:
+        family.append(
+            "".join([geography['metadata']['STATE'], geography['metadata']['PLACE']])
+        )
+    if geography['metadata']['TRACT']:
+        family.append(
+            "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY'], geography['metadata']['TRACT']])
+        )
+    
+    geoid_str = ",".join(family)
+    url = reverse("data", args=[geoid_str,])
+    return HttpResponsePermanentRedirect(url)
+
 def data(request, geoids):
     geographies = []
 
@@ -164,6 +186,7 @@ def data(request, geoids):
 
             column_meta['name'] = column_name
             column_meta['geoid'] = g['geoid']
+            column_meta['sumlev'] = g['sumlev']
             report['columns'].append(column_meta)
 
         reports.append(report)

@@ -27,6 +27,8 @@ $(function(){
             $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
             $('.button.go').click(this.go);
             $('.button.remove-column').click(this.remove_column);
+            $('tr.row').click(this.twist_row);
+            $('.button.show-family').click(this.show_family);
         },
 
         isCompletable: function() {
@@ -154,6 +156,29 @@ $(function(){
             } else {
                 document.location.href = document.location.href.replace(',' + geoid, '');
             }
+        },
+        
+        twist_row: function() {
+            var show_child = !$($('tr[parent=' + $(this).attr('id') + ']')[0]).is(":visible");
+            window.query.twist_row_helper($(this), show_child);
+            $(this).toggleClass('closed')
+            $(this).toggleClass('open');
+        },
+        
+        twist_row_helper: function(parent_row, show_me) {
+            $.each($('tr[parent=' + $(parent_row).attr('id') + ']'), function(index, value){
+                if(show_me){
+                    $(value).show();
+                } else {
+                    $(value).hide();
+                }
+                window.query.twist_row_helper(value, false);
+            });
+        },
+        
+        show_family: function() {
+            geoid = $(this).attr('data-val');
+            document.location.href = "/family/" + geoid + "/";
         },
 
         // ------------------------- Data ---------------------------------

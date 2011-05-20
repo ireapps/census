@@ -129,6 +129,11 @@ nav {
     font-family: Menlo, Consolas, Monaco, Courier, monospace;
 }
 
+.report tr.row {}
+.report tr.row.hidden {}
+.report tr.row.has-children.closed td.label { background-color:green; }
+.report tr.row.has-children.open td.label { background-color:red; }
+
 .report td {
     color: #333;
     padding: 5px 5px 5px 15px;
