@@ -5,10 +5,10 @@ when you run "manage.py test".
 Replace this with more appropriate tests for your application.
 """
 
-from unittest import TestCase
+from django.utils import unittest
 from statmodels import Statistic, AggregateStatistic, ssf, sumsf
 
-class StatisticTest(TestCase):
+class StatisticTest(unittest.TestCase):
     def test_sums(self):
         """
         Test summing and pct for aggregate statistics
