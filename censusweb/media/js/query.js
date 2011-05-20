@@ -108,7 +108,7 @@ $(function(){
         go: function() {
             if (window.location.pathname.indexOf('/data/') != -1 ) {
                 //we're on the data page and are adding another
-                window.location = window.location.href.replace('.html','/') + this.location() + '.html';
+                window.location = window.location.href.replace('.html',',') + this.location() + '.html';
             } else {
                 //we're on the homepage
                 window.location = '/data/' + this.location() + '.html';
