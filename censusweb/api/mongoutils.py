@@ -48,3 +48,7 @@ def get_labels_for_table(year, table):
 
     return labels.find_one({ 'year': year, 'key': table })
 
+def get_tables_for_year(year):
+    labels = get_labels_collection()
+
+    return sorted([x['key'] for x in labels.find({'year' : '2010' },fields=['key'])])

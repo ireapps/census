@@ -14,11 +14,11 @@ if len(sys.argv) < 2:
 
 FILENAME = sys.argv[1]
 
-YEAR = '2000'
+YEAR = '2010'
 
 connection = Connection()
 db = connection[config.CENSUS_DB] 
-collection = db[config.GEOGRAPHIES_2000_COLLECTION]
+collection = db[config.GEOGRAPHIES_COLLECTION]
 
 with open(FILENAME) as f:
     rows = UnicodeCSVReader(f)

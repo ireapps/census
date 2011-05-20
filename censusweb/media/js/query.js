@@ -10,6 +10,7 @@ $(function(){
             this.lazyRender = _.debounce(this.render, 50);
             this.filter = '';
             $(document.body).keypress(this.keypress);
+            document.onkeydown = this.keydown;
             this.bind('change', this.render);
             this.bind('change', this.loadNext);
         },
@@ -59,12 +60,16 @@ $(function(){
             return '';
         },
 
-        keypress: function(e) {
+        keydown: function(e) {
             if (e.which == 8) {
                 e.preventDefault();
-                this.filter = this.filter.substr(0, this.filter.length - 1);
-                this.lazyRender();
-            } else if (e.which == 13) {
+                var _this = window.query;
+                _this.filter = _this.filter.substr(0, _this.filter.length - 1);
+                _this.lazyRender();
+            }
+        },
+        keypress: function(e) {
+            if (e.which == 13) {
                 if (this.filter) {
                     $('.link:first').trigger('click');
                 } else if (this.isCompletable()) {
