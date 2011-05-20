@@ -13,8 +13,8 @@ urlpatterns = patterns('',
     #/data/10.html
     #/data/10001.html
     #/data/10001041500.html
-    #/data/10/10001/10001041500.html
-    (r'^data/(?P<geoids>(/?\d+)+)\.(?P<extension>json|csv|html)$', views.data),
+    #/data/10,10001,10001041500.html
+    (r'^data/(?P<geoids>(,?\d+)+)\.(?P<extension>json|csv|html)$', views.data),
 
     # County codes for states.
     #/internal/counties_for_state/10.json
