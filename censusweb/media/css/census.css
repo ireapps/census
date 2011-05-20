@@ -143,6 +143,10 @@ nav {
     width: 300px;
 }
 
+.report td.label .key {
+    font-size: 12px;
+}
+
 .report tr.odd td {
     background: #f3f6fa;
     border-top: 1px solid #eee; border-bottom: 1px solid #eee;
