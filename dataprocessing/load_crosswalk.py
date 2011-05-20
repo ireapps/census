@@ -40,7 +40,7 @@ else:
             row_count += 1
             row_dict = dict(zip(headers, row))
 
-            if row_dict['STATE'] != STATE_FIPS:
+            if row_dict['STATE10'] != STATE_FIPS:
                 continue
             
             geography = collection.find_one({ 'geoid': row_dict['GEOID10'] })

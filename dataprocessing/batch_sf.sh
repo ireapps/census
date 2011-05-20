@@ -2,16 +2,13 @@
 
 # See batch.sh for notes.
 
-echo "use census; 
-db.geographies.ensureIndex({ 'geoid': 1 });
-db.geographies.ensureIndex({ 'metadata.STATE': 1 });
-db.geographies.ensureIndex({ 'xrefs': 1 });" | mongo
-
 STATE_NAME=$1
 STATE_NAME_LOWER=`echo $1 | tr '[A-Z]' '[a-z]'`
 STATE_NAME_ABBR=`python get_state_abbr.py $1`
 STATE_FIPS=`python get_state_fips.py $1`
 FAKE=$2
+
+./ensure_indexes.sh
 
 ./fetch_sf_data.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR $FAKE
 
