@@ -27,6 +27,7 @@ $(function(){
             $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
             $('.button.go').click(this.go);
             $('.button.remove-column').click(this.remove_column);
+            $('.button.show-family').click(this.show_family);
         },
 
         isCompletable: function() {
@@ -154,6 +155,10 @@ $(function(){
             } else {
                 document.location.href = document.location.href.replace(',' + geoid, '');
             }
+        },
+        show_family: function() {
+            geoid = $(this).attr('data-val');
+            document.location.href = "/family/" + geoid + "/";
         },
 
         // ------------------------- Data ---------------------------------
