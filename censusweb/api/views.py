@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+import csv
 import constants
 import help_text
 import mongoutils
@@ -26,7 +27,90 @@ def tracts_for_county(request, county=''):
     tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
 
-def data(request, geoids, extension):
+def data_as_json(request, geoids):
+    geographies = {}
+
+    for geoid in geoids.split(','):
+        g = mongoutils.get_geography(geoid)
+        del g['_id']
+        del g['xrefs']
+        geographies[geoid] = g
+        
+    return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
+
+DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
+
+def csv_row_header(tables=None):
+    if not tables:
+        tables_list = mongoutils.get_tables_for_year("2010")
+    else:
+        tables_list = tables
+
+    row = ["sumlev", "geoid", "name"]
+    for table in tables_list:
+        labels = mongoutils.get_labels_for_table("2010", table)
+        for statistic in sorted(labels['labels']):
+            for alternative in DATA_ALTERNATIVES:
+                if alternative == '2010':
+                    row.append(statistic)
+                else:
+                    row.append("%s.%s" % (statistic,alternative))
+
+    return row
+    
+def csv_row_for_geography(geography, tables=None):
+    if not tables:
+        tables_list = mongoutils.get_tables_for_year("2010")
+    else:
+        tables_list = tables
+
+    row = [
+        geography['sumlev'],
+        geography['geoid'],
+        geography['metadata']['NAME']
+    ]
+    for table in tables_list:
+        labels = mongoutils.get_labels_for_table("2010", table)
+        for statistic in sorted(labels['labels']):
+            for alternative in DATA_ALTERNATIVES:
+                try:
+                    row.append( geography['data'][alternative][table][statistic] )
+                except KeyError:
+                    row.append('')
+
+    return row
+
+def data_as_csv(request, geoids):
+    tables = request.GET.get("tables", None)
+    if tables:
+        tables = tables.split(",")
+
+    response = HttpResponse(mimetype="text/csv")
+    w = csv.writer(response)
+    w.writerow(csv_row_header(tables))
+
+    for geoid in geoids.split(','):
+        g = mongoutils.get_geography(geoid)
+        csvrow = csv_row_for_geography(g, tables)
+        w.writerow(csvrow)
+    
+    return response
+
+def labels_as_json(request,year,tables=None):
+    labels = {}
+    if tables is None:
+        tables = mongoutils.get_tables_for_year(year)
+    else:    
+        tables = tables.split(',')
+
+    for t in tables:
+        l = mongoutils.get_labels_for_table(year,t)
+        del l['_id']
+        labels[t] = l
+        
+    return HttpResponse(simplejson.dumps(labels), mimetype='application/json')
+
+def data(request, geoids):
     geographies = []
 
     for geoid in geoids.split(','):
