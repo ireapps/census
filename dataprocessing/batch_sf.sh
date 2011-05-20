@@ -15,11 +15,11 @@ FAKE=$2
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
 ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_1.csv
 
-# TODO
-#./load_sf_labels_2010.py data/sf_2010_data_labels.csv
-
 # Load 2000 data as 2010 for testing
 if [ "$FAKE" = "FAKE" ]; then
+    # TODO: YOU ARE WORKING ON THIS
+    ./load_sf_labels_2000.py data/sf_2000_data_labels.csv
+
     ./load_sf_geographies_2010.py data/${STATE_NAME_ABBR}geo2000.csv
     ./load_crosswalk.py $STATE_FIPS $FAKE 
     ./load_sf_data_2010.py data/sf_data_2000_${STATE_NAME_LOWER}_1.csv

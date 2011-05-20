@@ -84,12 +84,14 @@ with open(FILENAME) as f:
         indent = whitespace_count / 2
 
         if indent > last_indent:
-            hierarchy.append(last_key)
-        elif indent < last_indent:
+            hierarchy.append((last_key, last_indent))
+
+        while indent < last_indent:
             hierarchy.pop()
+            last_indent = hierarchy[-1][1]
 
         if hierarchy:
-            parent = hierarchy[-1]
+            parent = hierarchy[-1][0]
         else:
             parent = None
 
@@ -102,6 +104,7 @@ with open(FILENAME) as f:
         inserts += 1
 
         last_key = key
+        last_indent = indent
 
     # Save final table
     collection.save(table)
