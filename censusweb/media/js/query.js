@@ -28,6 +28,7 @@ $(function(){
             $('.button.go').click(this.go);
             $('.button.remove-column').click(this.remove_column);
             $('tr.row').click(this.twist_row);
+            $('.button.show-family').click(this.show_family);
         },
 
         isCompletable: function() {
@@ -174,6 +175,11 @@ $(function(){
                 window.query.twist_row_helper(value, false);
             });
         },
+        
+        show_family: function() {
+            geoid = $(this).attr('data-val');
+            document.location.href = "/family/" + geoid + "/";
+        },
 
         // ------------------------- Data ---------------------------------
 
@@ -256,5 +262,12 @@ $(function(){
 
     query.controller = new QueryController;
     Backbone.history.start();
+
+    // Table mouseover row highlighting.
+    $(".report tr").hover(function() {
+        $(this).addClass("highlight");
+    }, function() {
+        $(this).removeClass('highlight');
+    });
     
 });
