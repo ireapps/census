@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import unittest
+from django.utils import unittest
 
 from pymongo import Connection
 
@@ -12,11 +12,28 @@ class TestSimpleGeographies(unittest.TestCase):
         db = connection[config.CENSUS_DB]
         self.geographies = db[config.GEOGRAPHIES_COLLECTION]
 
-    def test_nation(self):
-        # TODO
-        pass
+    def _test_totalpop(self, obj, known_2000, known_2010):
+        """
+        Shortcut to test "total population" field from the P1 (race)
+        table since this table exists for both 2000 and 2010.
+        """
+        known_delta = known_2010-known_2000
+        known_pct = float(known_delta)/float(known_2000)
+
+        self.assertEqual(obj['data']['2000']["P1"]['P0010001'], known_2000)
+        self.assertEqual(obj['data']['2010']["P1"]['P0010001'], known_2010)
+        self.assertEqual(obj['data']['delta']["P1"]['P0010001'], known_delta)
+        self.assertAlmostEqual(
+            obj['data']['pct_change']["P1"]['P0010001'],
+            known_pct
+        )
+
+    # TODO 
+    #def test_nation(self):
+    #    pass
     
     def test_state(self):
+        """ Data import test against known values that Delaware should have. """
         states = self.geographies.find({ 'geoid': '10' })
 
         self.assertEqual(states.count(), 1)
@@ -25,30 +42,62 @@ class TestSimpleGeographies(unittest.TestCase):
 
         self.assertEqual(state['sumlev'], '040')
         self.assertEqual(state['metadata']['NAME'], 'Delaware')
+        self.assertEqual(state['metadata']['STATE'], '10')
 
-        # TODO:
-        # Test that an arbitrary value in 2000 is correct
-        # Test that the same value in 2010 is correct
-        # Test that the same value has a correct delta
-        # Test that the same value has a correct pct_change
+        pop_2000 = 783600
+        pop_2010 = 897934
+        self._test_totalpop(state, pop_2000, pop_2010)
 
     def test_county(self):
-        # TODO
-        pass
-    
+        """ Data import test against known values that Kent County, DE should have. """
+        counties = self.geographies.find({ 'geoid': '10001' })
+
+        self.assertEqual(counties.count(), 1)
+
+        county = counties[0]
+
+        self.assertEqual(county['sumlev'], '050')
+        self.assertEqual(county['metadata']['NAME'], 'Kent County')
+        self.assertEqual(county['metadata']['STATE'], '10')
+        self.assertEqual(county['metadata']['COUNTY'], '001')
+
+        pop_2000 = 126697
+        pop_2010 = 162310
+        self._test_totalpop(county, pop_2000, pop_2010)
+
     def test_place(self):
-        # TODO
-        pass
+        """ Data import test against known values that Newark city, DE should have. """
+        places = self.geographies.find({ 'geoid': '1050670' })
 
-class TestTracts(unittest.TestCase):
-    def setUp(self):
-        connection = Connection()
-        db = connection[config.CENSUS_DB]
-        self.geographies = db[config.GEOGRAPHIES_COLLECTION]
+        self.assertEqual(places.count(), 1)
 
-    def test_simple_tract(self):
-        # TODO
-        pass
+        place = places[0]
+
+        self.assertEqual(place['sumlev'], '160')
+        self.assertEqual(place['metadata']['NAME'], 'Newark city')
+        self.assertEqual(place['metadata']['STATE'], '10')
+        self.assertEqual(place['metadata']['PLACE'], '50670')
+
+        pop_2000 = 28547
+        pop_2010 = 31454
+        self._test_totalpop(place, pop_2000, pop_2010)
+
+    def test_tract(self): 
+        """ Data import test against known values that Tract 401, Kent County, DE should have. """
+        tracts = self.geographies.find({ 'geoid': '10001040100' })
+
+        self.assertEqual(tracts.count(), 1)
+
+        tract = tracts[0]
+
+        self.assertEqual(tract['sumlev'], '140')
+        self.assertEqual(tract['metadata']['NAME'], 'Census Tract 401')
+        self.assertEqual(tract['metadata']['STATE'], '10')
+        self.assertEqual(tract['metadata']['COUNTY'], '001')
+
+        pop_2000 = 5337
+        pop_2010 = 6541
+        self._test_totalpop(tract, pop_2000, pop_2010)
 
 class TestLabels(unittest.TestCase):
     def setUp(self):
