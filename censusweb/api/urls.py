@@ -15,7 +15,10 @@ urlpatterns = patterns('',
     #/data/10001041500.html
     #/data/10,10001,10001041500.html
     (r'^data/(?P<geoids>(,?\d+)+)\.json$', views.data_as_json),
-    (r'^data/(?P<geoids>(,?\d+)+)\.(?P<extension>csv|html)$', views.data),
+    (r'^data/(?P<geoids>(,?\d+)+)\.csv$', views.data_as_csv),
+    (r'^data/(?P<geoids>(,?\d+)+)\.html$', views.data),
+
+    (r'^labels/(?P<year>\d{4})(/(?P<tables>.+))?.json', views.labels_as_json),
 
     # County codes for states.
     #/internal/counties_for_state/10.json
