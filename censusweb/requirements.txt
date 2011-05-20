@@ -5,7 +5,7 @@ django-debug-toolbar==0.8.4
 geopy==0.94.1
 multiprocessing==2.6.2.1
 paramiko==1.7.6
-psycopg2==2.4
+#psycopg2==2.4
 pycrypto==2.3
 python-memcached==1.47
 simplejson==2.1.3
