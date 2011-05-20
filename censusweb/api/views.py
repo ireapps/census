@@ -26,6 +26,17 @@ def tracts_for_county(request, county=''):
     tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
 
+def data_as_json(request, geoids):
+    geographies = {}
+
+    for geoid in geoids.split(','):
+        g = mongoutils.get_geography(geoid)
+        del g['_id']
+        del g['xrefs']
+        geographies[geoid] = g
+        
+    return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
+    
 def data(request, geoids, extension):
     geographies = []
 
