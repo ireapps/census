@@ -1,0 +1,101 @@
+P001001	P001001	Universe: Total population
+P002001	P002001	Universe: Total population
+P007001	P003001	Universe: Total population
+P001001	P004001	Universe: Total population
+P008001	P005001	Universe: Total population
+P009001	P006001	Universe: Total races tallied
+P010001	P007001	Universe: Total races tallied
+P003001	P008001	Universe: Total population
+P004001	P009001	Universe: Total population
+P005001	P010001	Universe: Population 18 years and over
+P006001	P011001	Universe: Population 18 years and over
+P012001	P012001	Universe: Total population
+P013001	P013001	Universe: Total population
+P014001	P014001	Universe: Population under 20 years
+H007001	P015001	Universe: Households
+P016001	P016001	Universe: Population in households  
+P017001	P017001	Universe: Households
+P019001	P018001	Universe: Households
+P018001	P019001	Universe: Households
+P019001	P020001	Universe: Households
+P020001	P021001	Universe: Households
+P021001	P022001	Universe: Households
+	P023001	Universe: Households
+P022001	P024001	Universe: Households
+P023001	P025001	Universe: Households
+P024001	P026001	Universe: Households
+P025001	P027001	Universe: Households
+P026001	P028001	Universe: Households
+P027001	P029001	Universe: Total population
+	P030001	Universe: Population in households
+P028001	P031001	Universe: Population under 18 years
+P029001	P032001	Universe: Population under 18 years
+	P033001	Universe: Population under 18 years in households (excluding householders)
+P030001	P034001	Universe: Population 65 years and over
+P031001	P035001	Universe: Families
+P032001	P036001	Universe: Population in families    
+P033001	P037001	Universe: Families
+P034001	P038001	Universe: Families
+P035001	P039001	Universe: Families
+P036001	P040001	Universe: Own children under 18 years
+	P041001	Universe: Grandchildren under 18 years living with a grandparent householder
+P037001	P042001	Universe: Population in group quarters
+P038001	P043001	Universe: Population in group quarters
+PCT001001	PCT001001	Universe: People who are American Indian and Alaska Native alone - total tribes tallied for people with one tribe only
+PCT002001	PCT002001	Universe: People who are American Indian and Alaska Native alone - total tribes tallied for people with one or more tribes
+PCT003001	PCT003001	Universe: People who are American Indian and Alaska Native alone or in combination with one or more other races - total tribes tallied for people with one or more tribes
+PCT004001	PCT004001	Universe: People who are American Indian or Alaska Native alone or in combination with one or more other races
+PCT005001	PCT005001	Universe: Total Asian categories tallied for people with one Asian category only and people with no specific Asian category reported
+PCT006001	PCT006001	Universe: Total Asian categories tallied for people with one or more Asian categories only and people with no specific Asian category reported.
+PCT007001	PCT007001	Universe: Total Asian categories tallied and people with no specific Asian category reported
+PCT008001	PCT008001	Universe: Total Native Hawaiian and Other Pacific Islander categories tallied for people with one Native Hawaiian and Other Pacific Islander category only and people with no specific Native Hawaiian and Other Pacific Islander category reported
+PCT009001	PCT009001	Universe: Total Native Hawaiian and Other Pacific Islander categories tallied for people with one or more Native Hawaiian and Other Pacific Islander category only and people with no specific 
+PCT010001	PCT010001	Universe: Total Native Hawaiian and Other Pacific Islander categories tallied and people with no specific Native Hawaiian and Other Pacific Islander category reported
+PCT011001	PCT011001	Universe: Total population
+PCT012001	PCT012001	Universe: Total population
+PCT013001	PCT013001	Universe: Population in households
+	PCT014001	Universe: Households
+PCT014001	PCT015001	Universe: Households
+	PCT016001	Universe: Households		Universe = 2000 SF1 P15.
+	PCT017001	Universe: Population under 18 years in households (excluding householders)
+SF3PCT002001	PCT018001	Universe: Nonfamily households
+PCT015001	PCT019001	Universe: Nonrelatives
+PCT016001	PCT020001	Universe: Population in group quarters
+PCT017001	PCT021001	Universe: Population in group quarters
+	PCT022001	Universe: Population 18 years and over in group quarters 
+	PCO001001	Universe: Population in group quarters
+	PCO002001	Universe: Institutionalized population 
+	PCO003001	Universe: Population in correctional facilities for adults 
+	PCO004001	Universe: Population in juvenile facilities 
+	PCO005001	Universe: Population in nursing facilities/skilled-nursing facilities 
+	PCO006001	Universe: Population in other institutional facilities 
+	PCO007001	Universe: Noninstitutionalized population 
+	PCO008001	Universe: Population in college/university student housing 
+	PCO009001	Universe: Population in military quarters 
+	PCO010001	Universe: Population in other noninstitutional facilities 
+H001001	H001001	Universe: Housing units
+H002001	H002001	Universe: Housing units
+H003001	H003001	Universe: Housing units
+	H004001	Universe: Occupied housing units
+H005001	H005001	Universe: Vacant housing units
+H006001	H006001	Universe: Occupied housing units
+H007001	H007001	Universe: Occupied housing units
+H008001	H008001	Universe: Total races tallied for householders in occupied housing units
+H009001	H009001	Universe: Total races tallied for householders in occupied housing units
+H010001	H010001	Universe: Population in occupied housing units
+H011001	H011001	Universe: Population in occupied housing units
+H012001	H012001	Universe: Occupied housing units 
+H013001	H013001	Universe: Occupied housing units
+H014001	H014001	Universe: Occupied housing units
+	H015001	Universe: Occupied housing units
+H015001	H016001	Universe: Occupied housing units
+H017001	H017001	Universe: Occupied housing units
+H017001	H018001	Universe: Occupied housing units
+	H019001	Universe: Occupied housing units
+H018001	H020001	Universe: Occupied housing units
+H019001	H021001	Universe: Vacant housing units
+H020001	H022001	Universe: Occupied housing units not substituted
+	HCT001001	Universe: Occupied housing units
+	HCT002001	Universe: Occupied housing units
+	HCT003001	Universe: Occupied housing units
+	HCT004001	Universe: Occupied housing units
