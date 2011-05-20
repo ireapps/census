@@ -25,6 +25,7 @@ $(function(){
             $('#place-select .link').click(_.bind(this.select, this, 'place'));
             $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
             $('.button.go').click(this.go);
+            $('.button.remove-column').click(this.remove_column);
         },
 
         isCompletable: function() {
@@ -140,6 +141,15 @@ $(function(){
                 this.render();
             }, this));
         },
+        
+        remove_column: function() {
+            geoid = $(this).attr('data-val');
+            if (document.location.href.indexOf('/' + geoid) > 0) {
+                document.location.href = document.location.href.replace(geoid + ',', '');
+            } else {
+                document.location.href = document.location.href.replace(',' + geoid, '');
+            }
+        },
 
         // ------------------------- Data ---------------------------------
 
@@ -222,5 +232,5 @@ $(function(){
 
     query.controller = new QueryController;
     Backbone.history.start();
-
+    
 });

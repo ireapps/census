@@ -25,7 +25,12 @@
     <tr>
         <th rowspan="2">{{ r.table }}<br /><span class="universe">Universe: {{ r.universe }}</span></th>
         {% for c in r.columns %}
-        <th colspan="4">{{ c }}</th>
+        <th colspan="4">
+            {{ c.name }}
+            {% if show_remove_button %}
+                <span class="button remove-column" data-val="{{ c.geoid }}">X</span>
+            {% endif %}
+        </th>
         {% endfor %}
     <tr>
         {% for c in r.columns %}
