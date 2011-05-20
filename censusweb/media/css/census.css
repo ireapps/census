@@ -143,6 +143,10 @@ nav {
     width: 300px;
 }
 
+.report td.label .key {
+    font-size: 12px;
+}
+
 .report tr.odd td {
     background: #f3f6fa;
     border-top: 1px solid #eee; border-bottom: 1px solid #eee;
@@ -150,6 +154,10 @@ nav {
 
 .report tr.odd td.first {
     border-left: 1px solid #aaa;
+}
+
+.report tr.highlight td {
+    background: #fefbeb !important;
 }
 
 .report tr:last-child td {
