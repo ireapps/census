@@ -41,9 +41,9 @@
         {% endfor %}
     </tr>
     </tr>
-    {% for label, data in r.rows %}
-    <tr class="{% cycle odd,even %} indent-{{ label.indent }}">
-        <td class="label">{{ label.text }}</td>
+    {% for label, data, key in r.rows %}
+    <tr class="{% cycle odd,even %} indent-{{ label.indent }}" id="{{ key }}">
+        <td class="label">{{ label.text }} <span class="key">{{ key }}</span></td>
         {% for d in data %}
             <td class="code">{{ d.2000 }}</td>
             <td class="code">{{ d.2010 }}</td>

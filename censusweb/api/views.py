@@ -69,7 +69,7 @@ def data(request, geoids, extension):
                         '2010': g['data']['2010'][t][key],
                     })
             
-            report['rows'].append((label, data))
+            report['rows'].append((label, data, key))
 
         for g in geographies:
             column_meta = {}
