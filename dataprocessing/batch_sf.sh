@@ -20,9 +20,9 @@ FAKE=$2
 
 # Load 2000 data as 2010 for testing
 if [ "$FAKE" = "FAKE" ]; then
-    ./load_sf_geographies_2010.py data/${STATE_NAME_ABBR}geo2010.csv
+    ./load_sf_geographies_2010.py data/${STATE_NAME_ABBR}geo2000.csv
     ./load_crosswalk.py $STATE_FIPS $FAKE 
-    ./load_sf_data_2010.py data/sf_data_2010_${STATE_NAME_LOWER}_1.csv
+    ./load_sf_data_2010.py data/sf_data_2000_${STATE_NAME_LOWER}_1.csv
 
     ./crosswalk.py $STATE_FIPS
     ./compute_deltas.py $STATE_FIPS
