@@ -114,6 +114,11 @@ nav {
     color: #333;
 }
 
+.report th .universe {
+	font-weight: normal;
+	font-size: 18px;
+}
+
 .report th.subhead {
     font-size: 14px;
     font-weight: bold;

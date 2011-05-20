@@ -47,6 +47,7 @@ def data(request, geoids, extension):
         report = {
             'year': '2010',
             'table': t + ". " + labels['name'],
+            'universe': labels['universe'],
             'columns': [],
             'rows': [],
         }
