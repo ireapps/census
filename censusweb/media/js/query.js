@@ -16,6 +16,12 @@ $(function(){
         },
 
         render: function() {
+            // Remove this section to enable "go button" prompt:
+            if (this.get('summarylevel') && this.get(this.get("summarylevel")))
+                // Don't re-render. We just selected the item we wanted so
+                // we are going to force "go" there. (See `select`.)
+                return;
+            
             $("#search").html(this.template({query: this}));
             $('#filter-help').toggle(!!this.shouldShowFilterHelp());
             $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
