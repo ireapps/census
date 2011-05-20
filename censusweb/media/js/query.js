@@ -98,6 +98,13 @@ $(function(){
             this.currentLevel = level;
             this.set(attrs);
             //this.controller.saveLocation('query/' + this.location());
+            
+            // Remove this section to enable "go button" prompt:
+            var q = window.query;
+            if (query.get('summarylevel') && query.get(query.get("summarylevel")))
+                // The item we just selected is of the same type as our
+                // target datatype. We just picked the value we wanted.
+                this.go();
         },
 
         loadNext: function() {
