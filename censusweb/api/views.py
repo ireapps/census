@@ -131,6 +131,7 @@ def data(request, geoids):
         report = {
             'year': '2010',
             'table': t + ". " + labels['name'],
+            'universe': labels['universe'],
             'columns': [],
             'rows': [],
         }
@@ -155,12 +156,15 @@ def data(request, geoids):
             report['rows'].append((label, data))
 
         for g in geographies:
-            c = g['metadata']['NAME']
+            column_meta = {}
+            column_name = g['metadata']['NAME']
 
             if g['sumlev'] in [constants.SUMLEV_COUNTY, constants.SUMLEV_PLACE, constants.SUMLEV_TRACT]:
-                c += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
+                column_name += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
 
-            report['columns'].append(c)
+            column_meta['name'] = column_name
+            column_meta['geoid'] = g['geoid']
+            report['columns'].append(column_meta)
 
         reports.append(report)
 
@@ -170,5 +174,6 @@ def data(request, geoids):
             'reports': reports,
             'csv_url': request.get_full_path().replace('.html','.csv'),
             'json_url': request.get_full_path().replace('.html','.json'),
+            'show_remove_button': len(report['columns']) > 1,
         },
         context_instance=RequestContext(request))
