@@ -45,7 +45,11 @@
     </tr>
     </tr>
     {% for label, data, key in r.rows %}
-    <tr class="{% cycle odd,even %} indent-{{ label.indent }}" id="{{ key }}">
+    <tr
+        class="{% cycle odd,even %} indent-{{ label.indent }} row {% if label.has_children %} has-children {% if label.indent > 1 %}closed{% else %}open{% endif %}{% endif %}"
+        id="{{ key }}" parent="{{ label.parent }}"
+        style="{% if label.indent > 2 %}display:none;{% endif %}"
+    >
         <td class="label">{{ label.text }} <span class="key">{{ key }}</span></td>
         {% for d in data %}
             <td class="code">{{ d.2000 }}</td>

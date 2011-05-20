@@ -85,6 +85,7 @@ with open(FILENAME) as f:
 
         if indent > last_indent:
             hierarchy.append((last_key, last_indent))
+            table['labels'][last_key]['has_children'] = True
 
         while indent < last_indent:
             hierarchy.pop()
@@ -98,7 +99,8 @@ with open(FILENAME) as f:
         table['labels'][key] = {
             'text': text.strip().strip(':'),
             'indent': indent,
-            'parent': parent
+            'parent': parent,
+            'has_children': False, #maybe! we'll reset this later in the loop if we discover otherwise. look up.
         }
 
         inserts += 1
