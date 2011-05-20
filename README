@@ -13,4 +13,5 @@ mkvirtualenv --no-site-packages censusweb
 pip install -r requirements.txt
 cd ../dataprocessing
 ./batch_test.sh
+cd ../censusweb
 ./manage.py runserver
