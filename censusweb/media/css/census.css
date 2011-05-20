@@ -131,8 +131,16 @@ nav {
 
 .report tr.row {}
 .report tr.row.hidden {}
-.report tr.row.has-children.closed td.label { background-color:green; }
-.report tr.row.has-children.open td.label { background-color:red; }
+.report tr.row.has-children td.label {
+    background-position: 5px 5px !important;
+    background-repeat: no-repeat !important;
+}
+.report tr.row.has-children.closed td.label { 
+    background-image:url('/site_media/images/plus.png') !important;
+}
+.report tr.row.has-children.open td.label {
+    background-image:url('/site_media/images/minus.png') !important;
+}
 
 .report td {
     color: #333;
@@ -175,22 +183,23 @@ nav {
 
 .report tr.indent-0 td.label {
     font-weight: bold;
-}
-
-.report tr.indent-1 td.label {
     padding-left: 25px;
 }
 
-.report tr.indent-2 td.label {
+.report tr.indent-1 td.label {
     padding-left: 50px;
 }
 
-.report tr.indent-3 td.label {
+.report tr.indent-2 td.label {
     padding-left: 75px;
 }
 
-.report tr.indent-4 td.label {
+.report tr.indent-3 td.label {
     padding-left: 100px;
+}
+
+.report tr.indent-4 td.label {
+    padding-left: 125px;
 }
 
 .report span.help_text {
