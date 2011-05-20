@@ -152,6 +152,10 @@ nav {
     border-left: 1px solid #aaa;
 }
 
+.report tr.highlight td {
+    background: #fefbeb !important;
+}
+
 .report tr:last-child td {
     border-bottom-color: #aaa;
 }

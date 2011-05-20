@@ -237,5 +237,12 @@ $(function(){
 
     query.controller = new QueryController;
     Backbone.history.start();
+
+    // Table mouseover row highlighting.
+    $(".report tr").hover(function() {
+        $(this).addClass("highlight");
+    }, function() {
+        $(this).removeClass('highlight');
+    });
     
 });
