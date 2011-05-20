@@ -29,7 +29,7 @@ def tracts_for_county(request, county=''):
 def data(request, geoids, extension):
     geographies = []
 
-    for geoid in geoids.split('/'):
+    for geoid in geoids.split(','):
         geographies.append(mongoutils.get_geography(geoid))
 
     tables = []
