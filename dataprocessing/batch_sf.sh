@@ -10,10 +10,14 @@ FAKE=$2
 
 ./ensure_indexes.sh
 
-./fetch_sf_data.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR $FAKE
+./fetch_sf_data.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
 
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
-./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_1.csv
+
+for i in {1..39}
+do
+    ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
+done
 
 # Load 2000 data as 2010 for testing
 if [ "$FAKE" = "FAKE" ]; then
