@@ -43,8 +43,7 @@ def get_geography(geoid):
 
 def get_geographies_list(geoids, fields = None):
     collection = get_geographies_collection()
-#    raw_geographies = list( collection.find({ 'geoid': { "$in": geoids }}, fields=fields) )
-    raw_geographies = list( collection.find({ 'geoid': { "$in": geoids }}) )
+    raw_geographies = list( collection.find({ 'geoid': { "$in": geoids }}, fields=fields) )
     
     # Re-order `raw_geographies` into the original order of the `geoids` input
     geo_list = []
