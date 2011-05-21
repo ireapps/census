@@ -26,6 +26,7 @@ $(function(){
             $('#place-select .link').click(_.bind(this.select, this, 'place'));
             $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
             $('.button.go').click(this.go);
+            $('.button.csv').click(this.csv);
             $('.button.remove-column').click(this.remove_column);
             $('tr.row').click(this.twist_row);
             $('.button.show-family').click(this.show_family);
@@ -121,6 +122,14 @@ $(function(){
                 //we're on the homepage
                 window.location = '/data/' + this.location() + '.html';
             }
+        },
+        
+        csv: function() {
+            var geoid_list = []
+            $('.link').each(function() {
+                geoid_list.push($(this).attr('data-val'))
+            });
+            window.location = '/data/' + geoid_list.join(',') + '.csv';
         },
 
         showHelp: function(e) {
