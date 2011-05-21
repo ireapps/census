@@ -17,7 +17,12 @@ $(function(){
             this.template = _.template($('#query-template').html());
             this.lazyRender = _.debounce(this.render, 50);
             this.filter = '';
-            $(document.body).keypress(this.keypress);
+            if ($.browser.ie) {
+                $(document.body).keypress(this.keypress);
+            } else {
+                $(document).keypress(this.keypress);
+            }
+            
             document.onkeydown = this.keydown;
             this.bind('change', this.render);
             this.bind('change', this.loadNext);
