@@ -26,22 +26,6 @@
     $(function(){
         $('.button.more-data').click(function(){
             $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
-            
-            ///NONONO, forget this. make it do a callback for the info. create a method called 'setup picker' or something, it does JSON
-        
-            // switch(last_sumlev)
-            // {
-            //     case SUMLEV_TRACT:
-            //         var state = last_geoid.substr(0,2);
-            //         var county = last_geoid.substr(0,5);
-            //         query.set({'state': state, 'county': county, 'summarylevel':'tract'});
-            //         query.loadTracts();
-            // }
-            
-            // query.set({'state':'10'});
-            // query.set({'county':'10001'});
-            // query.loadTracts();
-            
             query.initializeWithGeography(last_geoid);
         });
     });

@@ -136,6 +136,9 @@ $(function(){
                     attrs[SUMLEV_STATE] = g.metadata.STATE;
                     attrs[SUMLEV_COUNTY] = g.metadata.STATE + g.metadata.COUNTY;
                     attrs['summarylevel'] = g.sumlev;
+
+                    //need the names for the labels for the parent summary levels
+
                     query.set(attrs);
                 });
             }, this));

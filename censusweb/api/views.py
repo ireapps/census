@@ -41,6 +41,10 @@ def data_as_json(request, geoids):
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
+def family_as_json(request, geoid):
+    family = get_family_geoids(geoid)
+    
+
 def csv_row_header(tables=None):
     if not tables:
         tables_list = mongoutils.get_tables_for_year("2010")
@@ -112,8 +116,13 @@ def labels_as_json(request,year,tables=None):
     return HttpResponse(simplejson.dumps(labels), mimetype='application/json')
 
 def redirect_to_family(request, geoid):
+    family = get_family_geoids(geoid)
+    geoid_str = ",".join(family)
+    url = reverse("data", args=[geoid_str,])
+    return HttpResponsePermanentRedirect(url)
+
+def get_family_geoids(geoid):
     geography = mongoutils.get_geography(geoid)
-    
     family = [geography['metadata']['STATE'],]
     if geography['metadata']['COUNTY']:
         family.append(
@@ -127,10 +136,7 @@ def redirect_to_family(request, geoid):
         family.append(
             "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY'], geography['metadata']['TRACT']])
         )
-    
-    geoid_str = ",".join(family)
-    url = reverse("data", args=[geoid_str,])
-    return HttpResponsePermanentRedirect(url)
+    return family
 
 def report_values_for_key(g,t,key):
     d = {}

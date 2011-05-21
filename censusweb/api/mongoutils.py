@@ -37,6 +37,10 @@ def get_tracts_by_county(county_geoid):
 
     return [(t['metadata']['NAME'], t['geoid']) for t in tracts] 
 
+def get_names(geoids):
+    geographies = get_geographies_collection()
+    names = geographies.find({ 'geoid': state_fips }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
+
 def get_geography(geoid):
     geographies = get_geographies_collection()
     return geographies.find_one({ 'geoid': geoid })
