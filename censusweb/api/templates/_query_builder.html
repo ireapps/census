@@ -97,7 +97,13 @@
 
     <% if (query.isCompletable()) { %>
         <div>
-            Download data for listed geographies as <span class="button csv-json">CSV</span> <span class="button csv-json">JSON</span>
+            Download data for
+            all <%= query.get('summarylevelDisplay') %> in
+            <% if (query.get(SUMLEV_COUNTY)) { %>
+                <%= query.get(SUMLEV_COUNTY+'Display') %>,
+            <% } %>
+            <%= query.get(SUMLEV_STATE +'Display') %>
+            as <span class="button csv-json">CSV</span> <span class="button csv-json">JSON</span>
         </div>
     <% } %>
 
