@@ -361,15 +361,22 @@ $(function(){
     // Table mouseover row highlighting.
     $(".report").delegate('td','mouseover mouseleave', function(e) {
         if (e.type == 'mouseover') {
+            status = ''
             $(this).addClass("selected");
             $(this).parent().addClass("highlight");
-            if ($(this).index() > 0)
-                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight");
+            status = $(this).parent().find('.label').text();
+            if ($(this).index() > 0) {
+                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight"); //column
+                status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
+                status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
+            }
+            $('#status').show().text(status);
         } else {
             $(this).removeClass("selected");
             $(this).parent().removeClass('highlight');
             if ($(this).index() > 0)
                 $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
+            $('#status').hide();
         }
     });
     

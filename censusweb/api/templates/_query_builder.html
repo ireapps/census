@@ -107,7 +107,7 @@
         - <b><%= query.get(SUMLEV_TRACT + 'Display') %></b>.
     <% } %>
 
-    <% if (query.isCompletable()) { %>
+    <% if (query.isCompletable() && window.location.pathname.indexOf('/data/') < 0 ) { %>
         <div>
             Download data for
             all <%= query.get('summarylevelDisplay') %> in

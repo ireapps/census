@@ -245,3 +245,11 @@ nav {
     cursor:pointer;
     text-decoration:underline;
 }
+
+#status {
+    position:fixed;
+    bottom:0;
+    left:0;
+    background-color:#FDF4CA;
+    padding:5px;
+}
