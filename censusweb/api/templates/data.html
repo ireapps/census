@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load helpertags %}
+{% load humanize %}
 
 {% block content %}
 
@@ -63,10 +65,10 @@
     >
         <td class="label">{{ label.text }} <span class="key">{{ key }}</span></td>
         {% for d in data %}
-            <td class="code data-cell">{{ d.2000 }}</td>
-            <td class="code data-cell">{{ d.2010 }}</td>
-            <td class="code data-cell">{{ d.delta }}</td>
-            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|floatformat:-3 }}</td>
+            <td class="code data-cell">{{ d.2000|intcomma }}</td>
+            <td class="code data-cell">{{ d.2010|intcomma }}</td>
+            <td class="code data-cell">{{ d.delta|intcomma }}</td>
+            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|percent|floatformat:-1 }}</td>
         {% endfor %}
     </tr>
     {% endfor %}
