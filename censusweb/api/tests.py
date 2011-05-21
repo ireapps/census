@@ -5,6 +5,7 @@ Not sure what to test in the api yet...
 from django.utils import unittest
 from django.test.client import Client
 from django.test.simple import DjangoTestSuiteRunner
+from django.core.urlresolvers import get_resolver
 import simplejson
 import logging
 
@@ -44,3 +45,20 @@ class ViewTest(unittest.TestCase):
             self.log.debug("asking for %s" % path)
             r = c.get(path)
             print '.',
+
+class UrlTest(unittest.TestCase):
+    log = logging.getLogger('UrlTest')
+    def test_resolution(self):
+        r = get_resolver(None)
+        geoids = '10,10001,10002,10003,10001040100'
+        geoids = geoids.split(',')
+        test = []
+        while geoids:
+            test.append(geoids.pop())
+            geoid_str = ",".join(test)
+            path = "/data/%s.html" % geoid_str
+            self.log.debug("asking for %s" % path)
+            match = r.resolve(path)
+            self.assertEquals(1,len(match.kwargs))
+            self.assertEquals(geoid_str,match.kwargs['geoids'])
+        
