@@ -17,10 +17,20 @@ $(function(){
             this.template = _.template($('#query-template').html());
             this.lazyRender = _.debounce(this.render, 50);
             this.filter = '';
-            $(document.body).keypress(this.keypress);
+            if ($.browser.ie) {
+                $(document.body).keypress(this.keypress);
+            } else {
+                $(document).keypress(this.keypress);
+            }
+            
             document.onkeydown = this.keydown;
             this.bind('change', this.render);
             this.bind('change', this.loadNext);
+            this.mappings.summarylevelDisplays[SUMLEV_TRACT] = 'Tracts';
+            this.mappings.summarylevelDisplays[SUMLEV_PLACE] = 'Places';
+            this.mappings.summarylevelDisplays[SUMLEV_COUNTY] = 'Counties';
+            this.mappings.summarylevelDisplays[SUMLEV_STATE] = 'States';
+            this.mappings.summarylevelDisplays[SUMLEV_NATION] = 'USA';
         },
 
         render: function() {
@@ -123,25 +133,30 @@ $(function(){
         },
         
         initializeWithGeography: function(geoid) {
-            $.getJSON('/data/' + geoid + '.json', _.bind(function(response) {
+            $.getJSON('/family/' + geoid + '.json', _.bind(function(response) {
                 var geographies = response;
-                // there should only be one, but $.each seems to work for me...
-                $.each(geographies, function(index, g){
-                    if(g.sumlev == SUMLEV_TRACT){
-                        query.currentLevel = SUMLEV_COUNTY;
-                    } else {
-                        query.currentLevel = SUMLEV_STATE;
+                var attrs = {};                
+                $.each(geographies, function(index,g) {
+                    attrs[g.sumlev + "Display"] = g.metadata.NAME;
+                    if(geoid == g.geoid) {
+                        attrs[SUMLEV_STATE] = g.metadata.STATE;
+                        attrs['summarylevel'] = g.sumlev;
+                        attrs['summarylevelDisplay'] = query.mappings.summarylevelDisplays[g.sumlev];
+                        if(g.sumlev == SUMLEV_TRACT){
+                            query.currentLevel = SUMLEV_COUNTY;
+                            attrs[SUMLEV_COUNTY] = g.metadata.STATE + g.metadata.COUNTY;
+                        } else {
+                            query.currentLevel = SUMLEV_STATE;
+                        }
                     }
-                    var attrs = {};
-                    attrs[SUMLEV_STATE] = g.metadata.STATE;
-                    attrs[SUMLEV_COUNTY] = g.metadata.STATE + g.metadata.COUNTY;
-                    attrs['summarylevel'] = g.sumlev;
-                    query.set(attrs);
                 });
+                query.set(attrs);
             }, this));
         },
 
         loadNext: function() {
+            console.log(this.currentLevel);
+            console.log(this.get('summarylevel'));
             var level = this.currentLevel;
             if (level == SUMLEV_STATE) {
                 if (_.include([SUMLEV_TRACT, SUMLEV_COUNTY], this.get('summarylevel'))) {
@@ -240,6 +255,10 @@ $(function(){
         mappings: {
 
             summarylevels: [SUMLEV_TRACT, SUMLEV_PLACE, SUMLEV_COUNTY, SUMLEV_STATE, SUMLEV_NATION],
+            
+            summarylevelDisplays: {
+                //gets filled in during init
+            },
 
             states: [
                 ["Alabama"              ,"01"],
@@ -318,10 +337,18 @@ $(function(){
     Backbone.history.start();
 
     // Table mouseover row highlighting.
-    $(".report tr").hover(function() {
-        $(this).addClass("highlight");
-    }, function() {
-        $(this).removeClass('highlight');
+    $(".report").delegate('td','mouseover mouseleave', function(e) {
+        if (e.type == 'mouseover') {
+            $(this).addClass("selected");
+            $(this).parent().addClass("highlight");
+            if ($(this).index() > 0)
+                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight");
+        } else {
+            $(this).removeClass("selected");
+            $(this).parent().removeClass('highlight');
+            if ($(this).index() > 0)
+                $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
+        }
     });
     
 });

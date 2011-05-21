@@ -56,6 +56,17 @@ def data_as_json(request, geoids):
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
+def family_as_json(request, geoid):
+    geographies = {}
+    
+    family_geoids = get_family_geoids(geoid)
+    for g in mongoutils.get_geographies_list(family_geoids, ['geoid', 'sumlev', 'metadata.NAME', 'metadata.STATE', 'metadata.COUNTY']):
+        del g['_id']
+        #del g['xrefs']
+        geographies[g['geoid']] = g
+        
+    return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
+
 def csv_row_header(tables=None):
     if not tables:
         tables_list = mongoutils.get_tables_for_year("2010")
@@ -131,8 +142,13 @@ def labels_as_json(request,year,tables=None):
     return HttpResponse(simplejson.dumps(labels), mimetype='application/json')
 
 def redirect_to_family(request, geoid):
+    family = get_family_geoids(geoid)
+    geoid_str = ",".join(family)
+    url = reverse("data", args=[geoid_str,])
+    return HttpResponsePermanentRedirect(url)
+
+def get_family_geoids(geoid):
     geography = mongoutils.get_geography(geoid)
-    
     family = [geography['metadata']['STATE'],]
     if geography['metadata']['COUNTY']:
         family.append(
@@ -146,10 +162,7 @@ def redirect_to_family(request, geoid):
         family.append(
             "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY'], geography['metadata']['TRACT']])
         )
-    
-    geoid_str = ",".join(family)
-    url = reverse("data", args=[geoid_str,])
-    return HttpResponsePermanentRedirect(url)
+    return family
 
 def report_values_for_key(g,t,key):
     d = {}
@@ -217,7 +230,6 @@ def data(request, geoids):
             'csv_url': request.get_full_path().replace('.html','.csv'),
             'json_url': request.get_full_path().replace('.html','.json'),
             'show_remove_button': len(geoids_list) > 1,
-            'last_sumlev': g['sumlev'],
             'last_geoid': g['geoid'],
         },
         context_instance=RequestContext(request))
