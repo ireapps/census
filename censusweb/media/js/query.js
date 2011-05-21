@@ -203,12 +203,15 @@ $(function(){
         
         csvJson: function() {
             var dataType = '.' + this.innerHTML.toLowerCase()
-
             var geoid_list = []
-            $('.link').each(function() {
-                geoid_list.push($(this).attr('data-val'))
-            });
-            window.location = '/data/' + geoid_list.join(',') + dataType;
+            if (query.attributes.summarylevel == "140" && query.currentLevel == "040") {
+                window.location = '/internal/download_tracts_for_state/' + query.attributes['040'] + dataType;
+            } else {
+                $('.link').each(function() {
+                    geoid_list.push($(this).attr('data-val'))
+                });
+                window.location = '/data/' + geoid_list.join(',') + dataType;
+            }
         },
 
         showHelp: function(e) {
@@ -356,10 +359,18 @@ $(function(){
     Backbone.history.start();
 
     // Table mouseover row highlighting.
-    $(".report tr").hover(function() {
-        $(this).addClass("highlight");
-    }, function() {
-        $(this).removeClass('highlight');
+    $(".report").delegate('td','mouseover mouseleave', function(e) {
+        if (e.type == 'mouseover') {
+            $(this).addClass("selected");
+            $(this).parent().addClass("highlight");
+            if ($(this).index() > 0)
+                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight");
+        } else {
+            $(this).removeClass("selected");
+            $(this).parent().removeClass('highlight');
+            if ($(this).index() > 0)
+                $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
+        }
     });
     
 });

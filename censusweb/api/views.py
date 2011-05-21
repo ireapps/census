@@ -30,6 +30,20 @@ def places_for_state(request, state=''):
 def tracts_for_county(request, county=''):
     tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
+    
+def tracts_for_state(request, state=''):
+    tracts = mongoutils.get_tracts_by_state(state)
+    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
+    
+def download_tracts_for_state(request, state='', datatype=''):
+    tracts = mongoutils.get_tracts_by_state(state)
+    
+    tract_list = ','.join([t[1] for t in tracts])
+
+    if datatype == 'csv':
+        return data_as_csv(request,tract_list)
+    elif datatype == 'json':
+        return data_as_json(request,tract_list)
 
 def data_as_json(request, geoids):
     geographies = {}
