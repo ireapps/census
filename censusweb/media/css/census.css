@@ -152,6 +152,7 @@ nav {
     width: 375px !important;
 }
 .report th.locationdef {
+    background-color: #fff !important;
     width: 300px !important;
 }
 .report td.data-cell {
@@ -170,20 +171,28 @@ nav {
 }
 
 .report tr.odd td {
-    background: #f3f6fa;
-    /* 
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    */
+    background-color: #f3f6fa;
+}
+.report:hover tr.odd td {
+    /* Fixes issues with highlighting odd rows using <colgroup> */
+    background-color: inherit;
 }
 
 .report tr.odd td.first {
     border-left: 1px solid #aaa;
 }
 
-.report tr.highlight td {
-    background: #fefbeb !important;
+.highlight, colgroup.highlight, .highlight td {
+    background-color: #fefbeb;
 }
+.highlight th, th .highlight {
+    background-color: #fff;
+}
+.highlight td.selected {
+    /* border: 1px solid #aaa; */
+    background-color: #fdf4ca !important;
+}
+
 
 .report tr:last-child td {
     border-bottom-color: #aaa;

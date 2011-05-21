@@ -334,10 +334,18 @@ $(function(){
     Backbone.history.start();
 
     // Table mouseover row highlighting.
-    $(".report tr").hover(function() {
-        $(this).addClass("highlight");
-    }, function() {
-        $(this).removeClass('highlight');
+    $(".report").delegate('td','mouseover mouseleave', function(e) {
+        if (e.type == 'mouseover') {
+            $(this).addClass("selected");
+            $(this).parent().addClass("highlight");
+            if ($(this).index() > 0)
+                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight");
+        } else {
+            $(this).removeClass("selected");
+            $(this).parent().removeClass('highlight');
+            if ($(this).index() > 0)
+                $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
+        }
     });
     
 });
