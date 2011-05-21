@@ -33,11 +33,11 @@ def tracts_for_county(request, county=''):
 def data_as_json(request, geoids):
     geographies = {}
 
-    for geoid in geoids.split(','):
-        g = mongoutils.get_geography(geoid)
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    for g in mongoutils.get_geographies_list(geoids_list):
         del g['_id']
         del g['xrefs']
-        geographies[geoid] = g
+        geographies[g['geoid']] = g
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
@@ -94,8 +94,8 @@ def data_as_csv(request, geoids):
     w = csv.writer(response)
     w.writerow(csv_row_header(tables))
 
-    for geoid in geoids.split(','):
-        g = mongoutils.get_geography(geoid)
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    for g in mongoutils.get_geographies_list(geoids_list):
         csvrow = csv_row_for_geography(g, tables)
         w.writerow(csvrow)
     
@@ -181,10 +181,8 @@ def report_for_table(geographies, year, t):
     return report
     
 def data(request, geoids):
-    geographies = []
-
-    for geoid in geoids.split(','):
-        geographies.append(mongoutils.get_geography(geoid))
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    geographies = mongoutils.get_geographies_list(geoids_list)
 
     tables = []
     
@@ -205,9 +203,8 @@ def data(request, geoids):
             'reports': reports,
             'csv_url': request.get_full_path().replace('.html','.csv'),
             'json_url': request.get_full_path().replace('.html','.json'),
-            'show_remove_button': len(report['columns']) > 1,
+            'show_remove_button': len(geoids_list) > 1,
             'last_sumlev': g['sumlev'],
             'last_geoid': g['geoid'],
-            
         },
         context_instance=RequestContext(request))

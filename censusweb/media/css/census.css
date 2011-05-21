@@ -171,7 +171,10 @@ nav {
 
 .report tr.odd td {
     background: #f3f6fa;
-    border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+    /* 
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    */
 }
 
 .report tr.odd td.first {
