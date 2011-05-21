@@ -50,9 +50,9 @@
 {% for r in reports %}
 <table class="report">
     <tr>
-        <th rowspan="2">{{ r.table }}<br /><span class="universe">Universe: {{ r.universe }}</span></th>
+        <th rowspan="2" class="labeldef">{{ r.table }}<br /><span class="universe">Universe: {{ r.universe }}</span></th>
         {% for c in r.columns %}
-        <th colspan="4">
+        <th colspan="4" class="locationdef">
             {{ c.name }}
             {% if c.sumlev != "040" %}
                 <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">F</span>
@@ -79,10 +79,10 @@
     >
         <td class="label">{{ label.text }} <span class="key">{{ key }}</span></td>
         {% for d in data %}
-            <td class="code">{{ d.2000 }}</td>
-            <td class="code">{{ d.2010 }}</td>
-            <td class="code">{{ d.delta }}</td>
-            <td class="code {% if forloop.last %}last{% endif %}">{{ d.pct_change|floatformat:-3 }}</td>
+            <td class="code data-cell">{{ d.2000 }}</td>
+            <td class="code data-cell">{{ d.2010 }}</td>
+            <td class="code data-cell">{{ d.delta }}</td>
+            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|floatformat:-3 }}</td>
         {% endfor %}
     </tr>
     {% endfor %}

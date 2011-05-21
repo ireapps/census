@@ -35,8 +35,6 @@ def get_tracts_by_county(county_geoid):
 
     tracts = geographies.find({ 'metadata.STATE': state_fips, 'metadata.COUNTY': county_fips, 'sumlev': SUMLEV_TRACT }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
 
-    print tracts
-
     return [(t['metadata']['NAME'], t['geoid']) for t in tracts] 
 
 def get_geography(geoid):

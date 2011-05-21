@@ -10,6 +10,8 @@ import constants
 import help_text
 import mongoutils
 
+DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
+
 def homepage(request):
     return render_to_response('homepage.html', {
         'help_text': help_text,
@@ -38,8 +40,6 @@ def data_as_json(request, geoids):
         geographies[geoid] = g
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
-
-DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
 
 def csv_row_header(tables=None):
     if not tables:
@@ -132,6 +132,48 @@ def redirect_to_family(request, geoid):
     url = reverse("data", args=[geoid_str,])
     return HttpResponsePermanentRedirect(url)
 
+def report_values_for_key(g,t,key):
+    d = {}
+    for alternative in DATA_ALTERNATIVES:
+        try:
+            d[alternative] = g['data'][alternative][t][key]
+        except KeyError:
+            d[alternative] = ''
+    return d
+
+def report_for_table(geographies, year, t):
+    labels = mongoutils.get_labels_for_table(year, t)
+
+    report = {
+        'year': year,
+        'table': t + ". " + labels['name'],
+        'universe': labels['universe'],
+        'columns': [],
+        'rows': [],
+    }
+
+    for key, label in sorted(labels['labels'].items()):
+        data = []
+
+        for g in geographies:
+            data.append(report_values_for_key(g,t,key))
+
+        report['rows'].append((label, data, key))
+
+    for g in geographies:
+        column_meta = {}
+        column_name = g['metadata']['NAME']
+
+        if g['sumlev'] in [constants.SUMLEV_COUNTY, constants.SUMLEV_PLACE, constants.SUMLEV_TRACT]:
+            column_name += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
+
+        column_meta['name'] = column_name
+        column_meta['geoid'] = g['geoid']
+        column_meta['sumlev'] = g['sumlev']
+        report['columns'].append(column_meta)
+
+    return report
+    
 def data(request, geoids):
     geographies = []
 
@@ -148,47 +190,7 @@ def data(request, geoids):
     reports = []
 
     for t in sorted(tables):
-        labels = mongoutils.get_labels_for_table('2010', t)
-
-        report = {
-            'year': '2010',
-            'table': t + ". " + labels['name'],
-            'universe': labels['universe'],
-            'columns': [],
-            'rows': [],
-        }
-
-        for key, label in sorted(labels['labels'].items()):
-            data = []
-
-            for g in geographies:
-                try:
-                    data.append({
-                        '2000': g['data']['2000'][t][key],
-                        '2010': g['data']['2010'][t][key],
-                        'delta': g['data']['delta'][t][key],
-                        'pct_change': g['data']['pct_change'][t][key]
-                    })
-                # Data not available for 2000
-                except KeyError:
-                    data.append({
-                        '2010': g['data']['2010'][t][key],
-                    })
-            
-            report['rows'].append((label, data, key))
-
-        for g in geographies:
-            column_meta = {}
-            column_name = g['metadata']['NAME']
-
-            if g['sumlev'] in [constants.SUMLEV_COUNTY, constants.SUMLEV_PLACE, constants.SUMLEV_TRACT]:
-                column_name += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
-
-            column_meta['name'] = column_name
-            column_meta['geoid'] = g['geoid']
-            column_meta['sumlev'] = g['sumlev']
-            report['columns'].append(column_meta)
-
+        report = report_for_table(geographies, '2010',t)
         reports.append(report)
 
     return render_to_response('data.html',
