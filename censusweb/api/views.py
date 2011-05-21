@@ -203,5 +203,7 @@ def data(request, geoids):
             'csv_url': request.get_full_path().replace('.html','.csv'),
             'json_url': request.get_full_path().replace('.html','.json'),
             'show_remove_button': len(geoids_list) > 1,
+            'last_sumlev': g['sumlev'],
+            'last_geoid': g['geoid'],
         },
         context_instance=RequestContext(request))

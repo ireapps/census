@@ -1,4 +1,12 @@
 $(function(){
+    
+    // ------------------------- Constants -----------------------------------
+    SUMLEV_NATION = '010';
+    SUMLEV_STATE = '040';
+    SUMLEV_COUNTY = '050';
+    SUMLEV_TRACT = '140';
+    SUMLEV_PLACE = '160';
+    SUMLEV_BLOCK = '101';
 
     // ------------------------- Query Model ---------------------------------
 
@@ -27,23 +35,23 @@ $(function(){
             $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
             $('#help-link').click(this.showHelp);
             $("#summarylevel-select .link").click(_.bind(this.select, this, 'summarylevel'));
-            $("#state-select .link").click(_.bind(this.select, this, 'state'));
-            $('#county-select .link').click(_.bind(this.select, this, 'county'));
-            $('#place-select .link').click(_.bind(this.select, this, 'place'));
-            $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
+            $("#state-select .link").click(_.bind(this.select, this, SUMLEV_STATE));
+            $('#county-select .link').click(_.bind(this.select, this, SUMLEV_COUNTY));
+            $('#place-select .link').click(_.bind(this.select, this, SUMLEV_PLACE));
+            $('#tract-select .link').click(_.bind(this.select, this, SUMLEV_TRACT));
             $('.button.go').click(this.go);
-            $('.button.csv').click(this.csv);
+            $('.button.csv-json').click(this.csvJson);
             $('.button.remove-column').click(this.remove_column);
             $('tr.row').click(this.twist_row);
             $('.button.show-family').click(this.show_family);
         },
 
         isCompletable: function() {
-            return (this.get('summarylevel') && this.get('state'));
+            return (this.get('summarylevel') && this.get(SUMLEV_STATE));
         },
 
         isComplete: function() {
-            return !!(this.get('summarylevel') == 'nation' || this.get(this.get('summarylevel')));
+            return !!(this.get('summarylevel') == SUMLEV_NATION || this.get(this.get('summarylevel')));
         },
 
         shouldShowFilterHelp: function() {
@@ -61,10 +69,10 @@ $(function(){
         location: function() {
             if (!this.get('summarylevel')) return '';
             
-            if (this.get('tract'))         return this.get('tract');
-            if (this.get('place'))         return this.get('place');
-            if (this.get('county'))        return this.get('county');
-            if (this.get('state'))         return this.get('state');
+            if (this.get(SUMLEV_TRACT))         return this.get(SUMLEV_TRACT);
+            if (this.get(SUMLEV_PLACE))         return this.get(SUMLEV_PLACE);
+            if (this.get(SUMLEV_COUNTY))        return this.get(SUMLEV_COUNTY);
+            if (this.get(SUMLEV_STATE))         return this.get(SUMLEV_STATE);
 
             return '';
         },
@@ -96,7 +104,7 @@ $(function(){
             return _.filter(list, function(item){ return matcher.test(item[0]); });
         },
 
-        select: function(level, e) {
+        select: function(level, e) {    
             this.filter = "";
             var attrs = {};
             var el = $(e.currentTarget);
@@ -113,16 +121,35 @@ $(function(){
                 // target datatype. We just picked the value we wanted.
                 this.go();
         },
+        
+        initializeWithGeography: function(geoid) {
+            $.getJSON('/data/' + geoid + '.json', _.bind(function(response) {
+                var geographies = response;
+                // there should only be one, but $.each seems to work for me...
+                $.each(geographies, function(index, g){
+                    if(g.sumlev == SUMLEV_TRACT){
+                        query.currentLevel = SUMLEV_COUNTY;
+                    } else {
+                        query.currentLevel = SUMLEV_STATE;
+                    }
+                    var attrs = {};
+                    attrs[SUMLEV_STATE] = g.metadata.STATE;
+                    attrs[SUMLEV_COUNTY] = g.metadata.STATE + g.metadata.COUNTY;
+                    attrs['summarylevel'] = g.sumlev;
+                    query.set(attrs);
+                });
+            }, this));
+        },
 
         loadNext: function() {
             var level = this.currentLevel;
-            if (level == 'state') {
-                if (_.include(['tract', 'county'], this.get('summarylevel'))) {
+            if (level == SUMLEV_STATE) {
+                if (_.include([SUMLEV_TRACT, SUMLEV_COUNTY], this.get('summarylevel'))) {
                     this.loadCounties();
-                } else if (this.get('summarylevel') == 'place') {
+                } else if (this.get('summarylevel') == SUMLEV_PLACE) {
                     this.loadPlaces();
                 }
-            } else if (level == 'county' && this.get('summarylevel') == 'tract') {
+            } else if (level == SUMLEV_COUNTY && this.get('summarylevel') == SUMLEV_TRACT) {
                 this.loadTracts();
             }
         },
@@ -137,12 +164,14 @@ $(function(){
             }
         },
         
-        csv: function() {
+        csvJson: function() {
+            var dataType = '.' + this.innerHTML.toLowerCase()
+
             var geoid_list = []
             $('.link').each(function() {
                 geoid_list.push($(this).attr('data-val'))
             });
-            window.location = '/data/' + geoid_list.join(',') + '.csv';
+            window.location = '/data/' + geoid_list.join(',') + dataType;
         },
 
         showHelp: function(e) {
@@ -151,21 +180,21 @@ $(function(){
         },
 
         loadCounties: function() {
-            $.getJSON('/internal/counties_for_state/' + this.get('state') + '.json', _.bind(function(response) {
+            $.getJSON('/internal/counties_for_state/' + this.get(SUMLEV_STATE) + '.json', _.bind(function(response) {
                 this.mappings.counties = response;
                 this.render();
             }, this));
         },
 
         loadPlaces: function() {
-            $.getJSON('/internal/places_for_state/' + this.get('state') + '.json', _.bind(function(response) {
+            $.getJSON('/internal/places_for_state/' + this.get(SUMLEV_STATE) + '.json', _.bind(function(response) {
                 this.mappings.places = response;
                 this.render();
             }, this));
         },
 
         loadTracts: function() {
-            $.getJSON('/internal/tracts_for_county/' + this.get('county') + '.json', _.bind(function(response) {
+            $.getJSON('/internal/tracts_for_county/' + this.get(SUMLEV_COUNTY) + '.json', _.bind(function(response) {
                 this.mappings.tracts = response;
                 this.render();
             }, this));
@@ -202,65 +231,65 @@ $(function(){
             geoid = $(this).attr('data-val');
             document.location.href = "/family/" + geoid + "/";
         },
-
-        // ------------------------- Data ---------------------------------
-
+    
+        // --------------------- Data ----------------------------------------
+    
         mappings: {
 
-            summarylevels: ['tract', 'place', 'county', 'state', 'nation'],
+            summarylevels: [SUMLEV_TRACT, SUMLEV_PLACE, SUMLEV_COUNTY, SUMLEV_STATE, SUMLEV_NATION],
 
             states: [
                 ["Alabama"              ,"01"],
                 ["Alaska"               ,"02"],
-	            ["Arizona"              ,"04"],
-	            ["Arkansas"             ,"05"],
-	            ["California"           ,"06"],
-	            ["Colorado"             ,"08"],
-	            ["Connecticut"          ,"09"],
-	            ["District of Columbia" ,"11"],
-	            ["Delaware"             ,"10"],
-	            ["Florida"              ,"12"],
-	            ["Georgia"              ,"13"],
-	            ["Hawaii"               ,"15"],
-	            ["Iowa"                 ,"19"],
-	            ["Idaho"                ,"16"],
-	            ["Illinois"             ,"17"],
-	            ["Indiana"              ,"18"],
-	            ["Kansas"               ,"20"],
-	            ["Kentucky"             ,"21"],
-	            ["Louisiana"            ,"22"],
-	            ["Massachusetts"        ,"25"],
-	            ["Maryland"             ,"24"],
-	            ["Maine"                ,"23"],
-	            ["Michigan"             ,"26"],
-	            ["Minnesota"            ,"27"],
-	            ["Mississippi"          ,"26"],
-	            ["Missouri"             ,"29"],
-	            ["Montana"              ,"29"],
-	            ["North Carolina"       ,"37"],
-	            ["North Dakota"         ,"38"],
-	            ["Nebraska"             ,"31"],
-	            ["New Hampshire"        ,"33"],
-	            ["New Jersey"           ,"34"],
-	            ["New Mexico"           ,"35"],
-	            ["Nevada"               ,"32"],
-	            ["New York"             ,"36"],
-	            ["Ohio"                 ,"39"],
-	            ["Oklahoma"             ,"40"],
-	            ["Oregon"               ,"41"],
-	            ["Pennsylvania"         ,"42"],
-	            ["Rhode Island"         ,"44"],
-	            ["South Carolina"       ,"45"],
-	            ["South Dakota"         ,"46"],
-	            ["Tennessee"            ,"47"],
-	            ["Texas"                ,"48"],
-	            ["Utah"                 ,"49"],
-	            ["Virginia"             ,"78"],
-	            ["Vermont"              ,"50"],
-	            ["Washington"           ,"53"],
-	            ["Wisconsin"            ,"55"],
-	            ["West Virginia"        ,"54"],
-	            ["Wyoming"              ,"56"]
+                ["Arizona"              ,"04"],
+                ["Arkansas"             ,"05"],
+                ["California"           ,"06"],
+                ["Colorado"             ,"08"],
+                ["Connecticut"          ,"09"],
+                ["District of Columbia" ,"11"],
+                ["Delaware"             ,"10"],
+                ["Florida"              ,"12"],
+                ["Georgia"              ,"13"],
+                ["Hawaii"               ,"15"],
+                ["Iowa"                 ,"19"],
+                ["Idaho"                ,"16"],
+                ["Illinois"             ,"17"],
+                ["Indiana"              ,"18"],
+                ["Kansas"               ,"20"],
+                ["Kentucky"             ,"21"],
+                ["Louisiana"            ,"22"],
+                ["Massachusetts"        ,"25"],
+                ["Maryland"             ,"24"],
+                ["Maine"                ,"23"],
+                ["Michigan"             ,"26"],
+                ["Minnesota"            ,"27"],
+                ["Mississippi"          ,"26"],
+                ["Missouri"             ,"29"],
+                ["Montana"              ,"29"],
+                ["North Carolina"       ,"37"],
+                ["North Dakota"         ,"38"],
+                ["Nebraska"             ,"31"],
+                ["New Hampshire"        ,"33"],
+                ["New Jersey"           ,"34"],
+                ["New Mexico"           ,"35"],
+                ["Nevada"               ,"32"],
+                ["New York"             ,"36"],
+                ["Ohio"                 ,"39"],
+                ["Oklahoma"             ,"40"],
+                ["Oregon"               ,"41"],
+                ["Pennsylvania"         ,"42"],
+                ["Rhode Island"         ,"44"],
+                ["South Carolina"       ,"45"],
+                ["South Dakota"         ,"46"],
+                ["Tennessee"            ,"47"],
+                ["Texas"                ,"48"],
+                ["Utah"                 ,"49"],
+                ["Virginia"             ,"78"],
+                ["Vermont"              ,"50"],
+                ["Washington"           ,"53"],
+                ["Wisconsin"            ,"55"],
+                ["West Virginia"        ,"54"],
+                ["Wyoming"              ,"56"]
             ]
         }
     });
