@@ -34,11 +34,10 @@ def data_as_json(request, geoids):
     geographies = {}
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
-    for geoid in geoids_list:
-        g = mongoutils.get_geography(geoid)
+    for g in mongoutils.get_geographies_list(geoids_list):
         del g['_id']
         del g['xrefs']
-        geographies[geoid] = g
+        geographies[g['geoid']] = g
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
@@ -92,8 +91,7 @@ def data_as_csv(request, geoids):
     w.writerow(csv_row_header(tables))
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
-    for geoid in geoids_list:
-        g = mongoutils.get_geography(geoid)
+    for g in mongoutils.get_geographies_list(geoids_list):
         csvrow = csv_row_for_geography(g, tables)
         w.writerow(csvrow)
     
@@ -177,11 +175,8 @@ def report_for_table(geographies, year, t):
     return report
     
 def data(request, geoids):
-    geographies = []
-
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
-    for geoid in geoids_list:
-        geographies.append(mongoutils.get_geography(geoid))
+    geographies = mongoutils.get_geographies_list(geoids_list)
 
     tables = []
     
