@@ -34,12 +34,16 @@
         {% for c in r.columns %}
         <th colspan="4" class="locationdef">
             {{ c.name }}
-            {% if c.sumlev != "040" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">F</span>
-            {% endif %}
+            <div class="button-set">
+            {% if c.sumlev == "050" or c.sumlev == "160" %}
+                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state</span>
+            {% else %}{% if c.sumlev == "140" or c.sumlev == "101" %}
+                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state and county</span>
+            {% endif %}{% endif %}
             {% if show_remove_button %}
-                <span class="button remove-column" data-val="{{ c.geoid }}">X</span>
+                <span class="button remove-column" data-val="{{ c.geoid }}">Remove</span>
             {% endif %}
+            </div>
         </th>
         {% endfor %}
     <tr>
