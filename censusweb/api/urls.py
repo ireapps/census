@@ -33,4 +33,12 @@ urlpatterns = patterns('',
     # Tracts for a given county.
     #/internal/tracts_for_county/10101.json
     (r'^internal/tracts_for_county/(?P<county>\d{5}).json$', views.tracts_for_county),
+
+    # Tracts for a given state.
+    #/internal/tracts_for_state/10.json
+    (r'^internal/tracts_for_state/(?P<state>\d{2}).json$', views.tracts_for_state),
+    
+    # Generate CSV/JSON for all tracts in a given state (used from within Query Builder)
+    #/internal/download_tracts_for_state/10.csv (or .json)
+    (r'^internal/download_tracts_for_state/(?P<state>\d{2})\.(?P<datatype>[a-z]{3,4})$', views.download_tracts_for_state),
 )
