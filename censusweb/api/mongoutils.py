@@ -41,6 +41,21 @@ def get_geography(geoid):
     geographies = get_geographies_collection()
     return geographies.find_one({ 'geoid': geoid })
 
+def get_geographies_list(geoids):
+    collection = get_geographies_collection()
+    raw_geographies = list( collection.find({ 'geoid': { "$in": geoids } }) )
+    
+    # Re-order `raw_geographies` into the original order of the `geoids` input
+    geo_list = []
+    for geoid in geoids:
+        g = filter(lambda item: item['geoid'] == geoid, raw_geographies)
+        # Same location can be entered multiple times, but they're all equvalent.
+        # Fail if 0, grab first match otherwise.
+        if len(g) == 0:
+            continue
+        geo_list.append( g[0] )
+    return geo_list
+
 def get_labels_for_table(year, table):
     labels = get_labels_collection()
 
