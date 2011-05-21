@@ -33,13 +33,24 @@ h1 {
     background: -moz-linear-gradient(top, #bbb, #777);
     padding: 3px 10px;
     -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;
-    -webkit-box-shadow: rgba(0,0,0,0.7) 0 1px 1px; -moz-box-shadow: rgba(0,0,0,0.7) 0 1px 1px; box-shadow: rgba(0,0,0,0.7) 0 1px 1px;
+    -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0 inset, rgba(0,0,0,0.4) 0 0 2px;
+    -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0 inset, rgba(0,0,0,0.4) 0 0 2px;
+    box-shadow: rgba(255,255,255,0.4) 0 1px 0 inset, rgba(0,0,0,0.4) 0 0 2px;
     text-shadow: rgba(0,0,0,0.4) 0 1px 0;
+    border: 1px solid #999;
     color: #fff;
     font-size: 11px;
     font-weight: bold;
     text-decoration: none;
     vertical-align: text-bottom;
+    white-space:nowrap;
+
+    -webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25 ease-in-out;
+    -o-transition: all 0.25s ease-in-out;
+}
+.button:hover {
+    opacity:.8;
 }
 
 /*-------------------------------- Layout ------------------------------------*/
