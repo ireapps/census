@@ -9,6 +9,7 @@ import csv
 import constants
 import help_text
 import mongoutils
+from datetime import datetime
 
 DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
 
@@ -105,7 +106,11 @@ def data_as_csv(request, geoids):
     for g in mongoutils.get_geographies_list(geoids_list):
         csvrow = csv_row_for_geography(g, tables)
         w.writerow(csvrow)
-    
+
+    now = datetime.now()
+    date_string = "%s-%s-%s-%s" % (now.year, now.month, now.day, now.microsecond)
+    response['Content-Disposition'] = "attachment; filename=ire-census-%s.csv" % date_string
+
     return response
 
 def labels_as_json(request,year,tables=None):
