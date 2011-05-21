@@ -32,7 +32,7 @@ $(function(){
             $('#place-select .link').click(_.bind(this.select, this, 'place'));
             $('#tract-select .link').click(_.bind(this.select, this, 'tract'));
             $('.button.go').click(this.go);
-            $('.button.csv').click(this.csv);
+            $('.button.csv-json').click(this.csvJson);
             $('.button.remove-column').click(this.remove_column);
             $('tr.row').click(this.twist_row);
             $('.button.show-family').click(this.show_family);
@@ -137,12 +137,14 @@ $(function(){
             }
         },
         
-        csv: function() {
+        csvJson: function() {
+            var dataType = '.' + this.innerHTML.toLowerCase()
+
             var geoid_list = []
             $('.link').each(function() {
                 geoid_list.push($(this).attr('data-val'))
             });
-            window.location = '/data/' + geoid_list.join(',') + '.csv';
+            window.location = '/data/' + geoid_list.join(',') + dataType;
         },
 
         showHelp: function(e) {
