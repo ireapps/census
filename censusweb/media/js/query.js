@@ -16,6 +16,12 @@ $(function(){
         },
 
         render: function() {
+            // Remove this section to enable "go button" prompt:
+            if (this.get('summarylevel') && this.get(this.get("summarylevel")))
+                // Don't re-render. We just selected the item we wanted so
+                // we are going to force "go" there. (See `select`.)
+                return;
+            
             $("#search").html(this.template({query: this}));
             $('#filter-help').toggle(!!this.shouldShowFilterHelp());
             $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
@@ -99,6 +105,13 @@ $(function(){
             this.currentLevel = level;
             this.set(attrs);
             //this.controller.saveLocation('query/' + this.location());
+            
+            // Remove this section to enable "go button" prompt:
+            var q = window.query;
+            if (query.get('summarylevel') && query.get(query.get("summarylevel")))
+                // The item we just selected is of the same type as our
+                // target datatype. We just picked the value we wanted.
+                this.go();
         },
 
         loadNext: function() {

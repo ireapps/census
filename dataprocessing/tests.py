@@ -82,7 +82,7 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 31454
         self._test_totalpop(place, pop_2000, pop_2010)
 
-    def test_tract(self): 
+    def test_simple_tract(self): 
         """ Data import test against known values that Tract 401, Kent County, DE should have. """
         tracts = self.geographies.find({ 'geoid': '10001040100' })
 
@@ -98,6 +98,17 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2000 = 5337
         pop_2010 = 6541
         self._test_totalpop(tract, pop_2000, pop_2010)
+
+class TestTracts(unittest.TestCase):
+    def setUp(self):
+        connection = Connection()
+        db = connection[config.CENSUS_DB]
+        self.geographies = db[config.GEOGRAPHIES_COLLECTION]
+
+    @unittest.skip("TODO")
+    def test_tract_crosswalk(self):
+        # TODO
+        pass
 
 class TestLabels(unittest.TestCase):
     def setUp(self):
