@@ -4,10 +4,10 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # Database
-# DATABASES['default']['HOST'] = 'censusweb.beta.tribapps.com'
-# DATABASES['default']['PORT'] = '5433'
-# DATABASES['default']['USER'] = 'censusweb'
-# DATABASES['default']['PASSWORD'] = 'Xy9XKembdu'
+DATABASES['default']['HOST'] = 'censusweb.beta.tribapps.com'
+DATABASES['default']['PORT'] = '5433'
+DATABASES['default']['USER'] = 'censusweb'
+DATABASES['default']['PASSWORD'] = 'Xy9XKembdu'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
