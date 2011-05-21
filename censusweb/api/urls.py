@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^data/(?P<geoids>[,\d]+)\.html$', views.data, name="data"),
 
     (r'^family/(?P<geoid>\d+)/$', views.redirect_to_family),
+    (r'^family/(?P<geoid>\d+)\.json$', views.family_as_json),
 
     (r'^labels/(?P<year>\d{4})(/(?P<tables>.+))?.json', views.labels_as_json),
 
@@ -33,4 +34,12 @@ urlpatterns = patterns('',
     # Tracts for a given county.
     #/internal/tracts_for_county/10101.json
     (r'^internal/tracts_for_county/(?P<county>\d{5}).json$', views.tracts_for_county),
+
+    # Tracts for a given state.
+    #/internal/tracts_for_state/10.json
+    (r'^internal/tracts_for_state/(?P<state>\d{2}).json$', views.tracts_for_state),
+    
+    # Generate CSV/JSON for all tracts in a given state (used from within Query Builder)
+    #/internal/download_tracts_for_state/10.csv (or .json)
+    (r'^internal/download_tracts_for_state/(?P<state>\d{2})\.(?P<datatype>[a-z]{3,4})$', views.download_tracts_for_state),
 )

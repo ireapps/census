@@ -9,6 +9,7 @@ import csv
 import constants
 import help_text
 import mongoutils
+from datetime import datetime
 
 DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
 
@@ -29,15 +30,40 @@ def places_for_state(request, state=''):
 def tracts_for_county(request, county=''):
     tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
+    
+def tracts_for_state(request, state=''):
+    tracts = mongoutils.get_tracts_by_state(state)
+    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
+    
+def download_tracts_for_state(request, state='', datatype=''):
+    tracts = mongoutils.get_tracts_by_state(state)
+    
+    tract_list = ','.join([t[1] for t in tracts])
+
+    if datatype == 'csv':
+        return data_as_csv(request,tract_list)
+    elif datatype == 'json':
+        return data_as_json(request,tract_list)
 
 def data_as_json(request, geoids):
     geographies = {}
 
-    for geoid in geoids.split(','):
-        g = mongoutils.get_geography(geoid)
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    for g in mongoutils.get_geographies_list(geoids_list):
         del g['_id']
         del g['xrefs']
-        geographies[geoid] = g
+        geographies[g['geoid']] = g
+        
+    return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
+
+def family_as_json(request, geoid):
+    geographies = {}
+    
+    family_geoids = get_family_geoids(geoid)
+    for g in mongoutils.get_geographies_list(family_geoids, ['geoid', 'sumlev', 'metadata.NAME', 'metadata.STATE', 'metadata.COUNTY']):
+        del g['_id']
+        #del g['xrefs']
+        geographies[g['geoid']] = g
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
@@ -90,11 +116,15 @@ def data_as_csv(request, geoids):
     w = csv.writer(response)
     w.writerow(csv_row_header(tables))
 
-    for geoid in geoids.split(','):
-        g = mongoutils.get_geography(geoid)
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    for g in mongoutils.get_geographies_list(geoids_list):
         csvrow = csv_row_for_geography(g, tables)
         w.writerow(csvrow)
-    
+
+    now = datetime.now()
+    date_string = "%s-%s-%s-%s" % (now.year, now.month, now.day, now.microsecond)
+    response['Content-Disposition'] = "attachment; filename=ire-census-%s.csv" % date_string
+
     return response
 
 def labels_as_json(request,year,tables=None):
@@ -112,8 +142,13 @@ def labels_as_json(request,year,tables=None):
     return HttpResponse(simplejson.dumps(labels), mimetype='application/json')
 
 def redirect_to_family(request, geoid):
+    family = get_family_geoids(geoid)
+    geoid_str = ",".join(family)
+    url = reverse("data", args=[geoid_str,])
+    return HttpResponsePermanentRedirect(url)
+
+def get_family_geoids(geoid):
     geography = mongoutils.get_geography(geoid)
-    
     family = [geography['metadata']['STATE'],]
     if geography['metadata']['COUNTY']:
         family.append(
@@ -127,10 +162,7 @@ def redirect_to_family(request, geoid):
         family.append(
             "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY'], geography['metadata']['TRACT']])
         )
-    
-    geoid_str = ",".join(family)
-    url = reverse("data", args=[geoid_str,])
-    return HttpResponsePermanentRedirect(url)
+    return family
 
 def report_values_for_key(g,t,key):
     d = {}
@@ -175,10 +207,8 @@ def report_for_table(geographies, year, t):
     return report
     
 def data(request, geoids):
-    geographies = []
-
-    for geoid in geoids.split(','):
-        geographies.append(mongoutils.get_geography(geoid))
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    geographies = mongoutils.get_geographies_list(geoids_list)
 
     tables = []
     
@@ -199,6 +229,7 @@ def data(request, geoids):
             'reports': reports,
             'csv_url': request.get_full_path().replace('.html','.csv'),
             'json_url': request.get_full_path().replace('.html','.json'),
-            'show_remove_button': len(report['columns']) > 1,
+            'show_remove_button': len(geoids_list) > 1,
+            'last_geoid': g['geoid'],
         },
         context_instance=RequestContext(request))

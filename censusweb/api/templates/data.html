@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
+{% load helpertags %}
+{% load humanize %}
 
 {% block content %}
 
 <nav>
     <span class="button more-data">Add another geography to compare</span>
     &nbsp;or download as
-    <a class="button" href="{{ csv_url }}">CSV (TKTK)</a>
-    <a class="button" href="{{ json_url }}">JSON (TKTK)</a>
+    <a class="button" href="{{ csv_url }}">CSV</a>
+    <a class="button" href="{{ json_url }}">JSON</a>
 </nav>
 <div class="query-builder-popup hidden">
     {% include "_query_builder.html" %}
@@ -16,23 +18,32 @@
     $(function(){
         $('.button.more-data').click(function(){
             $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
+            query.initializeWithGeography({{ last_geoid }});
         });
     });
 </script>
 
 {% for r in reports %}
 <table class="report">
+    <colgroup></colgroup><colgroup></colgroup>
+    {% for c in r.columns %}
+    <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
+    {% endfor %}
     <tr>
         <th rowspan="2" class="labeldef">{{ r.table }}<br /><span class="universe">Universe: {{ r.universe }}</span></th>
         {% for c in r.columns %}
         <th colspan="4" class="locationdef">
             {{ c.name }}
-            {% if c.sumlev != "040" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">F</span>
-            {% endif %}
+            <div class="button-set">
+            {% if c.sumlev == "050" or c.sumlev == "160" %}
+                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state</span>
+            {% else %}{% if c.sumlev == "140" or c.sumlev == "101" %}
+                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state and county</span>
+            {% endif %}{% endif %}
             {% if show_remove_button %}
-                <span class="button remove-column" data-val="{{ c.geoid }}">X</span>
+                <span class="button remove-column" data-val="{{ c.geoid }}">Remove</span>
             {% endif %}
+            </div>
         </th>
         {% endfor %}
     <tr>
@@ -52,10 +63,10 @@
     >
         <td class="label">{{ label.text }} <span class="key">{{ key }}</span></td>
         {% for d in data %}
-            <td class="code data-cell">{{ d.2000 }}</td>
-            <td class="code data-cell">{{ d.2010 }}</td>
-            <td class="code data-cell">{{ d.delta }}</td>
-            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|floatformat:-3 }}</td>
+            <td class="code data-cell">{{ d.2000|intcomma }}</td>
+            <td class="code data-cell">{{ d.2010|intcomma }}</td>
+            <td class="code data-cell">{{ d.delta|intcomma }}</td>
+            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|percent|floatformat:-1 }}</td>
         {% endfor %}
     </tr>
     {% endfor %}

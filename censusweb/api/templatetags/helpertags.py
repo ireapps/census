@@ -3,6 +3,7 @@ from django.conf import settings
 from urlparse import urljoin
 from urllib import quote_plus
 import api.help_text
+from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
@@ -25,3 +26,7 @@ def build_media_url(uri):
 @register.simple_tag
 def help_text(key):
     return api.help_text.help_text[key]
+
+@register.filter
+def percent(val):
+    return val*100

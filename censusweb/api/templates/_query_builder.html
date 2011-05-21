@@ -35,19 +35,26 @@
 <script id="query-template" type="x-js-template">
 
     <% if (query.get('summarylevel')) { %>
-        Find data for <b><%= query.get('summarylevelDisplay') %></b>
+        <span id="summarylevel-select">
+            <span class="link">Find data</span> for
+            <% if (_.values(query.attributes).length > 2) { %>
+                <span class="link" data-val="<%= query.get('summarylevel') %>"><%= query.get('summarylevelDisplay') %></span>
+            <% } else { %>
+                <b><%= query.get('summarylevelDisplay') %></b>
+            <% } %>
+        </span>
     <% } else { %>
         Find data for
         <span id="summarylevel-select">
-          <span class="link" data-val="tract">Tracts</span>,
-          <span class="link" data-val="place">Places</span>,
-          <span class="link" data-val="county">Counties</span>,
-          <span class="link" data-val="state">States</span>, or
-          <span class="link" data-val="nation">the USA</span>.
-      </span>
+            <span class="link" data-val="<%= SUMLEV_TRACT %>"><%= query.mappings.summarylevelDisplays[SUMLEV_TRACT] %></span>,
+            <span class="link" data-val="<%= SUMLEV_PLACE %>"><%= query.mappings.summarylevelDisplays[SUMLEV_PLACE] %></span>,
+            <span class="link" data-val="<%= SUMLEV_COUNTY %>"><%= query.mappings.summarylevelDisplays[SUMLEV_COUNTY] %></span>,
+            <span class="link" data-val="<%= SUMLEV_STATE %>"><%= query.mappings.summarylevelDisplays[SUMLEV_STATE] %></span>, or
+            <span class="link" data-val="<%= SUMLEV_NATION %>"><%= query.mappings.summarylevelDisplays[SUMLEV_NATION] %></span>.
+        </span>
     <% } %>
 
-    <% if (query.get('summarylevel') && (query.get('summarylevel') != 'nation') && !query.get('state')) { %>
+    <% if (query.get('summarylevel') && (query.get('summarylevel') != SUMLEV_NATION) && !query.get(SUMLEV_STATE)) { %>
         in
         <span id="state-select">
             <% var states = query.filtered(query.mappings.states); %>
@@ -55,11 +62,16 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == states.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.get('state')) { %>
-        in <b><%= query.get('stateDisplay') %></b>
+    <% } else if (query.get(SUMLEV_STATE)) { %>
+        in
+        <% if (_.values(query.attributes).length > 5) { %>
+            <span id="state-select"><span class="link" data-val="<%= query.get(SUMLEV_STATE) %>"><%= query.get(SUMLEV_STATE + 'Display') %></span></span>
+        <% } else { %>
+            <b><%= query.get(SUMLEV_STATE +'Display') %></b>
+        <% } %>
     <% } %>
 
-    <% if (query.mappings.counties && !query.get('county')) { %>
+    <% if (query.mappings.counties && !query.get(SUMLEV_COUNTY)) { %>
         for
         <span id="county-select">
             <% var counties = query.filtered(query.mappings.counties); %>
@@ -67,11 +79,11 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == counties.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.get('county')) { %>
-        - <b><%= query.get('countyDisplay') %></b>.
+    <% } else if (query.get(SUMLEV_COUNTY)) { %>
+        - <b><%= query.get(SUMLEV_COUNTY + 'Display') %></b>.
     <% } %>
 
-    <% if (query.mappings.places && !query.get('place')) { %>
+    <% if (query.mappings.places && !query.get(SUMLEV_PLACE)) { %>
         for
         <span id="place-select">
             <% var places = query.filtered(query.mappings.places); %>
@@ -79,11 +91,11 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == places.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.get('place')) { %>
-        - <b><%= query.get('placeDisplay') %></b>.
+    <% } else if (query.get(SUMLEV_PLACE)) { %>
+        - <b><%= query.get(SUMLEV_PLACE + 'Display') %></b>.
     <% } %>
 
-    <% if (query.mappings.tracts && !query.get('tract')) { %>
+    <% if (query.mappings.tracts && !query.get(SUMLEV_TRACT)) { %>
         for
         <span id="tract-select">
             <% var tracts = query.filtered(query.mappings.tracts); %>
@@ -91,14 +103,20 @@
                 <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == tracts.length - 1 ? '' : ', ' %>
             <% }); %>
         </span>
-    <% } else if (query.get('tract')) { %>
-        - <b><%= query.get('tractDisplay') %></b>.
+    <% } else if (query.get(SUMLEV_TRACT)) { %>
+        - <b><%= query.get(SUMLEV_TRACT + 'Display') %></b>.
     <% } %>
 
     <% if (query.isCompletable()) { %>
-        <span id="proceed">
-            <span class="button csv">Download CSV</span>
-        </span>
+        <div>
+            Download data for
+            all <%= query.get('summarylevelDisplay') %> in
+            <% if (query.get(SUMLEV_COUNTY)) { %>
+                <%= query.get(SUMLEV_COUNTY+'Display') %>,
+            <% } %>
+            <%= query.get(SUMLEV_STATE +'Display') %>
+            as <span class="button csv-json">CSV</span> <span class="button csv-json">JSON</span>
+        </div>
     <% } %>
 
     <div id="help-link">Huh?</div>
