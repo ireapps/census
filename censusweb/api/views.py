@@ -48,66 +48,6 @@ def download_tracts_for_state(request, state='', datatype=''):
     elif datatype == 'json':
         return data_as_json(request,tract_list)
 
-def data_as_kml(request, geoids,format='kml'):
-    geoid_list = filter(lambda g: bool(g), geoids.split(','))
-    boundaries = dict((b.external_id,b) for b in Boundary.objects.filter(external_id__in=geoid_list))
-    json_data = dict((j['geoid'],j) for j in mongoutils.get_geographies_list(geoid_list))
-    
-    placemarks = [
-        _create_placemark_dict(boundaries[geoid],json_data[geoid]) for geoid in geoid_list
-    ] 
-
-    if format == 'kmz':
-        render = render_to_kmz
-    else:
-        render = render_to_kml
-    return render('gis/kml/placemarks.kml', {'places' : placemarks})            
-
-def _create_placemark_dict(b,j,tables=None):
-    """each thing should have a name, a description, and kml which includes <ExtraData>"""
-    p = {
-       'name': b.display_name,
-       'description': 'Summary Level: %(sumlev)s; GeoID: %(geoid)s' % (j),
-    }
-
-    if not tables:
-        tables_list = mongoutils.get_tables_for_year("2010")
-    else:
-        tables_list = tables
-
-    kml_context = _build_kml_context_for_template(b,j,tables_list)
-    p['kml'] = b.simple_shape.kml + KML_EXTENDED_DATA_TEMPLATE.render(Context(kml_context))
-    
-    return p
-
-KML_EXTENDED_DATA_TEMPLATE = Template("""
-<ExtendedData>
-    {% for datum in data %}
-  <Data name="{{datum.name}}">{% if datum.display_name %}
-    <displayName><![CDATA[{{datum.display_name}}]]></displayName>{% endif %}
-    <value><![CDATA[{{datum.value}}]]></value>
-  </Data>
-  {% endfor %}
-</ExtendedData>""")
-
-def _build_kml_context_for_template(b,j,tables_list):
-    kml_context = { 'data': [] }
-    for table in tables_list:
-        labels = mongoutils.get_labels_for_table("2010", table)
-        for statistic in sorted(labels['labels']):
-            for alternative in DATA_ALTERNATIVES:
-                print "t: %s, a: %s, s: %s" % (table, alternative, statistic)
-                try: 
-                    datum = { 'value': j['data'][alternative][table][statistic] }
-                    if alternative == '2010':
-                        datum['name'] = statistic
-                    else:
-                        datum['name'] = "%s.%s" % (statistic,alternative)
-                    datum['display_name'] = labels['labels'][statistic]['text']
-                    kml_context['data'].append(datum)
-                except KeyError: pass
-    return kml_context
-    
 def data_as_json(request, geoids):
     geoid_list = filter(lambda g: bool(g), geoids.split(','))
     geographies = {}
@@ -296,3 +236,66 @@ def data(request, geoids):
             'last_geoid': g['geoid'],
         },
         context_instance=RequestContext(request))
+
+# --- KML BEGIN ---
+def data_as_kml(request, geoids,format='kml'):
+    geoid_list = filter(lambda g: bool(g), geoids.split(','))
+    boundaries = dict((b.external_id,b) for b in Boundary.objects.filter(external_id__in=geoid_list))
+    json_data = dict((j['geoid'],j) for j in mongoutils.get_geographies_list(geoid_list))
+    
+    placemarks = [
+        _create_placemark_dict(boundaries[geoid],json_data[geoid]) for geoid in geoid_list
+    ] 
+
+    if format == 'kmz':
+        render = render_to_kmz
+    else:
+        render = render_to_kml
+    return render('gis/kml/placemarks.kml', {'places' : placemarks})            
+
+def _create_placemark_dict(b,j,tables=None):
+    """each thing should have a name, a description, and kml which includes <ExtraData>"""
+    p = {
+       'name': b.display_name,
+       'description': 'Summary Level: %(sumlev)s; GeoID: %(geoid)s' % (j),
+    }
+
+    if not tables:
+        tables_list = mongoutils.get_tables_for_year("2010")
+    else:
+        tables_list = tables
+
+    kml_context = _build_kml_context_for_template(b,j,tables_list)
+    p['kml'] = b.simple_shape.kml + KML_EXTENDED_DATA_TEMPLATE.render(Context(kml_context))
+    
+    return p
+
+KML_EXTENDED_DATA_TEMPLATE = Template("""
+<ExtendedData>
+    {% for datum in data %}
+  <Data name="{{datum.name}}">{% if datum.display_name %}
+    <displayName><![CDATA[{{datum.display_name}}]]></displayName>{% endif %}
+    <value><![CDATA[{{datum.value}}]]></value>
+  </Data>
+  {% endfor %}
+</ExtendedData>""")
+
+def _build_kml_context_for_template(b,j,tables_list):
+    kml_context = { 'data': [] }
+    for table in tables_list:
+        labels = mongoutils.get_labels_for_table("2010", table)
+        for statistic in sorted(labels['labels']):
+            for alternative in DATA_ALTERNATIVES:
+                print "t: %s, a: %s, s: %s" % (table, alternative, statistic)
+                try: 
+                    datum = { 'value': j['data'][alternative][table][statistic] }
+                    if alternative == '2010':
+                        datum['name'] = statistic
+                    else:
+                        datum['name'] = "%s.%s" % (statistic,alternative)
+                    datum['display_name'] = labels['labels'][statistic]['text']
+                    kml_context['data'].append(datum)
+                except KeyError: pass
+    return kml_context
+    
+# --- KML END ---
