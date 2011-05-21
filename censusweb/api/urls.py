@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^data/(?P<geoids>[,\d]+)\.html$', views.data, name="data"),
 
     (r'^family/(?P<geoid>\d+)/$', views.redirect_to_family),
+    (r'^family/(?P<geoid>\d+)\.json$', views.family_as_json),
 
     (r'^labels/(?P<year>\d{4})(/(?P<tables>.+))?.json', views.labels_as_json),
 

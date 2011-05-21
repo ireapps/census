@@ -37,17 +37,14 @@ def get_tracts_by_county(county_geoid):
 
     return [(t['metadata']['NAME'], t['geoid']) for t in tracts] 
 
-def get_names(geoids):
-    geographies = get_geographies_collection()
-    names = geographies.find({ 'geoid': state_fips }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', ASCENDING)])
-
 def get_geography(geoid):
     geographies = get_geographies_collection()
     return geographies.find_one({ 'geoid': geoid })
 
-def get_geographies_list(geoids):
+def get_geographies_list(geoids, fields = None):
     collection = get_geographies_collection()
-    raw_geographies = list( collection.find({ 'geoid': { "$in": geoids } }) )
+#    raw_geographies = list( collection.find({ 'geoid': { "$in": geoids }}, fields=fields) )
+    raw_geographies = list( collection.find({ 'geoid': { "$in": geoids }}) )
     
     # Re-order `raw_geographies` into the original order of the `geoids` input
     geo_list = []

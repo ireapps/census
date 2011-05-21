@@ -42,8 +42,15 @@ def data_as_json(request, geoids):
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
 def family_as_json(request, geoid):
-    family = get_family_geoids(geoid)
+    geographies = {}
     
+    family_geoids = get_family_geoids(geoid)
+    for g in mongoutils.get_geographies_list(family_geoids, ['geoid', 'sumlev', 'metadata.NAME', 'metadata.STATE', 'metadata.COUNTY']):
+        del g['_id']
+        #del g['xrefs']
+        geographies[g['geoid']] = g
+        
+    return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
 def csv_row_header(tables=None):
     if not tables:

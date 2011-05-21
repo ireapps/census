@@ -39,11 +39,11 @@
     <% } else { %>
         Find data for
         <span id="summarylevel-select">
-          <span class="link" data-val="<%= SUMLEV_TRACT %>">Tracts</span>,
-          <span class="link" data-val="<%= SUMLEV_PLACE %>">Places</span>,
-          <span class="link" data-val="<%= SUMLEV_COUNTY %>">Counties</span>,
-          <span class="link" data-val="<%= SUMLEV_STATE %>">States</span>, or
-          <span class="link" data-val="<%= SUMLEV_NATION %>">the USA</span>.
+          <span class="link" data-val="<%= SUMLEV_TRACT %>"><%= query.mappings.summarylevelDisplays[SUMLEV_TRACT] %></span>,
+          <span class="link" data-val="<%= SUMLEV_PLACE %>"><%= query.mappings.summarylevelDisplays[SUMLEV_PLACE] %></span>,
+          <span class="link" data-val="<%= SUMLEV_COUNTY %>"><%= query.mappings.summarylevelDisplays[SUMLEV_COUNTY] %></span>,
+          <span class="link" data-val="<%= SUMLEV_STATE %>"><%= query.mappings.summarylevelDisplays[SUMLEV_STATE] %></span>, or
+          <span class="link" data-val="<%= SUMLEV_NATION %>"><%= query.mappings.summarylevelDisplays[SUMLEV_NATION] %></span>.
       </span>
     <% } %>
 
