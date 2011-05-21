@@ -59,7 +59,7 @@ def get_geographies_list(geoids, fields = None):
         # Same location can be entered multiple times, but they're all equvalent.
         # Fail if 0, grab first match otherwise.
         if len(g) == 0:
-            raise KeyError("geoid %s is not in MongoDB")
+            raise KeyError("Geography with geoid %s does not exist" % geoid)
         geo_list.append( g[0] )
     return geo_list
 
