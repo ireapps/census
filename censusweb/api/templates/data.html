@@ -13,20 +13,10 @@
 </div>
 
 <script type="text/javascript">
-    SUMLEV_NATION = '010'
-    SUMLEV_STATE = '040'
-    SUMLEV_COUNTY = '050'
-    SUMLEV_TRACT = '140'
-    SUMLEV_PLACE = '160'
-    SUMLEV_BLOCK = '101'
-    
-    last_sumlev = '{{ last_sumlev }}';
-    last_geoid = '{{ last_geoid }}';
-
     $(function(){
         $('.button.more-data').click(function(){
             $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
-            query.initializeWithGeography(last_geoid);
+            query.initializeWithGeography({{ last_geoid }});
         });
     });
 </script>
