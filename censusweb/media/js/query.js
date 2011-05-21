@@ -114,15 +114,39 @@ $(function(){
             return _.filter(list, function(item){ return matcher.test(item[0]); });
         },
 
-        select: function(level, e) {    
+        select: function(level, e) {
             this.filter = "";
             var attrs = {};
+            
+            //so that we can work backwards up the builder, resetting stuff
+            if(level == 'summarylevel' || level == SUMLEV_STATE) {
+                delete query.attributes[SUMLEV_NATION];
+                delete query.attributes[SUMLEV_COUNTY];
+                delete query.attributes[SUMLEV_TRACT];
+                delete query.attributes[SUMLEV_PLACE];
+                delete query.attributes[SUMLEV_BLOCK];
+                delete query.attributes[SUMLEV_NATION + 'Display'];
+                delete query.attributes[SUMLEV_COUNTY + 'Display'];
+                delete query.attributes[SUMLEV_TRACT  + 'Display'];
+                delete query.attributes[SUMLEV_PLACE  + 'Display'];
+                delete query.attributes[SUMLEV_BLOCK  + 'Display'];
+                delete query.mappings['places'];
+                delete query.mappings['counties'];
+                delete query.mappings['tracts'];
+                //the top level, reset everything
+                if(level == 'summarylevel') {
+                    delete query.attributes[SUMLEV_STATE];
+                    delete query.attributes[SUMLEV_STATE  + 'Display'];
+                    delete query.attributes['summarylevelDisplay'];
+                }
+            }
+
             var el = $(e.currentTarget);
             var val = attrs[level] = el.attr('data-val');
             var display = attrs[level + 'Display'] = el.text();
             this.currentLevel = level;
             this.set(attrs);
-            //this.controller.saveLocation('query/' + this.location());
+            this.loadNext();
             
             // Remove this section to enable "go button" prompt:
             var q = window.query;
@@ -155,8 +179,6 @@ $(function(){
         },
 
         loadNext: function() {
-            console.log(this.currentLevel);
-            console.log(this.get('summarylevel'));
             var level = this.currentLevel;
             if (level == SUMLEV_STATE) {
                 if (_.include([SUMLEV_TRACT, SUMLEV_COUNTY], this.get('summarylevel'))) {
