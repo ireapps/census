@@ -22,8 +22,6 @@
     RewriteCond %{HTTP_HOST} !^censusweb.censusweb.ire.org [NC] 
     RewriteRule ^/(.*)  http://censusweb.censusweb.ire.org/$1 [L,R]
     
-    DocumentRoot /home/ubuntu/sites/censusweb/media/
-    
     RewriteCond %{REQUEST_URI} !/maintenance.html$ 
     RewriteRule $ /maintenance.html [R=302,L]
 </VirtualHost>
