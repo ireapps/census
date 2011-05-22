@@ -3,7 +3,7 @@
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection
+from pymongo import Connection, objectid
 
 import config
 
@@ -28,7 +28,7 @@ if FILENAME == 'FAKE':
 
         geography['xwalk'][geography['geoid']] = 1.0
 
-        collection.save(geography) 
+        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }) 
         row_count += 1
         inserts += 1
 else:
@@ -55,7 +55,7 @@ else:
 
             geography['xwalk'][row_dict['GEOID00']] = pop_pct_2000
 
-            collection.save(geography) 
+            collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }) 
             inserts += 1
 
 print 'Row count: %i' % row_count
