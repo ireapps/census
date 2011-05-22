@@ -204,14 +204,13 @@ $(function(){
         csvJson: function() {
             var dataType = '.' + this.innerHTML.toLowerCase()
             var geoid_list = []
-            if (query.attributes.summarylevel == "140" && query.currentLevel == "040") {
-                window.location = '/internal/download_tracts_for_state/' + query.attributes['040'] + dataType;
-            } else {
-                $('.link').each(function() {
-                    geoid_list.push($(this).attr('data-val'))
-                });
-                window.location = '/data/' + geoid_list.join(',') + dataType;
-            }
+            var sumlev = query.attributes.summarylevel
+            var containerlev = query.currentLevel
+            var container = query.attributes[query.currentLevel]
+            window.location = '/internal/download_data_for_region/' + 
+                sumlev + '-' +
+                containerlev + '-'+ 
+                container + dataType;
         },
 
         showHelp: function(e) {
