@@ -41,4 +41,8 @@ echo 'Loading 2010 geographies'
 ./load_sf_geographies_2010.py $GEOGRAPHY_HEADER_2010 
    
 echo 'Loading crosswalk'
-./load_crosswalk.py $STATE_FIPS $FAKE
+if [ "$FAKE" = "FAKE" ]; then
+    ./load_crosswalk.py $STATE_FIPS $FAKE
+else
+    ./load_crosswalk.py $STATE_FIPS data/us2010trf.csv
+fi

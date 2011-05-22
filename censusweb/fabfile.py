@@ -284,16 +284,20 @@ def pgpool_up():
 """
 Commands - Data Processing
 """
+def run_unattended_batch_command(command, command_log):
+    # Make sure log exists
+    run("touch %s" % command_log)
+
+    with cd(env.dataprocessing_path):
+        run("source %s/bin/activate; nohup %s >> %s < /dev/null &" % (env.env_path, command, command_log))
+
 def batch_sf_2000(state, fake=''):
     """
     Kick off the SF 2000 data loader for a state.
     """
     command = './batch_sf_2000.sh %s %s' % (state, fake)
     loader_log = '%s/census.load.%s.log' % (env.log_path, state)
-    run("touch %s" % loader_log)
-
-    with cd(env.dataprocessing_path):
-        run("source %s/bin/activate; nohup %s >& %s < /dev/null &" % (env.env_path, command, loader_log))
+    run_unattended_batch_command(command, loader_log)
 
 def batch_sf_2010(state, fake=''):
     """
@@ -301,10 +305,14 @@ def batch_sf_2010(state, fake=''):
     """
     command = './batch_sf_2010.sh %s %s' % (state, fake)
     loader_log = '%s/census.load.%s.log' % (env.log_path, state)
-    run("touch %s" % loader_log)
+    run_unattended_batch_command(command, loader_log)
 
-    with cd(env.dataprocessing_path):
-        run("source %s/bin/activate; nohup %s >& %s < /dev/null &" % (env.env_path, command, loader_log))
+def batch_test():
+    """
+    Kick off the test data loader.
+    """
+    loader_log = '%(log_path)s/census.load.test.log' % env
+    run_unattended_batch_command('./batch_test.sh', loader_log)
 
 """
 Commands - miscellaneous
