@@ -66,10 +66,11 @@
         <th colspan="4" class="locationdef">
             {{ c.name }}
             <div class="button-set">
-            {% if c.sumlev == "050" or c.sumlev == "160" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state &raquo;</span>
-            {% else %}{% if c.sumlev == "140" or c.sumlev == "101" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state and county &raquo;</span>
+            {% if c.sumlev == "050" or c.sumlev == "160" or c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"2" not in geoids %}
+                <span class="button add-related-state" title="Show state that contains this" data-val="{{ c.geoid }}">Add state &raquo;</span>
+            {% endif %}{% endif %}
+            {% if c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"5" not in geoids %}
+                <span class="button add-related-county" title="Show county that contains this" data-val="{{ c.geoid }}">Add county &raquo;</span>
             {% endif %}{% endif %}
             {% if show_remove_button %}
                 <span class="button remove-column" data-val="{{ c.geoid }}">Remove</span>

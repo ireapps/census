@@ -53,7 +53,8 @@ $(function(){
             $('.button.csv-json').click(this.csvJson);
             $('.button.remove-column').click(this.remove_column);
             $('tr.row').click(this.twist_row);
-            $('.button.show-family').click(this.show_family);
+            $('.button.add-related-state').click(this.add_related_state);
+            $('.button.add-related-county').click(this.add_related_county);
         },
 
         isCompletable: function() {
@@ -266,9 +267,17 @@ $(function(){
             });
         },
         
-        show_family: function() {
-            geoid = $(this).attr('data-val');
-            document.location.href = "/family/" + geoid + "/";
+        add_related_state: function() {
+            this_geoid = $(this).attr('data-val');
+            state_geoid = this_geoid.slice(0,2);
+            
+            window.location.pathname = window.location.pathname.replace('.html', ","+state_geoid+'.html');
+        },
+        add_related_county: function() {
+            this_geoid = $(this).attr('data-val');
+            county_geoid = this_geoid.slice(0,5);
+            
+            window.location.pathname = window.location.pathname.replace('.html', ","+county_geoid+'.html');
         },
     
         // --------------------- Data ----------------------------------------
