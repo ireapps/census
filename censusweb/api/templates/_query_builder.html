@@ -4,10 +4,7 @@
     <div id="filter-help" class="code hidden">
         Start typing to filter&hellip;
     </div>
-
-    <div id="filter-display" class="code hidden">
-    
-    </div>
+    <div id="filter-display" class="code hidden"></div>
 </nav>
 
 <div id="search"></div>
@@ -55,56 +52,55 @@
     <% } %>
 
     <% if (query.get('summarylevel') && (query.get('summarylevel') != SUMLEV_NATION) && !query.get(SUMLEV_STATE)) { %>
-        in
-        <span id="state-select">
+        <% if (query.get('summarylevel') != SUMLEV_STATE) { %><!-- state list, target item is not a state -->
+            in
+        <% } %>
             <% var states = query.filtered(query.mappings.states); %>
-            <% _.each(states, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == states.length - 1 ? '' : ', ' %>
-            <% }); %>
-        </span>
-    <% } else if (query.get(SUMLEV_STATE)) { %>
+            <ol id="state-select" <% if (states.length > 12) { %>class="columnize"<% } %>>
+                <% _.each(states, function(pair, i) { %>
+                    <li><span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span></li>
+                <% }); %>
+            </ol>
+    <% } else if (query.get(SUMLEV_STATE)) { %><!-- state is selected -->
         in
         <% if (_.values(query.attributes).length > 5) { %>
             <span id="state-select"><span class="link" data-val="<%= query.get(SUMLEV_STATE) %>"><%= query.get(SUMLEV_STATE + 'Display') %></span></span>
         <% } else { %>
-            <b><%= query.get(SUMLEV_STATE +'Display') %></b>
+            &mdash; <b><%= query.get(SUMLEV_STATE +'Display') %></b>
         <% } %>
     <% } %>
-
+    
     <% if (query.mappings.counties && !query.get(SUMLEV_COUNTY)) { %>
-        for
-        <span id="county-select">
-            <% var counties = query.filtered(query.mappings.counties); %>
+        <% var counties = query.filtered(query.mappings.counties); %>
+        <ol id="county-select" <% if (counties.length > 12) { %>class="columnize"<% } %>>
             <% _.each(counties, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == counties.length - 1 ? '' : ', ' %>
+                <li><span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span></li>
             <% }); %>
-        </span>
+        </ol>
     <% } else if (query.get(SUMLEV_COUNTY)) { %>
-        - <b><%= query.get(SUMLEV_COUNTY + 'Display') %></b>.
+        &mdash; <b><%= query.get(SUMLEV_COUNTY + 'Display') %></b>
     <% } %>
 
     <% if (query.mappings.places && !query.get(SUMLEV_PLACE)) { %>
-        for
-        <span id="place-select">
-            <% var places = query.filtered(query.mappings.places); %>
+        <% var places = query.filtered(query.mappings.places); %>
+        <ol id="place-select" <% if (places.length > 12) { %>class="columnize"<% } %>>
             <% _.each(places, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == places.length - 1 ? '' : ', ' %>
+                <li><span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span></li>
             <% }); %>
-        </span>
+        </ol>
     <% } else if (query.get(SUMLEV_PLACE)) { %>
-        - <b><%= query.get(SUMLEV_PLACE + 'Display') %></b>.
+        &mdash; <b><%= query.get(SUMLEV_PLACE + 'Display') %></b>
     <% } %>
 
     <% if (query.mappings.tracts && !query.get(SUMLEV_TRACT)) { %>
-        for
-        <span id="tract-select">
-            <% var tracts = query.filtered(query.mappings.tracts); %>
+        <% var tracts = query.filtered(query.mappings.tracts); %>
+        <ol id="tract-select" <% if (tracts.length > 12) { %>class="columnize"<% } %>>
             <% _.each(tracts, function(pair, i) { %>
-                <span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span><%= i == tracts.length - 1 ? '' : ', ' %>
+                <li><span class="link" data-val="<%= pair[1] %>"><%= pair[0] %></span></li>
             <% }); %>
-        </span>
+        </ol>
     <% } else if (query.get(SUMLEV_TRACT)) { %>
-        - <b><%= query.get(SUMLEV_TRACT + 'Display') %></b>.
+        &mdash; <b><%= query.get(SUMLEV_TRACT + 'Display') %></b>
     <% } %>
 
     <% if (query.isCompletable() && window.location.pathname.indexOf('/data/') < 0 ) { %>
