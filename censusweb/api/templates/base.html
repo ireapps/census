@@ -11,10 +11,14 @@
         <script src="{% build_media_url '/js/jquery-ui-1.8.11.custom.min.js' %}"></script>
         <script src="{% build_media_url '/js/underscore-1.1.5.js' %}"></script>
         <script src="{% build_media_url '/js/backbone-0.3.3.min.js' %}"></script>
+        <script src="{% build_media_url '/js/jquery.cookie.js' %}"></script>
+        <script src="{% build_media_url '/js/jquery.tree.js' %}"></script>
     </head>
     <body>
-        <div id="container">
+        <header>
             <a href="/"><img src="{% build_media_url '/images/logo.png' %}" id="logo" width="328" height="29" /></a>
+        </header>
+        <div id="container">
             {% block content %}{% endblock %}
         </div>
     </body>

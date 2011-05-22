@@ -30,11 +30,11 @@ GEOID_COMPUTERS = {
     config.SUMLEV_BLOCK: geoid_block,
 }
 
-def find_geography_by_xref(collection, xref):
-    return collection.find_one({ 'xrefs': { '$elemMatch': xref } })
+def find_geography_by_xref(collection, xref, fields=None):
+    return collection.find_one({ 'xrefs': { '$elemMatch': xref } }, fields=fields)
 
-def find_geographies_for_xwalk(collection, geography):
-    return collection.find({ 'geoid': { '$in': geography['xwalk'].keys() } })
+def find_geographies_for_xwalk(collection, geography, fields=None):
+    return collection.find({ 'geoid': { '$in': geography['xwalk'].keys() } }, fields=fields)
 
 def xref_from_row_dict(d):
     # Strip off unncessary attrs

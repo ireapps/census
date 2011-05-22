@@ -40,3 +40,13 @@ done
 
 in2csv -f fixed -s ../census2000_geo_schema.csv ${STATE_NAME_ABBR}geo.uf1 > ${STATE_NAME_ABBR}geo2000.csv
 
+# 2010
+
+wget http://www2.census.gov/census_2010/redistricting_file--pl_94-171/${STATE_NAME}/${STATE_NAME_ABBR}2010.pl.zip
+unzip ${STATE_NAME_ABBR}2010.pl.zip
+
+in2csv -f fixed -s ../census2010_geo_schema.csv ${STATE_NAME_ABBR}geo2010.pl > ${STATE_NAME_ABBR}geo2010.csv
+
+# Crosswalk
+
+wget http://www.census.gov/geo/www/2010census/tract_rel/trf_txt/us2010trf.txt

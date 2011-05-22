@@ -2,8 +2,7 @@
 
 # See batch.sh for notes.
 
-echo "use census; 
-db.dropDatabase();" | mongo
+./__drop_database.sh
 
 ./ensure_indexes.sh
 

@@ -3,6 +3,24 @@
 {% load humanize %}
 
 {% block content %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/report.js"></script>
+<script id="browser-template" type="x-js-template">
+<h1>Hello!</h1>
+<ul id="table-list" class="cookie1">
+<% $('table.report').each(function(index, report) { x = $(report); %>
+    <li>
+        <input
+            type="checkbox"
+            id="show-<%= $(report).attr('id') %>"
+            name="show-<%= $(report).attr('id') %>"
+            <% if ($(report).is(':visible')) { %>checked="checked"<% } %>>
+        <label for="show-<%= $(report).attr('id') %>">
+            <a href="#<%= $(report).attr('id') %>" class="link"><%= $(report).attr('data-val') %></a>
+        </label>
+    </li>
+<% }); %>
+</ul>
+</script>
 
 <nav>
     <span class="button more-data">Add another geography to compare</span>
@@ -17,14 +35,21 @@
 <script type="text/javascript">
     $(function(){
         $('.button.more-data').click(function(){
-            $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
+            $('.query-builder-popup').dialog({
+                draggable:false,
+                resizable:false,
+                modal:true,
+                height:600,
+                minWidth:800
+            });
             query.initializeWithGeography({{ last_geoid }});
         });
     });
 </script>
 
 {% for r in reports %}
-<table class="report">
+<a name="report-{{ r.key }}"></a>
+<table class="report" id="report-{{ r.key }}" data-val="{{ r.name }}">
     <colgroup></colgroup><colgroup></colgroup>
     {% for c in r.columns %}
     <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
@@ -35,10 +60,11 @@
         <th colspan="4" class="locationdef">
             {{ c.name }}
             <div class="button-set">
-            {% if c.sumlev == "050" or c.sumlev == "160" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state</span>
-            {% else %}{% if c.sumlev == "140" or c.sumlev == "101" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state and county</span>
+            {% if c.sumlev == "050" or c.sumlev == "160" or c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"2" not in geoids %}
+                <span class="button add-related-state" title="Show state that contains this" data-val="{{ c.geoid }}">Add state &raquo;</span>
+            {% endif %}{% endif %}
+            {% if c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"5" not in geoids %}
+                <span class="button add-related-county" title="Show county that contains this" data-val="{{ c.geoid }}">Add county &raquo;</span>
             {% endif %}{% endif %}
             {% if show_remove_button %}
                 <span class="button remove-column" data-val="{{ c.geoid }}">Remove</span>
@@ -65,8 +91,8 @@
         {% for d in data %}
             <td class="code data-cell">{{ d.2000|intcomma }}</td>
             <td class="code data-cell">{{ d.2010|intcomma }}</td>
-            <td class="code data-cell">{{ d.delta|intcomma }}</td>
-            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|percent|floatformat:-1 }}</td>
+            <td class="code data-cell">{{ d.delta|floatformat|intcomma }}</td>
+            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|percent|floatformat:1 }}</td>
         {% endfor %}
     </tr>
     {% endfor %}

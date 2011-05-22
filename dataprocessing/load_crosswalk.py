@@ -3,7 +3,7 @@
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection
+from pymongo import Connection, objectid
 
 import config
 
@@ -22,13 +22,13 @@ row_count = 0
 
 # Create dummy 2000->2010 crosswalk
 if FILENAME == 'FAKE':
-    for geography in collection.find({ 'metadata.STATE': STATE_FIPS }):
+    for geography in collection.find({ 'metadata.STATE': STATE_FIPS }, fields=['geoid', 'xwalk']):
         if 'xwalk' not in geography:
             geography['xwalk'] = {} 
 
         geography['xwalk'][geography['geoid']] = 1.0
 
-        collection.save(geography) 
+        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }) 
         row_count += 1
         inserts += 1
 else:
@@ -43,7 +43,7 @@ else:
             if row_dict['STATE10'] != STATE_FIPS:
                 continue
             
-            geography = collection.find_one({ 'geoid': row_dict['GEOID10'] })
+            geography = collection.find_one({ 'geoid': row_dict['GEOID10'] }, fields=['xwalk'])
 
             if not geography:
                 continue
@@ -55,7 +55,7 @@ else:
 
             geography['xwalk'][row_dict['GEOID00']] = pop_pct_2000
 
-            collection.save(geography) 
+            collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }) 
             inserts += 1
 
 print 'Row count: %i' % row_count
