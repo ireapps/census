@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# \< 2 ]
+if [ $# \< 1 ]
 then
     echo "You must specify the proper-case name of a state as an argument, e.g. 'Delaware'."
     exit
@@ -16,7 +16,7 @@ echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
 # echo 'Fetching data'
-./fetch_sf_data.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+#./fetch_sf_data.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
 
 echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
@@ -30,8 +30,15 @@ done
 # echo 'Loading TODO labels'
 #./load_sf_labels_2010.py data/sf_2010_data_labels.csv
 
+# Load 2000 headers as 2010 so fake 2010 data will match to shapes
+if [ "$FAKE" = "FAKE" ]; then
+    GEOGRAPHY_HEADER_2010=data/${STATE_NAME_ABBR}geo2000.csv
+else
+    GEOGRAPHY_HEADER_2010=data/${STATE_NAME_ABBR}geo2010.csv
+fi
+
 echo 'Loading 2010 geographies'
-./load_sf_geographies_2010.py data/${STATE_NAME_ABBR}geo2010.csv
+./load_sf_geographies_2010.py $GEOGRAPHY_HEADER_2010 
    
 echo 'Loading crosswalk'
 ./load_crosswalk.py $STATE_FIPS $FAKE

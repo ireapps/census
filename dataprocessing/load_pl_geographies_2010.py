@@ -34,7 +34,6 @@ with open(FILENAME) as f:
             #'metadata': {},
             #'xrefs': [],
             #'data': {}
-            #'shape': ''     # TODO
         }
         row_dict = dict(zip(headers, row))
 
