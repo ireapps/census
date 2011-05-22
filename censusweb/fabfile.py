@@ -14,7 +14,7 @@ env.database_password = 'Xy9XKembdu'
 env.site_media_prefix = "site_media"
 env.admin_media_prefix = "admin_media"
 env.path = '/home/ubuntu/sites/%(project_name)s' % env
-env.log_path = '/home/ubuntu/logs/%(project_name)s' % env
+env.log_path = '/home/ubuntu/logs' % env
 env.env_path = '/home/ubuntu/sites/virtualenvs/%(project_name)s' % env
 env.repo_path = '%(path)s' % env
 env.site_path = '%(repo_path)s/censusweb' % env
@@ -284,13 +284,27 @@ def pgpool_up():
 """
 Commands - Data Processing
 """
-def load_state_sf(state):
+def batch_sf_2000(state, fake=''):
     """
-    Kick off the SF data loader for a state.
+    Kick off the SF 2000 data loader for a state.
     """
-    command = '%s/batch_sf.sh %s &' % (env.dataprocessing_path, state)
+    command = './batch_sf_2000.sh %s %s' % (state, fake)
     loader_log = '%s/census.load.%s.log' % (env.log_path, state)
-    run("nohup %s >& %s < /dev/null &" % (command, loader_log))
+    run("touch %s" % loader_log)
+
+    with cd(env.dataprocessing_path):
+        run("source %s/bin/activate; nohup %s >& %s < /dev/null &" % (env.env_path, command, loader_log))
+
+def batch_sf_2010(state, fake=''):
+    """
+    Kick off the SF 2010 data loader for a state.
+    """
+    command = './batch_sf_2010.sh %s %s' % (state, fake)
+    loader_log = '%s/census.load.%s.log' % (env.log_path, state)
+    run("touch %s" % loader_log)
+
+    with cd(env.dataprocessing_path):
+        run("source %s/bin/activate; nohup %s >& %s < /dev/null &" % (env.env_path, command, loader_log))
 
 """
 Commands - miscellaneous
@@ -322,7 +336,6 @@ def shiva_the_destroyer():
     """
     with settings(warn_only=True):
         run('rm -Rf %(path)s' % env)
-        run('rm -Rf %(log_path)s' % env)
         run('rm -Rf %(env_path)s' % env)
         pgpool_down()
         run('dropdb %(project_name)s' % env)
