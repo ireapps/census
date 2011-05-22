@@ -53,7 +53,8 @@ $(function(){
             $('.button.csv-json').click(this.csvJson);
             $('.button.remove-column').click(this.remove_column);
             $('tr.row').click(this.twist_row);
-            $('.button.show-family').click(this.show_family);
+            $('.button.add-related-state').click(this.add_related_state);
+            $('.button.add-related-county').click(this.add_related_county);
         },
 
         isCompletable: function() {
@@ -98,7 +99,7 @@ $(function(){
         keypress: function(e) {
             if (e.which == 13) {
                 if (this.filter) {
-                    $('.link:first').trigger('click');
+                    $('ol .link:first').trigger('click');
                 } else if (this.isCompletable()) {
                     this.go();
                 }
@@ -194,24 +195,23 @@ $(function(){
         go: function() {
             if (window.location.pathname.indexOf('/data/') != -1 ) {
                 //we're on the data page and are adding another
-                window.location = window.location.href.replace('.html',',') + this.location() + '.html';
+                window.location.pathname = window.location.pathname.replace('.html',',') + this.location() + '.html';
             } else {
                 //we're on the homepage
-                window.location = '/data/' + this.location() + '.html';
+                window.location.pathname = '/data/' + this.location() + '.html';
             }
         },
         
         csvJson: function() {
             var dataType = '.' + this.innerHTML.toLowerCase()
             var geoid_list = []
-            if (query.attributes.summarylevel == "140" && query.currentLevel == "040") {
-                window.location = '/internal/download_tracts_for_state/' + query.attributes['040'] + dataType;
-            } else {
-                $('.link').each(function() {
-                    geoid_list.push($(this).attr('data-val'))
-                });
-                window.location = '/data/' + geoid_list.join(',') + dataType;
-            }
+            var sumlev = query.attributes.summarylevel
+            var containerlev = query.currentLevel
+            var container = query.attributes[query.currentLevel]
+            window.location = '/internal/download_data_for_region/' + 
+                sumlev + '-' +
+                containerlev + '-'+ 
+                container + dataType;
         },
 
         showHelp: function(e) {
@@ -242,10 +242,10 @@ $(function(){
         
         remove_column: function() {
             geoid = $(this).attr('data-val');
-            if (document.location.href.indexOf('/' + geoid) > 0) {
-                document.location.href = document.location.href.replace(geoid + ',', '');
+            if (document.location.pathname.indexOf('/' + geoid) > 0) {
+                document.location.pathname = document.location.pathname.replace(geoid + ',', '');
             } else {
-                document.location.href = document.location.href.replace(',' + geoid, '');
+                document.location.pathname = document.location.pathname.replace(',' + geoid, '');
             }
         },
         
@@ -267,9 +267,17 @@ $(function(){
             });
         },
         
-        show_family: function() {
-            geoid = $(this).attr('data-val');
-            document.location.href = "/family/" + geoid + "/";
+        add_related_state: function() {
+            this_geoid = $(this).attr('data-val');
+            state_geoid = this_geoid.slice(0,2);
+            
+            window.location.pathname = window.location.pathname.replace('.html', ","+state_geoid+'.html');
+        },
+        add_related_county: function() {
+            this_geoid = $(this).attr('data-val');
+            county_geoid = this_geoid.slice(0,5);
+            
+            window.location.pathname = window.location.pathname.replace('.html', ","+county_geoid+'.html');
         },
     
         // --------------------- Data ----------------------------------------

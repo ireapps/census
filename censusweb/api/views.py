@@ -35,15 +35,22 @@ def tracts_for_state(request, state=''):
     tracts = mongoutils.get_tracts_by_state(state)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
     
-def download_tracts_for_state(request, state='', datatype=''):
-    tracts = mongoutils.get_tracts_by_state(state)
-    
-    tract_list = ','.join([t[1] for t in tracts])
+def download_data_for_region(request, sumlev='', containerlev='', container='', datatype=''):
+    if sumlev == '140' and containerlev == '040':
+        geo_list = mongoutils.get_tracts_by_state(container)
+    elif sumlev == '140' and containerlev == '050':
+        geo_list = mongoutils.get_tracts_by_county(container)
+    elif sumlev == '160' and containerlev == '040':
+        geo_list = mongoutils.get_places_by_state(container)
+    elif sumlev == '050' and containerlev == '040':
+        geo_list = mongoutils.get_counties_by_state(container)
+
+    geoids = ','.join([g[1] for g in geo_list])
 
     if datatype == 'csv':
-        return data_as_csv(request,tract_list)
+        return data_as_csv(request,geoids)
     elif datatype == 'json':
-        return data_as_json(request,tract_list)
+        return data_as_json(request,geoids)
 
 def data_as_json(request, geoids):
     geographies = {}
@@ -177,6 +184,8 @@ def report_for_table(geographies, year, t):
     labels = mongoutils.get_labels_for_table(year, t)
 
     report = {
+        'key': t,
+        'name': labels['name'],
         'year': year,
         'table': t + ". " + labels['name'],
         'universe': labels['universe'],
@@ -231,5 +240,6 @@ def data(request, geoids):
             'json_url': request.get_full_path().replace('.html','.json'),
             'show_remove_button': len(geoids_list) > 1,
             'last_geoid': g['geoid'],
+            'geoids': geoids_list
         },
         context_instance=RequestContext(request))

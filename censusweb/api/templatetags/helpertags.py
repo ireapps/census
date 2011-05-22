@@ -29,4 +29,7 @@ def help_text(key):
 
 @register.filter
 def percent(val):
-    return val*100
+    try:
+        return float(val)*100.0
+    except ValueError:
+        return ""
