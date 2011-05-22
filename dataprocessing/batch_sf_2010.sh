@@ -12,6 +12,14 @@ STATE_NAME_ABBR=`python get_state_abbr.py $1`
 STATE_FIPS=`python get_state_fips.py $1`
 FAKE=$2
 
+echo 'Fetching data'
+# Fetch 2000 data to be used as 2010 data for testing
+if [ "$FAKE" = "FAKE" ]; then
+    ./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+else
+    ./fetch_sf_data_2010.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+fi
+
 echo 'Loading 2010 data'
 for i in {1..39}
 do
