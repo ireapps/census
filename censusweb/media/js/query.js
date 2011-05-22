@@ -194,10 +194,10 @@ $(function(){
         go: function() {
             if (window.location.pathname.indexOf('/data/') != -1 ) {
                 //we're on the data page and are adding another
-                window.location = window.location.href.replace('.html',',') + this.location() + '.html';
+                window.location.pathname = window.location.pathname.replace('.html',',') + this.location() + '.html';
             } else {
                 //we're on the homepage
-                window.location = '/data/' + this.location() + '.html';
+                window.location.pathname = '/data/' + this.location() + '.html';
             }
         },
         
@@ -241,10 +241,10 @@ $(function(){
         
         remove_column: function() {
             geoid = $(this).attr('data-val');
-            if (document.location.href.indexOf('/' + geoid) > 0) {
-                document.location.href = document.location.href.replace(geoid + ',', '');
+            if (document.location.pathname.indexOf('/' + geoid) > 0) {
+                document.location.pathname = document.location.pathname.replace(geoid + ',', '');
             } else {
-                document.location.href = document.location.href.replace(',' + geoid, '');
+                document.location.pathname = document.location.pathname.replace(',' + geoid, '');
             }
         },
         

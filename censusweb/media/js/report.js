@@ -2,6 +2,8 @@ $(function(){
     $(document).ready(function() {
         reportcontroller = new ReportController
         Backbone.history.start()
+        if ( !location.hash )
+            location.hash="#browser"
     })
 
     ReportController = Backbone.Controller.extend({
@@ -14,6 +16,9 @@ $(function(){
             // set is a comma list of table ids to show
             if ( set ) {
                 var show_ids = set.split(',')
+            } else if($.cookie('show_tables')) {
+                this.saveLocation("browser/"+$.cookie('show_tables'))
+                var show_ids = $.cookie('show_tables').split(',')
             } else {
                 var show_ids = ['H1']
             }
@@ -44,7 +49,9 @@ $(function(){
             _.bindAll(this)
 
             this.model.bind('change', function(model) {
-                window.location.hash = "#browser/"+ model.get('table_ids').join(',')
+                var table_ids = model.get('table_ids').join(',')
+                $.cookie('show_tables', table_ids)
+                window.location.hash = "#browser/"+table_ids 
             })
 
             this.render()
