@@ -30,7 +30,13 @@
 <script type="text/javascript">
     $(function(){
         $('.button.more-data').click(function(){
-            $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
+            $('.query-builder-popup').dialog({
+                draggable:false,
+                resizable:false,
+                modal:true,
+                height:600,
+                minWidth:800
+            });
             query.initializeWithGeography({{ last_geoid }});
         });
     });
