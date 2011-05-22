@@ -240,5 +240,6 @@ def data(request, geoids):
             'json_url': request.get_full_path().replace('.html','.json'),
             'show_remove_button': len(geoids_list) > 1,
             'last_geoid': g['geoid'],
+            'geoids': geoids_list
         },
         context_instance=RequestContext(request))
