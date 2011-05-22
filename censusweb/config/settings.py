@@ -127,6 +127,8 @@ GEOGRAPHIES_COLLECTION = 'geographies'
 GEOGRAPHIES_2000_COLLECTION = 'geographies_2000'
 LABELS_COLLECTION = 'labels'
 
+TEST_RUNNER='api.tests.TestRunner'
+
 # Logging
 logging.basicConfig(
     level=logging.DEBUG,

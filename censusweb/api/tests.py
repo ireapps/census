@@ -1,92 +1,85 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
-
 from django.utils import unittest
-from statmodels import Statistic, AggregateStatistic, ssf, sumsf
-
-class StatisticTest(unittest.TestCase):
-    def test_sums(self):
-        """
-        Test summing and pct for aggregate statistics
-        """
-        agg = AggregateStatistic("Aggregate Statistic Label")
-        stats = []
-        s = Statistic('stat 1',census2010=5,census2000=10)
-        agg.add(s)
-        stats.append(s)
-
-        s = Statistic('stat 2',census2000=5,census2010=2)
-        agg.add(s)
-        stats.append(s)
-
-        s = Statistic('stat 3',census2010=1,census2000=2)
-        agg.add(s)
-        stats.append(s)
-
-        s = Statistic('stat 4 non-atomic',census2010=1000,census2000=10,atomic=False)
-        agg.add(s)
-        stats.append(s)
-
-        s = Statistic('stat 4 non-atomic',census2010=100,census2000=50,atomic=False)
-        agg.add(s)
-        stats.append(s)
-
-        self.assertEqual(8, agg.census2010)
-        self.assertEqual(17, agg.census2000)
-        self.assertEqual(float(8+17)/17,agg.delta)
-        self.assertEqual(len(stats),len(list(agg.children)))
-        for orig,kid in zip(stats,agg.children):
-            self.assertTrue(kid.label,orig is kid)
-
-    def test_deltas(self):
-        s = Statistic('stat 1',census2010=10,census2000=5)
-        self.assertEqual(1.0,s.delta)
-
-        s = Statistic('stat 2',census2010=5,census2000=10)
-        self.assertEqual(-.5,s.delta)
+from django.test.client import Client
+from django.test.simple import DjangoTestSuiteRunner
+from django.core.urlresolvers import get_resolver, Resolver404
+import simplejson
+import logging
+import mongoutils
 
 
-    def test_indent(self):
-        agg = AggregateStatistic("Aggregate Statistic Label")
-        stats = []
-        s = Statistic('stat 1',census2010=5,census2000=10)
-        agg.add(s)
-        stats.append(s)
+class TestRunner(DjangoTestSuiteRunner):
+    def setup_databases(self,**kwargs):
+        pass
 
-        s = Statistic('stat 2',census2000=5,census2010=2)
-        agg.add(s)
-        stats.append(s)
+    def teardown_databases(self,old_config, **kwargs):
+        pass
 
-        s = Statistic('stat 3',census2010=1,census2000=2)
-        agg.add(s)
-        stats.append(s)
+class DataTest(unittest.TestCase):
+    # Stub. More mongoutils tests here.
+    log = logging.getLogger('DataTests')
+    def test_mongo_delaware(self):
+        self.log.debug('test_mongo_delaware')
+        g = mongoutils.get_geography("10")
+        self.assertEqual(g['geoid'], "10")
+        self.assertEqual(g['metadata']["NAME"], "Delaware")
 
-        self.assertEqual(0, agg.indent)
-        for kid in agg.children:
-            self.assertEqual(agg.indent + 1, kid.indent)
-            
-    def test_ssf(self):
-        "Test ssf (SimpleStatisticFactory)"
-        label = 'my label'
-        column = 'col'
-        factory = ssf(label, column)
-        s = factory(census2010={column: 5})
-        self.assertTrue(type(s) == Statistic)
-        self.assertEqual(label, s.label)
-        self.assertEqual(5,s.census2010)
-        self.assertTrue(s.census2000 is None)
+class ViewTest(unittest.TestCase):
+    log = logging.getLogger('ViewTests')
+    def test_json_api(self):
+        self.log.debug('test_json_api')
+        geoids = '10,10001,10001040100'
+        geoids = geoids.split(',')
+        test = []
+        c = Client()
+        while geoids:
+            test.append(geoids.pop())
+            path = "/data/%s.json" % ",".join(test)
+            self.log.debug("asking for %s" % path)
+            r = c.get(path)
+            json_response = simplejson.loads(r.content)
+            self.assertEqual(len(test),len(json_response))
+            print '.',
+
+    def test_html_api(self):
+        self.log.debug('test_html_api')
+        geoids = '10,10001,10001040100'
+        geoids = geoids.split(',')
+        test = []
+        c = Client()
+        while geoids:
+            test.append(geoids.pop())
+            path = "/data/%s.html" % ",".join(test)
+            self.log.debug("asking for %s" % path)
+            r = c.get(path)
+            print '.',
+
+class UrlTest(unittest.TestCase):
+    log = logging.getLogger('UrlTest')
+    def test_resolution(self):
+        r = get_resolver(None)
+        geoids = '10,10001,10002,10003,10001040100'
+        extensions = ["html", "csv", "json"]
+        geoids = geoids.split(',')
+        test = []
+        while geoids:
+            test.append(geoids.pop())
+            geoid_str = ",".join(test)
+            for extension in extensions:
+                path = "/data/%s.%s" % (geoid_str, extension)
+                self.log.debug("asking for %s" % path)
+                match = r.resolve(path)
+                self.assertEquals(1,len(match.kwargs))
+                self.assertEquals(geoid_str,match.kwargs['geoids'])
         
-    def test_sumsf(self):
-        "test sumsf (SummingStatisticFactory)"
-        label = 'another label'
-        columns = ['col1', 'col2', 'col3']
-        factory = sumsf(label, columns)
-        s = factory(census2010={'col1': 5, 'col2': 3, 'col3': 1, 'col4': 0})
-        self.assertTrue(type(s) == Statistic)
-        self.assertEqual(label, s.label)
-        self.assertEqual(9,s.census2010)
-        self.assertTrue(s.census2000 is None)
+        # A couple paths that should fail.
+        self.assertRaises(
+            Resolver404,
+            r.resolve,
+            "/data/10.foo"
+        )
+        self.assertRaises(
+            Resolver404,
+            r.resolve,
+            "/data/bunk.html"
+        )
+        

@@ -33,19 +33,48 @@ h1 {
     background: -moz-linear-gradient(top, #bbb, #777);
     padding: 3px 10px;
     -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;
-    -webkit-box-shadow: rgba(0,0,0,0.7) 0 1px 1px; -moz-box-shadow: rgba(0,0,0,0.7) 0 1px 1px; box-shadow: rgba(0,0,0,0.7) 0 1px 1px;
+    -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0 inset, rgba(0,0,0,0.4) 0 0 2px;
+    -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0 inset, rgba(0,0,0,0.4) 0 0 2px;
+    box-shadow: rgba(255,255,255,0.4) 0 1px 0 inset, rgba(0,0,0,0.4) 0 0 2px;
     text-shadow: rgba(0,0,0,0.4) 0 1px 0;
+    border: 1px solid #999;
     color: #fff;
     font-size: 11px;
     font-weight: bold;
     text-decoration: none;
     vertical-align: text-bottom;
+    white-space:nowrap;
+
+    -webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25 ease-in-out;
+    -o-transition: all 0.25s ease-in-out;
+}
+.button:hover {
+    opacity:.8;
 }
 
 /*-------------------------------- Layout ------------------------------------*/
 
+header {
+    padding: 30px 50px 25px;
+    border-bottom: 1px solid #efefef;
+}
+
+aside {
+    float:left;
+    padding:20px;
+    background-color:#8DD7F7;
+    width:300px;
+    margin-right:20px;
+}
+
+aside ul {
+    padding-left:20px;
+}
+
 #container {
-    margin: 50px;
+    margin: 40px 50px;
+    overflow:hidden;
 }
 
 #logo {
@@ -129,36 +158,75 @@ nav {
     font-family: Menlo, Consolas, Monaco, Courier, monospace;
 }
 
+.report tr.row {}
+.report tr.row.hidden {}
+.report tr.row.has-children td.label {
+    background-position: 5px 5px !important;
+    background-repeat: no-repeat !important;
+}
+.report tr.row.has-children.closed td.label { 
+    background-image:url('/site_media/images/plus.png') !important;
+}
+.report tr.row.has-children.open td.label {
+    background-image:url('/site_media/images/minus.png') !important;
+}
+
 .report td {
     color: #333;
     padding: 5px 5px 5px 15px;
     text-align: right;
 }
 
+.report th.labeldef {
+    width: 375px !important;
+}
+.report th.locationdef {
+    background-color: #fff !important;
+    width: 300px !important;
+}
+.report td.data-cell {
+    width: 75px !important;
+}
 .report td.label {
     color: #000;
-    padding: 5px 50px 5px 10px;
+    padding: 5px 60px 5px 10px;
     border-right: 1px solid #ccc !important;
     text-align: left;
     width: 300px;
 }
 
 .report td.label .key {
+    display: block;
+    float: right;
+    margin-right: -50px;
+    text-align: right;
     font-size: 12px;
+    color: #666;
 }
 
 .report tr.odd td {
-    background: #f3f6fa;
-    border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+    background-color: #f3f6fa;
+}
+.report:hover tr.odd td {
+    /* Fixes issues with highlighting odd rows using <colgroup> */
+    background-color: inherit;
 }
 
 .report tr.odd td.first {
     border-left: 1px solid #aaa;
 }
 
-.report tr.highlight td {
-    background: #fefbeb !important;
+.highlight, colgroup.highlight, .highlight td {
+    background-color: #fefbeb;
 }
+.highlight th, th .highlight {
+    background-color: #fff;
+}
+.highlight td.selected {
+    /* border: 1px solid #aaa; */
+    background-color: #fdf4ca !important;
+}
+
 
 .report tr:last-child td {
     border-bottom-color: #aaa;
@@ -170,22 +238,23 @@ nav {
 
 .report tr.indent-0 td.label {
     font-weight: bold;
-}
-
-.report tr.indent-1 td.label {
     padding-left: 25px;
 }
 
-.report tr.indent-2 td.label {
+.report tr.indent-1 td.label {
     padding-left: 50px;
 }
 
-.report tr.indent-3 td.label {
+.report tr.indent-2 td.label {
     padding-left: 75px;
 }
 
-.report tr.indent-4 td.label {
+.report tr.indent-3 td.label {
     padding-left: 100px;
+}
+
+.report tr.indent-4 td.label {
+    padding-left: 125px;
 }
 
 .report span.help_text {
@@ -193,4 +262,12 @@ nav {
     font-size:14px;
     cursor:pointer;
     text-decoration:underline;
+}
+
+#status {
+    position:fixed;
+    bottom:0;
+    left:0;
+    background-color:#FDF4CA;
+    padding:5px;
 }

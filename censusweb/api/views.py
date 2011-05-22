@@ -9,6 +9,9 @@ import csv
 import constants
 import help_text
 import mongoutils
+from datetime import datetime
+
+DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
 
 def homepage(request):
     return render_to_response('homepage.html', {
@@ -27,19 +30,49 @@ def places_for_state(request, state=''):
 def tracts_for_county(request, county=''):
     tracts = mongoutils.get_tracts_by_county(county)
     return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
+    
+def tracts_for_state(request, state=''):
+    tracts = mongoutils.get_tracts_by_state(state)
+    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
+    
+def download_data_for_region(request, sumlev='', containerlev='', container='', datatype=''):
+    if sumlev == '140' and containerlev == '040':
+        geo_list = mongoutils.get_tracts_by_state(container)
+    elif sumlev == '140' and containerlev == '050':
+        geo_list = mongoutils.get_tracts_by_county(container)
+    elif sumlev == '160' and containerlev == '040':
+        geo_list = mongoutils.get_places_by_state(container)
+    elif sumlev == '050' and containerlev == '040':
+        geo_list = mongoutils.get_counties_by_state(container)
+
+    geoids = ','.join([g[1] for g in geo_list])
+
+    if datatype == 'csv':
+        return data_as_csv(request,geoids)
+    elif datatype == 'json':
+        return data_as_json(request,geoids)
 
 def data_as_json(request, geoids):
     geographies = {}
 
-    for geoid in geoids.split(','):
-        g = mongoutils.get_geography(geoid)
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    for g in mongoutils.get_geographies_list(geoids_list):
         del g['_id']
         del g['xrefs']
-        geographies[geoid] = g
+        geographies[g['geoid']] = g
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
-DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
+def family_as_json(request, geoid):
+    geographies = {}
+    
+    family_geoids = get_family_geoids(geoid)
+    for g in mongoutils.get_geographies_list(family_geoids, ['geoid', 'sumlev', 'metadata.NAME', 'metadata.STATE', 'metadata.COUNTY']):
+        del g['_id']
+        #del g['xrefs']
+        geographies[g['geoid']] = g
+        
+    return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
 def csv_row_header(tables=None):
     if not tables:
@@ -90,11 +123,15 @@ def data_as_csv(request, geoids):
     w = csv.writer(response)
     w.writerow(csv_row_header(tables))
 
-    for geoid in geoids.split(','):
-        g = mongoutils.get_geography(geoid)
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    for g in mongoutils.get_geographies_list(geoids_list):
         csvrow = csv_row_for_geography(g, tables)
         w.writerow(csvrow)
-    
+
+    now = datetime.now()
+    date_string = "%s-%s-%s-%s" % (now.year, now.month, now.day, now.microsecond)
+    response['Content-Disposition'] = "attachment; filename=ire-census-%s.csv" % date_string
+
     return response
 
 def labels_as_json(request,year,tables=None):
@@ -112,8 +149,13 @@ def labels_as_json(request,year,tables=None):
     return HttpResponse(simplejson.dumps(labels), mimetype='application/json')
 
 def redirect_to_family(request, geoid):
+    family = get_family_geoids(geoid)
+    geoid_str = ",".join(family)
+    url = reverse("data", args=[geoid_str,])
+    return HttpResponsePermanentRedirect(url)
+
+def get_family_geoids(geoid):
     geography = mongoutils.get_geography(geoid)
-    
     family = [geography['metadata']['STATE'],]
     if geography['metadata']['COUNTY']:
         family.append(
@@ -127,16 +169,54 @@ def redirect_to_family(request, geoid):
         family.append(
             "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY'], geography['metadata']['TRACT']])
         )
+    return family
+
+def report_values_for_key(g,t,key):
+    d = {}
+    for alternative in DATA_ALTERNATIVES:
+        try:
+            d[alternative] = g['data'][alternative][t][key]
+        except KeyError:
+            d[alternative] = ''
+    return d
+
+def report_for_table(geographies, year, t):
+    labels = mongoutils.get_labels_for_table(year, t)
+
+    report = {
+        'key': t,
+        'year': year,
+        'table': t + ". " + labels['name'],
+        'universe': labels['universe'],
+        'columns': [],
+        'rows': [],
+    }
+
+    for key, label in sorted(labels['labels'].items()):
+        data = []
+
+        for g in geographies:
+            data.append(report_values_for_key(g,t,key))
+
+        report['rows'].append((label, data, key))
+
+    for g in geographies:
+        column_meta = {}
+        column_name = g['metadata']['NAME']
+
+        if g['sumlev'] in [constants.SUMLEV_COUNTY, constants.SUMLEV_PLACE, constants.SUMLEV_TRACT]:
+            column_name += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
+
+        column_meta['name'] = column_name
+        column_meta['geoid'] = g['geoid']
+        column_meta['sumlev'] = g['sumlev']
+        report['columns'].append(column_meta)
+
+    return report
     
-    geoid_str = ",".join(family)
-    url = reverse("data", args=[geoid_str,])
-    return HttpResponsePermanentRedirect(url)
-
 def data(request, geoids):
-    geographies = []
-
-    for geoid in geoids.split(','):
-        geographies.append(mongoutils.get_geography(geoid))
+    geoids_list = filter(lambda g: bool(g), geoids.split(','))
+    geographies = mongoutils.get_geographies_list(geoids_list)
 
     tables = []
     
@@ -148,47 +228,7 @@ def data(request, geoids):
     reports = []
 
     for t in sorted(tables):
-        labels = mongoutils.get_labels_for_table('2010', t)
-
-        report = {
-            'year': '2010',
-            'table': t + ". " + labels['name'],
-            'universe': labels['universe'],
-            'columns': [],
-            'rows': [],
-        }
-
-        for key, label in sorted(labels['labels'].items()):
-            data = []
-
-            for g in geographies:
-                try:
-                    data.append({
-                        '2000': g['data']['2000'][t][key],
-                        '2010': g['data']['2010'][t][key],
-                        'delta': g['data']['delta'][t][key],
-                        'pct_change': g['data']['pct_change'][t][key]
-                    })
-                # Data not available for 2000
-                except KeyError:
-                    data.append({
-                        '2010': g['data']['2010'][t][key],
-                    })
-            
-            report['rows'].append((label, data, key))
-
-        for g in geographies:
-            column_meta = {}
-            column_name = g['metadata']['NAME']
-
-            if g['sumlev'] in [constants.SUMLEV_COUNTY, constants.SUMLEV_PLACE, constants.SUMLEV_TRACT]:
-                column_name += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
-
-            column_meta['name'] = column_name
-            column_meta['geoid'] = g['geoid']
-            column_meta['sumlev'] = g['sumlev']
-            report['columns'].append(column_meta)
-
+        report = report_for_table(geographies, '2010',t)
         reports.append(report)
 
     return render_to_response('data.html',
@@ -197,6 +237,7 @@ def data(request, geoids):
             'reports': reports,
             'csv_url': request.get_full_path().replace('.html','.csv'),
             'json_url': request.get_full_path().replace('.html','.json'),
-            'show_remove_button': len(report['columns']) > 1,
+            'show_remove_button': len(geoids_list) > 1,
+            'last_geoid': g['geoid'],
         },
         context_instance=RequestContext(request))
