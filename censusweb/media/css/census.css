@@ -130,6 +130,7 @@ nav {
 }
 
 .report {
+    display:none;
     border: 1px solid #aaa;
     margin-right: 25px;
     margin-bottom: 25px;

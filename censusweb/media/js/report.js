@@ -6,28 +6,48 @@ $(function(){
 
     ReportController = Backbone.Controller.extend({
         routes: {
-            "browser": "browser"
+            "browser": "browser",
+            "browser/:set": "browser"
         },
 
-        browser: function() {
-            b = new Browser
+        browser: function(set) {
+            // set is a comma list of table ids to show
+            if ( set ) {
+                var show_ids = set.split(',')
+            } else {
+                var show_ids = ['H1']
+            }
+
+            $("table.report").hide()
+            _.each(show_ids, function(id) {
+                $('#report-'+id).show()
+            })
+
+            if ( ! this.browser_view ) {
+                var m = new Backbone.Model({'table_ids': show_ids})
+                this.browser_view = new Browser({model: m})
+            }
         }
     })
 
     Browser = Backbone.View.extend({
         tagName: "aside",
         id: "browser",
-        events: {},
+        events: {
+            "change input": "check",
+            "click .link": "scroll"
+        },
 
         initialize: function() {
             this.template = _.template($('#browser-template').html())
 
-            $.getJSON('/labels/2010.json', _.bind(function(response) {
-                this.model = new Backbone.Model(response)
-                this.render()
-            }, this))
-
             _.bindAll(this)
+
+            this.model.bind('change', function(model) {
+                window.location.hash = "#browser/"+ model.get('table_ids').join(',')
+            })
+
+            this.render()
 
             $('#container').before(this.el)
         },
@@ -36,6 +56,24 @@ $(function(){
             $(this.el).html(this.template({model:this.model}))
             $(this.el).find('#table-list').tree({default_expanded_paths_string : '0/0/0,0/0/2,0/2/4'})
             return this
+        },
+
+        check: function(ev) {
+            var id = $(ev.target).attr('id').match(/^show-report-(.+)$/)[1]
+            var table_ids = this.model.get('table_ids')
+
+            if ( $(ev.target).is(':checked') ) {
+                this.model.set({'table_ids': table_ids.concat([id])})
+            } else {
+                this.model.set({'table_ids': _.without(table_ids, id)})
+            }
+        },
+
+        scroll: function(ev) {
+            var a_name = $(ev.target).attr('href').match(/^#(.*)$/)[1]
+            $("html").scrollTop($("a[name="+a_name+"]").offset().top)
+
+            return false
         }
 
     })
