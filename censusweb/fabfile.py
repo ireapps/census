@@ -314,7 +314,7 @@ def batch_sf_everything(fake=''):
     USE WITH CAUTION!
     """
     command = 'python batch_sf_everything.py %s' % (fake)
-    loader_log = '%s/census.load.everything.log' % (env.log_path, state)
+    loader_log = '%s/census.load.everything.log' % (env.log_path)
     run_unattended_batch_command(command, loader_log)
 
 def batch_test():
