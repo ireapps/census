@@ -55,8 +55,26 @@ h1 {
 
 /*-------------------------------- Layout ------------------------------------*/
 
+header {
+    padding: 30px 50px 25px;
+    border-bottom: 1px solid #efefef;
+}
+
+aside {
+    float:left;
+    padding:20px;
+    background-color:#8DD7F7;
+    width:300px;
+    margin-right:20px;
+}
+
+aside ul {
+    padding-left:20px;
+}
+
 #container {
-    margin: 50px;
+    margin: 40px 50px;
+    overflow:hidden;
 }
 
 #logo {

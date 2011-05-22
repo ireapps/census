@@ -177,6 +177,7 @@ def report_for_table(geographies, year, t):
     labels = mongoutils.get_labels_for_table(year, t)
 
     report = {
+        'key': t,
         'year': year,
         'table': t + ". " + labels['name'],
         'universe': labels['universe'],
