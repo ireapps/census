@@ -4,6 +4,7 @@
 
 {% block content %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/browser.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.scrollfollow.js"></script>
 
 <span class="button" id="show-browser">show the thing</span>
 
@@ -48,18 +49,6 @@
                 minWidth:800
             });
             query.initializeWithGeography({{ last_geoid }});
-        });
-        
-        $('#show-browser').click(function(){
-            if($('#browser').is(':visible')) {
-                $('#browser').hide();
-                $('#show-browser').text('show the thing');
-                $('#container').removeClass('with-browser');
-            } else {
-                $('#browser').show();
-                $('#show-browser').text('hide the thing')
-                $('#container').addClass('with-browser');
-            }
         });
     });
 </script>
