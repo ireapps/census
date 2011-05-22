@@ -2,7 +2,7 @@
 
 import sys
 
-from pymongo import Connection
+from pymongo import Connection, objectid
 
 import config
 
@@ -18,7 +18,7 @@ collection = db[config.GEOGRAPHIES_COLLECTION]
 row_count = 0
 computations = 0
 
-for geography in collection.find({ 'metadata.STATE': STATE_FIPS }):
+for geography in collection.find({ 'metadata.STATE': STATE_FIPS }, fields=['data']):
     row_count += 1
 
     if 'delta' not in geography['data']:
@@ -56,7 +56,7 @@ for geography in collection.find({ 'metadata.STATE': STATE_FIPS }):
             geography['data']['delta'][table][k] = str(value_2010 - value_2000)
             geography['data']['pct_change'][table][k] = str((value_2010 - value_2000) / value_2000)
 
-    collection.save(geography)
+    collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } })
     computations += 1
 
 print 'Row count: %i' % row_count

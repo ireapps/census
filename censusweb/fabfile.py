@@ -288,8 +288,9 @@ def load_state_sf(state):
     """
     Kick off the SF data loader for a state.
     """
-    env.state = state
-    run('%(dataprocessing_path)s/batch_sf.sh %(state)s &' % env)
+    command = '%s/batch_sf.sh %s &' % (env.dataprocessing_path, state)
+    loader_log = '%s/census.load.%s.log' % (env.log_path, state)
+    run("nohup %s >& %s < /dev/null &" % (command, loader_log))
 
 """
 Commands - miscellaneous
