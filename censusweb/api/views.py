@@ -185,6 +185,7 @@ def report_for_table(geographies, year, t):
 
     report = {
         'key': t,
+        'name': labels['name'],
         'year': year,
         'table': t + ". " + labels['name'],
         'universe': labels['universe'],
