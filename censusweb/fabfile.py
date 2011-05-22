@@ -307,9 +307,21 @@ def batch_sf_2010(state, fake=''):
     loader_log = '%s/census.load.%s.log' % (env.log_path, state)
     run_unattended_batch_command(command, loader_log)
 
+def batch_sf_everything(fake=''):
+    """
+    Kick off the SF data loaders for all states.
+
+    USE WITH CAUTION!
+    """
+    command = 'python batch_sf_everything.py %s' % (fake)
+    loader_log = '%s/census.load.everything.log' % (env.log_path)
+    run_unattended_batch_command(command, loader_log)
+
 def batch_test():
     """
     Kick off the test data loader.
+
+    USE WITH CAUTION!
     """
     loader_log = '%(log_path)s/census.load.test.log' % env
     run_unattended_batch_command('./batch_test.sh', loader_log)
