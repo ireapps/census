@@ -3,23 +3,28 @@
 {% load humanize %}
 
 {% block content %}
-<script type="text/javascript" src="{{ MEDIA_URL }}js/report.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/browser.js"></script>
+
+<span class="button" id="show-browser">show the thing</span>
+
 <script id="browser-template" type="x-js-template">
-<h1>Hello!</h1>
-<ul id="table-list" class="cookie1">
-<% $('table.report').each(function(index, report) { x = $(report); %>
-    <li>
-        <input
-            type="checkbox"
-            id="show-<%= $(report).attr('id') %>"
-            name="show-<%= $(report).attr('id') %>"
-            <% if ($(report).is(':visible')) { %>checked="checked"<% } %>>
-        <label for="show-<%= $(report).attr('id') %>">
-            <a href="#<%= $(report).attr('id') %>" class="link"><%= $(report).attr('data-val') %></a>
-        </label>
-    </li>
-<% }); %>
-</ul>
+    <div id="floater">
+        <h1>Hello!</h1>
+        <ul id="table-list" class="cookie1">
+        <% $('table.report').each(function(index, report) { x = $(report); %>
+            <li>
+                <input
+                    type="checkbox"
+                    id="show-<%= $(report).attr('id') %>"
+                    name="show-<%= $(report).attr('id') %>"
+                    <% if ($(report).is(':visible')) { %>checked="checked"<% } %>>
+                <label for="show-<%= $(report).attr('id') %>">
+                    <a href="#<%= $(report).attr('id') %>" class="link"><%= $(report).attr('data-val') %></a>
+                </label>
+            </li>
+        <% }); %>
+        </ul>
+    </div>
 </script>
 
 <nav>
@@ -43,6 +48,18 @@
                 minWidth:800
             });
             query.initializeWithGeography({{ last_geoid }});
+        });
+        
+        $('#show-browser').click(function(){
+            if($('#browser').is(':visible')) {
+                $('#browser').hide();
+                $('#show-browser').text('show the thing');
+                $('#container').removeClass('with-browser');
+            } else {
+                $('#browser').show();
+                $('#show-browser').text('hide the thing')
+                $('#container').addClass('with-browser');
+            }
         });
     });
 </script>
