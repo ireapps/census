@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import sys
-import time
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection
+from pymongo import Connection, objectid
 
 import config
 import utils
