@@ -64,4 +64,5 @@ STATE_ABBRS = {
     'Wyoming': 'wy'
 }
 
-print STATE_ABBRS[sys.argv[1]]
+if __name__ == "__main__":
+    print STATE_ABBRS[sys.argv[1]]

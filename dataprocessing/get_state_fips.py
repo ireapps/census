@@ -56,4 +56,5 @@ STATE_FIPS = {
     'Wyoming': '56'
 }        
 
-print STATE_FIPS[sys.argv[1]]
+if __name__ == "__main__":
+    print STATE_FIPS[sys.argv[1]]
