@@ -266,7 +266,8 @@ def _create_placemark_dict(b,j,tables=None):
         tables_list = tables
 
     kml_context = _build_kml_context_for_template(b,j,tables_list)
-    p['kml'] = b.simple_shape.kml + KML_EXTENDED_DATA_TEMPLATE.render(Context(kml_context))
+    shape = b.simple_shape.transform(4326,clone=True)
+    p['kml'] = shape.kml + KML_EXTENDED_DATA_TEMPLATE.render(Context(kml_context))
     
     return p
 
