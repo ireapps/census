@@ -39,7 +39,7 @@ urlpatterns = patterns('',
     #/internal/tracts_for_state/10.json
     (r'^internal/tracts_for_state/(?P<state>\d{2}).json$', views.tracts_for_state),
     
-    # Generate CSV/JSON for all tracts in a given state (used from within Query Builder)
-    #/internal/download_tracts_for_state/10.csv (or .json)
-    (r'^internal/download_tracts_for_state/(?P<state>\d{2})\.(?P<datatype>[a-z]{3,4})$', views.download_tracts_for_state),
+    # Generate CSV/JSON for all elements in a given region (used from within Query Builder)
+    #/internal/download_data_for_region/10.csv (or .json)
+    (r'^internal/download_data_for_region/(?P<sumlev>\d{3})-(?P<containerlev>\d{3})-(?P<container>\d+)\.(?P<datatype>csv|json)$', views.download_data_for_region),
 )

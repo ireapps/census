@@ -204,14 +204,13 @@ $(function(){
         csvJson: function() {
             var dataType = '.' + this.innerHTML.toLowerCase()
             var geoid_list = []
-            if (query.attributes.summarylevel == "140" && query.currentLevel == "040") {
-                window.location = '/internal/download_tracts_for_state/' + query.attributes['040'] + dataType;
-            } else {
-                $('.link').each(function() {
-                    geoid_list.push($(this).attr('data-val'))
-                });
-                window.location = '/data/' + geoid_list.join(',') + dataType;
-            }
+            var sumlev = query.attributes.summarylevel
+            var containerlev = query.currentLevel
+            var container = query.attributes[query.currentLevel]
+            window.location = '/internal/download_data_for_region/' + 
+                sumlev + '-' +
+                containerlev + '-'+ 
+                container + dataType;
         },
 
         showHelp: function(e) {
@@ -361,15 +360,22 @@ $(function(){
     // Table mouseover row highlighting.
     $(".report").delegate('td','mouseover mouseleave', function(e) {
         if (e.type == 'mouseover') {
+            status = ''
             $(this).addClass("selected");
             $(this).parent().addClass("highlight");
-            if ($(this).index() > 0)
-                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight");
+            status = $(this).parent().find('.label').text();
+            if ($(this).index() > 0) {
+                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight"); //column
+                status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
+                status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
+            }
+            $('#status').show().text(status);
         } else {
             $(this).removeClass("selected");
             $(this).parent().removeClass('highlight');
             if ($(this).index() > 0)
                 $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
+            $('#status').hide();
         }
     });
     
