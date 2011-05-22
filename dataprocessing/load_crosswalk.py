@@ -22,7 +22,7 @@ row_count = 0
 
 # Create dummy 2000->2010 crosswalk
 if FILENAME == 'FAKE':
-    for geography in collection.find({ 'metadata.STATE': STATE_FIPS }):
+    for geography in collection.find({ 'metadata.STATE': STATE_FIPS }, fields=['geoid', 'xwalk']):
         if 'xwalk' not in geography:
             geography['xwalk'] = {} 
 
@@ -43,7 +43,7 @@ else:
             if row_dict['STATE10'] != STATE_FIPS:
                 continue
             
-            geography = collection.find_one({ 'geoid': row_dict['GEOID10'] })
+            geography = collection.find_one({ 'geoid': row_dict['GEOID10'] }, fields=['xwalk'])
 
             if not geography:
                 continue

@@ -18,6 +18,7 @@ env.log_path = '/home/ubuntu/logs/%(project_name)s' % env
 env.env_path = '/home/ubuntu/sites/virtualenvs/%(project_name)s' % env
 env.repo_path = '%(path)s' % env
 env.site_path = '%(repo_path)s/censusweb' % env
+env.dataprocessing_path = '%(repo_path)s/dataprocessing' % env
 env.apache_config_path = '/home/ubuntu/apache/%(project_name)s' % env
 env.python = 'python2.6'
 env.repository_url = "git@github.com:documentcloud/census.git"
@@ -279,6 +280,16 @@ def pgpool_up():
     Start pgpool.
     """
     sudo('/etc/init.d/pgpool start')
+
+"""
+Commands - Data Processing
+"""
+def load_state_sf(state):
+    """
+    Kick off the SF data loader for a state.
+    """
+    env.state = state
+    run('%(dataprocessing_path)s/batch_sf.sh %(state)s &' % env)
 
 """
 Commands - miscellaneous

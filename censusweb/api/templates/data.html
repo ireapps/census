@@ -7,11 +7,16 @@
 <script id="browser-template" type="x-js-template">
 <h1>Hello!</h1>
 <ul id="table-list" class="cookie1">
-<% _.each(model.attributes, function(label) { %>
-    <li id="<%= label.key %>">
-        <input type="checkbox" id="show-<%= label.key %>" name="show-<%= label.key %>">
-        <label for="show-<%= label.key %>">
-            <a href="#table-<%= label.key %>" class="link"><%= label.name %></a></label>
+<% $('table.report').each(function(index, report) { x = $(report); %>
+    <li>
+        <input
+            type="checkbox"
+            id="show-<%= $(report).attr('id') %>"
+            name="show-<%= $(report).attr('id') %>"
+            <% if ($(report).is(':visible')) { %>checked="checked"<% } %>>
+        <label for="show-<%= $(report).attr('id') %>">
+            <a href="#<%= $(report).attr('id') %>" class="link"><%= $(report).attr('data-val') %></a>
+        </label>
     </li>
 <% }); %>
 </ul>
@@ -43,8 +48,8 @@
 </script>
 
 {% for r in reports %}
-<a name="table-{{r.key}}"></a>
-<table class="report">
+<a name="report-{{ r.key }}"></a>
+<table class="report" id="report-{{ r.key }}" data-val="{{ r.name }}">
     <colgroup></colgroup><colgroup></colgroup>
     {% for c in r.columns %}
     <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>

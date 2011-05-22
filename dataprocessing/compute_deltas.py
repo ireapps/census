@@ -47,14 +47,14 @@ for geography in collection.find({ 'metadata.STATE': STATE_FIPS }):
             if k not in geography['data']['2000'][table]:
                 continue
 
-            value_2010 = v
-            value_2000 = geography['data']['2000'][table][k]
+            value_2010 = float(v)
+            value_2000 = float(geography['data']['2000'][table][k])
 
             if value_2000 == 0:
                 continue
 
-            geography['data']['delta'][table][k] = value_2010 - value_2000
-            geography['data']['pct_change'][table][k] = float(value_2010 - value_2000) / value_2000
+            geography['data']['delta'][table][k] = str(value_2010 - value_2000)
+            geography['data']['pct_change'][table][k] = str((value_2010 - value_2000) / value_2000)
 
     collection.save(geography)
     computations += 1
