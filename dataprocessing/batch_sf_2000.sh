@@ -15,8 +15,8 @@ FAKE=$2
 echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
-# echo 'Fetching data'
-#./fetch_sf_data.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+echo 'Fetching data'
+./fetch_sf_data.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
 
 echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv

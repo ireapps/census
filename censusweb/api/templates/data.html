@@ -35,7 +35,13 @@
 <script type="text/javascript">
     $(function(){
         $('.button.more-data').click(function(){
-            $('.query-builder-popup').dialog({minHeight:400, minWidth:800});
+            $('.query-builder-popup').dialog({
+                draggable:false,
+                resizable:false,
+                modal:true,
+                height:600,
+                minWidth:800
+            });
             query.initializeWithGeography({{ last_geoid }});
         });
     });
@@ -55,9 +61,9 @@
             {{ c.name }}
             <div class="button-set">
             {% if c.sumlev == "050" or c.sumlev == "160" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state</span>
+                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state &raquo;</span>
             {% else %}{% if c.sumlev == "140" or c.sumlev == "101" %}
-                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state and county</span>
+                <span class="button show-family" title="Show items that contain this" data-val="{{ c.geoid }}">Compare to state and county &raquo;</span>
             {% endif %}{% endif %}
             {% if show_remove_button %}
                 <span class="button remove-column" data-val="{{ c.geoid }}">Remove</span>

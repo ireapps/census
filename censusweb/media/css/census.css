@@ -272,3 +272,18 @@ nav {
     background-color:#FDF4CA;
     padding:5px;
 }
+
+.ui-dialog {
+    overflow-y: scroll;
+}
+#search ol {
+    margin-top: 20px;
+}
+#search .columnize {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+}
