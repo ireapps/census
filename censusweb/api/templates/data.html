@@ -3,6 +3,19 @@
 {% load humanize %}
 
 {% block content %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/report.js"></script>
+<script id="browser-template" type="x-js-template">
+<h1>Hello!</h1>
+<ul id="table-list" class="cookie1">
+<% _.each(model.attributes, function(label) { %>
+    <li id="<%= label.key %>">
+        <input type="checkbox" id="show-<%= label.key %>" name="show-<%= label.key %>">
+        <label for="show-<%= label.key %>">
+            <a href="#table-<%= label.key %>" class="link"><%= label.name %></a></label>
+    </li>
+<% }); %>
+</ul>
+</script>
 
 <nav>
     <span class="button more-data">Add another geography to compare</span>
@@ -24,6 +37,7 @@
 </script>
 
 {% for r in reports %}
+<a name="table-{{r.key}}"></a>
 <table class="report">
     <colgroup></colgroup><colgroup></colgroup>
     {% for c in r.columns %}
