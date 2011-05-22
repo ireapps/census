@@ -98,7 +98,7 @@ $(function(){
         keypress: function(e) {
             if (e.which == 13) {
                 if (this.filter) {
-                    $('.link:first').trigger('click');
+                    $('ol .link:first').trigger('click');
                 } else if (this.isCompletable()) {
                     this.go();
                 }
