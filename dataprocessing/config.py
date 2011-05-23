@@ -17,3 +17,5 @@ GEOGRAPHIES_COLLECTION = 'geographies'
 GEOGRAPHIES_2000_COLLECTION = 'geographies_2000'
 LABELS_COLLECTION = 'labels'
 
+# S3
+S3_BUCKET = 'census-test'

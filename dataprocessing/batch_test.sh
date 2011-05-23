@@ -23,4 +23,7 @@
 ./crosswalk.py 10
 ./compute_deltas.py 10
 
+#./deploy.py
+#./__drop_database.sh
+
 ./tests.py

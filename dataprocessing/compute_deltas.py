@@ -1,15 +1,8 @@
 #!/usr/bin/env python
 
-import sys
-
 from pymongo import Connection, objectid
 
 import config
-
-if len(sys.argv) < 2:
-    sys.exit('You must provide a state fips code as an argument to this script.')
-
-STATE_FIPS = sys.argv[1]
 
 connection = Connection()
 db = connection[config.CENSUS_DB]
@@ -18,7 +11,7 @@ collection = db[config.GEOGRAPHIES_COLLECTION]
 row_count = 0
 computations = 0
 
-for geography in collection.find({ 'metadata.STATE': STATE_FIPS }, fields=['data']):
+for geography in collection.find({}, fields=['data']):
     row_count += 1
 
     if 'delta' not in geography['data']:

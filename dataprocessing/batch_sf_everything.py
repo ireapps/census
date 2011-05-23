@@ -10,8 +10,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'FAKE':
 else:
     FAKE = ''
 
-for state in STATE_ABBRS.keys():
+for state in sorted(STATE_ABBRS.keys()):
     subprocess.call(['./batch_sf_2000.sh', state, FAKE]) 
-
-for state in STATE_ABBRS.keys():
     subprocess.call(['./batch_sf_2010.sh', state, FAKE]) 
+

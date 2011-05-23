@@ -1,16 +1,9 @@
 #!/usr/bin/env python
 
-import sys
-
 from pymongo import Connection, objectid
 
 import config
 import utils
-
-if len(sys.argv) < 2:
-    sys.exit('You must provide a state fips code as an argument to this script.')
-
-STATE_FIPS = sys.argv[1]
 
 connection = Connection()
 db = connection[config.CENSUS_DB]
@@ -20,7 +13,7 @@ collection_2000 = db[config.GEOGRAPHIES_2000_COLLECTION]
 row_count = 0
 inserts = 0
 
-for geography in collection.find({ 'metadata.STATE': STATE_FIPS }, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
+for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
     row_count += 1
 
     # TRACTS - require true crosswalk
