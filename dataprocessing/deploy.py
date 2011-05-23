@@ -26,9 +26,12 @@ for geography in collection.find():
 
     k = Key(bucket)
     k.key = '%(geoid)s.json' % geography
-    k.set_contents_from_string(zlib.compress(json.dumps(geography)))
+    k.set_contents_from_string(zlib.compress(json.dumps(geography)), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
+
+    print geography['geoid']
 
     deployed += 1
 
 print 'Row count: %i' % row_count
 print 'Deployed: %i' % deployed
+
