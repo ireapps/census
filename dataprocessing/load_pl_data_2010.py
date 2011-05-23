@@ -3,7 +3,7 @@
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection
+from pymongo import Connection, objectid
 
 import config
 import utils
@@ -23,7 +23,7 @@ with open(FILENAME) as f:
     rows = UnicodeCSVReader(f)
     headers = rows.next()
 
-    inserts = 0
+    updates = 0
     row_count = 0
 
     for row in rows:
@@ -32,7 +32,7 @@ with open(FILENAME) as f:
 
         xref = utils.xref_from_row_dict(row_dict)
 
-        geography = utils.find_geography_by_xref(collection, xref) 
+        geography = utils.find_geography_by_xref(collection, xref, fields=['data']) 
 
         if not geography:
             continue
@@ -53,9 +53,9 @@ with open(FILENAME) as f:
         for k, v in tables.items():
             geography['data'][YEAR][k] = v 
 
-        collection.save(geography)
-        inserts += 1
+        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } }, safe=True)
+        updates += 1
 
 print 'Row count: %i' % row_count
-print 'Inserted: %i' % inserts
+print 'Updates: %i' % updates
 

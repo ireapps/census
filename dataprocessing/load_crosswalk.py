@@ -28,7 +28,7 @@ if FILENAME == 'FAKE':
 
         geography['xwalk'][geography['geoid']] = 1.0
 
-        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }) 
+        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }, safe=True) 
         row_count += 1
         inserts += 1
 else:
@@ -55,7 +55,7 @@ else:
 
             geography['xwalk'][row_dict['GEOID00']] = pop_pct_2000
 
-            collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }) 
+            collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }, safe=True) 
             inserts += 1
 
 print 'Row count: %i' % row_count

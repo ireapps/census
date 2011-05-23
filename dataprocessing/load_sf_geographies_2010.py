@@ -60,7 +60,7 @@ with open(FILENAME) as f:
         geography['data'] = {}
         geography['metadata'] = row_dict
 
-        collection.save(geography)
+        collection.save(geography, safe=True)
         inserts += 1
 
 print 'Row count: %i' % row_count

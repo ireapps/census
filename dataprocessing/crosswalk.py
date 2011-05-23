@@ -59,7 +59,7 @@ for geography in collection.find({ 'metadata.STATE': STATE_FIPS }, fields=['data
 
         geography['data']['2000'] = geography_2000['data']['2000']
 
-    collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } })
+    collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } }, safe=True)
     inserts += 1
 
 print 'Row count: %i' % row_count

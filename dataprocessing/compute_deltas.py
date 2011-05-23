@@ -56,7 +56,7 @@ for geography in collection.find({ 'metadata.STATE': STATE_FIPS }, fields=['data
             geography['data']['delta'][table][k] = str(value_2010 - value_2000)
             geography['data']['pct_change'][table][k] = str((value_2010 - value_2000) / value_2000)
 
-    collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } })
+    collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } }, safe=True)
     computations += 1
 
 print 'Row count: %i' % row_count

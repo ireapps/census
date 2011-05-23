@@ -45,7 +45,7 @@ with open(FILENAME) as f:
             if re.match('^[A-Z]+[0-9]+.\s+', text):
                 # Save previous table
                 if table:
-                    collection.save(table)
+                    collection.save(table, safe=True)
 
                 match = re.match('^([A-Z]+[0-9]+).\s+(.*?)\s+\[([0-9]+)\]', text)
 
@@ -59,7 +59,7 @@ with open(FILENAME) as f:
                 }
                 
                 # Remove existing table
-                collection.remove({ 'key': table['key'], 'year': table['year'] })
+                collection.remove({ 'key': table['key'], 'year': table['year'] }, safe=True)
 
                 hierarchy = []
                 last_key = ''
@@ -109,7 +109,7 @@ with open(FILENAME) as f:
         last_indent = indent
 
     # Save final table
-    collection.save(table)
+    collection.save(table, safe=True)
 
 print 'Row count: %i' % row_count
 print 'Inserted: %i' % inserts

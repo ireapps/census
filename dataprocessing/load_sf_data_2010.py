@@ -53,7 +53,7 @@ with open(FILENAME) as f:
         for k, v in tables.items():
             geography['data'][YEAR][k] = v 
 
-        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } })
+        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } }, safe=True)
         updates += 1
 
 print 'Row count: %i' % row_count

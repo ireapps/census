@@ -20,11 +20,11 @@ class TestSimpleGeographies(unittest.TestCase):
         known_delta = known_2010-known_2000
         known_pct = float(known_delta)/float(known_2000)
 
-        self.assertEqual(obj['data']['2000']["P1"]['P0010001'], known_2000)
-        self.assertEqual(obj['data']['2010']["P1"]['P0010001'], known_2010)
-        self.assertEqual(obj['data']['delta']["P1"]['P0010001'], known_delta)
+        self.assertEqual(float(obj['data']['2000']["P1"]['P0010001']), known_2000)
+        self.assertEqual(float(obj['data']['2010']["P1"]['P0010001']), known_2010)
+        self.assertEqual(float(obj['data']['delta']["P1"]['P0010001']), known_delta)
         self.assertAlmostEqual(
-            obj['data']['pct_change']["P1"]['P0010001'],
+            float(obj['data']['pct_change']["P1"]['P0010001']),
             known_pct
         )
 

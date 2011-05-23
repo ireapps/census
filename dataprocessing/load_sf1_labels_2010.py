@@ -144,8 +144,8 @@ if __name__ == '__main__':
     connection = Connection()
     db = connection[config.CENSUS_DB]
     collection = db[config.LABELS_COLLECTION]
-    collection.remove({ 'dataset': 'SF1' })
-    collection.save({ 'dataset': 'SF1', 'tables': tables})
+    collection.remove({ 'dataset': 'SF1' }, safe=True)
+    collection.save({ 'dataset': 'SF1', 'tables': tables}, safe=True)
 
     print 'Row count: %i' % row_count
     print 'Skipped: %i' % skipped

@@ -33,7 +33,6 @@ with open(FILENAME) as f:
         xref = utils.xref_from_row_dict(row_dict)
 
         geography = utils.find_geography_by_xref(collection, xref, fields=['data']) 
-
         if not geography:
             continue
 
@@ -53,7 +52,7 @@ with open(FILENAME) as f:
         for k, v in tables.items():
             geography['data'][YEAR][k] = v 
 
-        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } })
+        collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } }, safe=True)
         updates += 1
 
 print 'Row count: %i' % row_count
