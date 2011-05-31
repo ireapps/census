@@ -132,7 +132,7 @@ TEST_RUNNER='api.tests.TestRunner'
 
 # Logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
 )
 
 # Allow for local (per-user) override

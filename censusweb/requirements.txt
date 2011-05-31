@@ -3,7 +3,7 @@ Fabric==0.9.4
 SQLAlchemy==0.6.6
 argparse==1.2.1
 csvkit==0.2
-django-boundaryservice==0.1.6
+django-boundaryservice==0.1.8
 django-debug-toolbar==0.8.4
 django-tastypie==0.9.9
 geopy==0.94.1
