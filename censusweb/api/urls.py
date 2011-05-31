@@ -22,22 +22,6 @@ urlpatterns = patterns('',
     (r'^family/(?P<geoid>\d+)\.json$', views.family_as_json),
 
     (r'^labels/(?P<year>\d{4})(/(?P<tables>.+))?.json', views.labels_as_json),
-
-    # County codes for states.
-    #/internal/counties_for_state/10.json
-    (r'^internal/counties_for_state/(?P<state>\d{2}).json$', views.counties_for_state),
-
-    # Place names for states.
-    #/internal/places_for_state/10.json
-    (r'^internal/places_for_state/(?P<state>\d{2}).json$', views.places_for_state),
-
-    # Tracts for a given county.
-    #/internal/tracts_for_county/10101.json
-    (r'^internal/tracts_for_county/(?P<county>\d{5}).json$', views.tracts_for_county),
-
-    # Tracts for a given state.
-    #/internal/tracts_for_state/10.json
-    (r'^internal/tracts_for_state/(?P<state>\d{2}).json$', views.tracts_for_state),
     
     # Generate CSV/JSON for all elements in a given region (used from within Query Builder)
     #/internal/download_data_for_region/10.csv (or .json)

@@ -8,7 +8,8 @@ from django.template import RequestContext
 import csv
 import constants
 import help_text
-import mongoutils
+import mongoutils # TODO: factor out
+import utils
 from datetime import datetime
 
 DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
@@ -18,22 +19,6 @@ def homepage(request):
         'help_text': help_text,
     },
     context_instance=RequestContext(request))
-
-def counties_for_state(request, state=''):
-    counties = mongoutils.get_counties_by_state(state)
-    return HttpResponse(simplejson.dumps(counties), mimetype='application/json')
-
-def places_for_state(request, state=''):
-    places = mongoutils.get_places_by_state(state)
-    return HttpResponse(simplejson.dumps(places), mimetype='application/json')
-
-def tracts_for_county(request, county=''):
-    tracts = mongoutils.get_tracts_by_county(county)
-    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
-    
-def tracts_for_state(request, state=''):
-    tracts = mongoutils.get_tracts_by_state(state)
-    return HttpResponse(simplejson.dumps(tracts), mimetype='application/json')
     
 def download_data_for_region(request, sumlev='', containerlev='', container='', datatype=''):
     if sumlev == '140' and containerlev == '040':
@@ -56,7 +41,7 @@ def data_as_json(request, geoids):
     geographies = {}
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
-    for g in mongoutils.get_geographies_list(geoids_list):
+    for g in utils.fetch_geographies(geoids_list):
         del g['_id']
         del g['xrefs']
         geographies[g['geoid']] = g
@@ -67,7 +52,7 @@ def family_as_json(request, geoid):
     geographies = {}
     
     family_geoids = get_family_geoids(geoid)
-    for g in mongoutils.get_geographies_list(family_geoids, ['geoid', 'sumlev', 'metadata.NAME', 'metadata.STATE', 'metadata.COUNTY']):
+    for g in utils.fetch_geographies(family_geoids, ['geoid', 'sumlev', 'metadata.NAME', 'metadata.STATE', 'metadata.COUNTY']):
         del g['_id']
         #del g['xrefs']
         geographies[g['geoid']] = g
@@ -124,7 +109,7 @@ def data_as_csv(request, geoids):
     w.writerow(csv_row_header(tables))
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
-    for g in mongoutils.get_geographies_list(geoids_list):
+    for g in utils.fetch_geographies(geoids_list):
         csvrow = csv_row_for_geography(g, tables)
         w.writerow(csvrow)
 
@@ -155,7 +140,7 @@ def redirect_to_family(request, geoid):
     return HttpResponsePermanentRedirect(url)
 
 def get_family_geoids(geoid):
-    geography = mongoutils.get_geography(geoid)
+    geography = utils.fetch_geography(geoid)
     family = [geography['metadata']['STATE'],]
     if geography['metadata']['COUNTY']:
         family.append(
@@ -214,10 +199,10 @@ def report_for_table(geographies, year, t):
         report['columns'].append(column_meta)
 
     return report
-    
+
 def data(request, geoids):
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
-    geographies = mongoutils.get_geographies_list(geoids_list)
+    geographies = utils.fetch_geographies(geoids_list)
 
     tables = []
     

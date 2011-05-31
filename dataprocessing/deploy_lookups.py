@@ -24,7 +24,7 @@ def push(slug, obj):
     k.key = '%s.jsonp' % slug
     data = json.dumps(obj)
     jsonp = '%s(%s)' % (slug, data) 
-    k.set_contents_from_string(zlib.compress(jsonp), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
+    k.set_contents_from_string(zlib.compress(jsonp), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/javascript' }, policy='public-read')
 
 state = collection.find_one()['metadata']['STATE']
 
