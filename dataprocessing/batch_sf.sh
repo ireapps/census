@@ -70,4 +70,5 @@ echo 'Computing deltas'
 
 echo 'Deploying to S3'
 ./deploy.py
+./deploy_lookups.py
 

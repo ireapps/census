@@ -24,5 +24,6 @@
 ./compute_deltas.py 10
 
 ./deploy.py
+./deploy_lookups.py
 
 ./tests.py
