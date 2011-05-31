@@ -220,24 +220,36 @@ $(function(){
         },
 
         loadCounties: function() {
-            $.getJSON('/internal/counties_for_state/' + this.get(SUMLEV_STATE) + '.json', _.bind(function(response) {
-                this.mappings.counties = response;
-                this.render();
-            }, this));
+            $.ajax('http://s3.amazonaws.com/census-test/counties_' + this.get(SUMLEV_STATE) + '.jsonp', {
+                dataType: "jsonp",
+                jsonpCallback: "counties_" + this.get(SUMLEV_STATE),
+                success: _.bind(function(response) {
+                    this.mappings.places = response;
+                    this.render();
+                }, this)
+            });
         },
 
         loadPlaces: function() {
-            $.getJSON('/internal/places_for_state/' + this.get(SUMLEV_STATE) + '.json', _.bind(function(response) {
-                this.mappings.places = response;
-                this.render();
-            }, this));
+            $.ajax('http://s3.amazonaws.com/census-test/places_' + this.get(SUMLEV_STATE) + '.jsonp', {
+                dataType: "jsonp",
+                jsonpCallback: "places_" + this.get(SUMLEV_STATE),
+                success: _.bind(function(response) {
+                    this.mappings.places = response;
+                    this.render();
+                }, this)
+            });
         },
 
         loadTracts: function() {
-            $.getJSON('/internal/tracts_for_county/' + this.get(SUMLEV_COUNTY) + '.json', _.bind(function(response) {
-                this.mappings.tracts = response;
-                this.render();
-            }, this));
+            $.ajax('http://s3.amazonaws.com/census-test/tracts_' + this.get(SUMLEV_STATE) + this.get(SUMLEV_COUNTY) + '.jsonp', {
+                dataType: "jsonp",
+                jsonpCallback: "tracts_" + this.get(SUMLEV_STATE) + this.get(SUMLEV_COUNTY),
+                success: _.bind(function(response) {
+                    this.mappings.places = response;
+                    this.render();
+                }, this)
+            });
         },
         
         remove_column: function() {

@@ -25,8 +25,10 @@ for geography in collection.find():
     del geography['_id']
 
     k = Key(bucket)
-    k.key = '%(geoid)s.json' % geography
-    k.set_contents_from_string(zlib.compress(json.dumps(geography)), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
+    k.key = '%(geoid)s.jsonp' % geography
+    data = json.dumps(geography)
+    jsonp = 'geoid_%s(%s)' % (geography['geoid'], data)
+    k.set_contents_from_string(zlib.compress(jsonp), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
 
     if row_count % 100 == 0:
         print 'Deployed %i...' % row_count
