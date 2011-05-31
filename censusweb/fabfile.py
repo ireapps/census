@@ -376,7 +376,7 @@ def local_bootstrap():
 
 def local_load_geodata():
     local('mkdir /tmp/geofetch')
-    local('./fetch_geodata.sh /tmp/geofetch 01')
+    local('./fetch_geodata.sh /tmp/geofetch 10')
     local('cp data/shapefiles/definitions.py /tmp/geofetch')
     local('./manage.py load_shapefiles -c -d /tmp/geofetch')
     
