@@ -375,7 +375,7 @@ def local_bootstrap():
     local('python manage.py syncdb --noinput')
 
 def local_load_geodata():
-    local('mkdir /tmp/geofetch')
+    local('mkdir -p /tmp/geofetch')
     local('./fetch_geodata.sh /tmp/geofetch 10')
     local('cp data/shapefiles/definitions.py /tmp/geofetch')
     local('./manage.py load_shapefiles -c -d /tmp/geofetch')
