@@ -12,7 +12,7 @@ STATE_NAME_ABBR=`python get_state_abbr.py $1`
 STATE_FIPS=`python get_state_fips.py $1`
 FAKE=$2
 
-echo 'Dropping existing data.'
+echo 'Dropping previous data.'
 ./__drop_database.sh
 
 echo 'Ensuring mongo indexes.'

@@ -11,6 +11,5 @@ else:
     FAKE = ''
 
 for state in sorted(STATE_ABBRS.keys()):
-    subprocess.call(['./batch_sf_2000.sh', state, FAKE]) 
-    subprocess.call(['./batch_sf_2010.sh', state, FAKE]) 
+    subprocess.call(['./batch_sf.sh', state, FAKE]) 
 

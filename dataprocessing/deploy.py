@@ -28,7 +28,8 @@ for geography in collection.find():
     k.key = '%(geoid)s.json' % geography
     k.set_contents_from_string(zlib.compress(json.dumps(geography)), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
 
-    print geography['geoid']
+    if row_count % 100 == 0:
+        print 'Deployed %i...' % row_count
 
     deployed += 1
 
