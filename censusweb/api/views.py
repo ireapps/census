@@ -239,11 +239,10 @@ def data(request, geoids):
         {
             'constants': constants,
             'reports': reports,
-            'csv_url': request.get_full_path().replace('.html','.csv'),
-            'json_url': request.get_full_path().replace('.html','.json'),
             'show_remove_button': len(geoids_list) > 1,
             'last_geoid': g['geoid'],
-            'geoids': geoids_list
+            'geoids': geoids,
+            'geoids_list': geoids_list,
         },
         context_instance=RequestContext(request))
 

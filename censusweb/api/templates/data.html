@@ -31,8 +31,9 @@
 <nav>
     <span class="button more-data">Add another geography to compare</span>
     &nbsp;or download as
-    <a class="button" href="{{ csv_url }}">CSV</a>
-    <a class="button" href="{{ json_url }}">JSON</a>
+    <a class="button" href="{% url data_as_csv geoids %}">CSV</a>
+    <a class="button" href="{% url data_as_json geoids %}">JSON</a>
+    <a class="button" href="{% url data_as_kml geoids 'kml' %}">KML</a>
 </nav>
 <div class="query-builder-popup hidden">
     {% include "_query_builder.html" %}
@@ -66,10 +67,10 @@
         <th colspan="4" class="locationdef">
             {{ c.name }}
             <div class="button-set">
-            {% if c.sumlev == "050" or c.sumlev == "160" or c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"2" not in geoids %}
+            {% if c.sumlev == "050" or c.sumlev == "160" or c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"2" not in geoid_list %}
                 <span class="button add-related-state" title="Show state that contains this" data-val="{{ c.geoid }}">Add state &raquo;</span>
             {% endif %}{% endif %}
-            {% if c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"5" not in geoids %}
+            {% if c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"5" not in geoid_list %}
                 <span class="button add-related-county" title="Show county that contains this" data-val="{{ c.geoid }}">Add county &raquo;</span>
             {% endif %}{% endif %}
             {% if show_remove_button %}
