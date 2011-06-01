@@ -18,14 +18,14 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-         'NAME': 'censusweb',                      # Or path to database file if using sqlite3.
-         'USER': 'censusweb',                      # Not used with sqlite3.
-         'PASSWORD': 'Xy9XKembdu',                  # Not used with sqlite3.
-         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-         'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
-     }
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'censusweb',                      # Or path to database file if using sqlite3.
+        'USER': 'censusweb',                      # Not used with sqlite3.
+        'PASSWORD': 'Xy9XKembdu',                  # Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
+    }
 }
 
 # Local time
@@ -103,6 +103,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.gis',
     'django.contrib.sitemaps',
+    'boundaryservice',
     'api',
 )
 
@@ -131,7 +132,7 @@ TEST_RUNNER='api.tests.TestRunner'
 
 # Logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
 )
 
 # Allow for local (per-user) override

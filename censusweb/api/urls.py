@@ -14,8 +14,9 @@ urlpatterns = patterns('',
     #/data/10001.html
     #/data/10001041500.html
     #/data/10,10001,10001041500.html
-    (r'^data/(?P<geoids>[,\d]+)\.json$', views.data_as_json),
-    (r'^data/(?P<geoids>[,\d]+)\.csv$', views.data_as_csv),
+    url(r'^data/(?P<geoids>[,\d]+)\.json$', views.data_as_json, name="data_as_json"),
+    url(r'^data/(?P<geoids>[,\d]+)\.csv$', views.data_as_csv, name="data_as_csv"),
+    url(r'^data/(?P<geoids>[,\d]+)\.(?P<format>kml|kmz)$', views.data_as_kml, name="data_as_kml"),
     url(r'^data/(?P<geoids>[,\d]+)\.html$', views.data, name="data"),
 
     (r'^family/(?P<geoid>\d+)/$', views.redirect_to_family),
