@@ -23,7 +23,7 @@
 ./crosswalk.py 10
 ./compute_deltas.py 10
 
-./deploy.py
+./deploy_data.py
 ./deploy_lookups.py
 ./update_state_list.py Delaware CLEAR
 

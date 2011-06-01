@@ -9,7 +9,6 @@ def fetch_geography(geoid):
     url = 'http://s3.amazonaws.com/census-test/%s.json' % geoid
     r = requests.get(url)
     content = zlib.decompress(r.content)
-    print content
     return simplejson.loads(content)
 
 def fetch_geographies(geoids):

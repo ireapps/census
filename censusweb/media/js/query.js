@@ -25,7 +25,6 @@ $(function(){
             
             document.onkeydown = this.keydown;
             this.bind('change', this.render);
-            this.bind('change', this.loadNext);
             this.mappings.summarylevelDisplays[SUMLEV_TRACT] = 'Tracts';
             this.mappings.summarylevelDisplays[SUMLEV_PLACE] = 'Places';
             this.mappings.summarylevelDisplays[SUMLEV_COUNTY] = 'Counties';
@@ -118,6 +117,8 @@ $(function(){
         select: function(level, e) {
             this.filter = "";
             var attrs = {};
+
+            console.log(level);
             
             //so that we can work backwards up the builder, resetting stuff
             if(level == 'summarylevel' || level == SUMLEV_STATE) {
@@ -147,6 +148,7 @@ $(function(){
             var display = attrs[level + 'Display'] = el.text();
             this.currentLevel = level;
             this.set(attrs);
+            console.log(this);
             this.loadNext();
             
             // Remove this section to enable "go button" prompt:
@@ -181,6 +183,7 @@ $(function(){
 
         loadNext: function() {
             var level = this.currentLevel;
+            console.log(this.get('summarylevel'));
             if (level == SUMLEV_STATE) {
                 if (_.include([SUMLEV_TRACT, SUMLEV_COUNTY], this.get('summarylevel'))) {
                     this.loadCounties();
@@ -242,6 +245,7 @@ $(function(){
         },
 
         loadTracts: function() {
+            console.log("here");
             $.ajax('http://s3.amazonaws.com/census-test/tracts_' + this.get(SUMLEV_STATE) + this.get(SUMLEV_COUNTY) + '.jsonp', {
                 dataType: "jsonp",
                 jsonpCallback: "tracts_" + this.get(SUMLEV_STATE) + this.get(SUMLEV_COUNTY),
