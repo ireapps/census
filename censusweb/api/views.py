@@ -207,15 +207,12 @@ def data(request, geoids):
     geographies = utils.fetch_geographies(geoids_list)
 
     tables = []
-    
-    for g in geographies:
-        tables.extend(g['data']['2010'].keys())
 
-    tables = set(tables)
+    tables = mongoutils.get_tables()
 
     reports = []
 
-    for t in sorted(tables):
+    for t in tables:
         report = report_for_table(geographies, t)
         reports.append(report)
 
@@ -224,7 +221,7 @@ def data(request, geoids):
             'constants': constants,
             'reports': reports,
             'show_remove_button': len(geoids_list) > 1,
-            'last_geoid': g['geoid'],
+            'last_geoid': geoids_list[-1],
             'geoids': geoids,
             'geoids_list': geoids_list,
         },

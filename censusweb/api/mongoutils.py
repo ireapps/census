@@ -16,4 +16,4 @@ def get_tables():
     labels = get_labels_collection()
     dataset = labels.find_one({ 'dataset': 'SF1' }, fields=['tables'])
 
-    return sorted([x['key'] for x in dataset['tables']])
+    return sorted(dataset['tables'].keys())
