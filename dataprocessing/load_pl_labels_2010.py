@@ -16,7 +16,7 @@ FILENAME = sys.argv[1]
 YEAR = '2010'
 
 connection = Connection()
-db = connection[config.CENSUS_DB]
+db = connection[config.LABELS_DB]
 collection = db[config.LABELS_COLLECTION]
 
 with open(FILENAME) as f:
@@ -52,14 +52,13 @@ with open(FILENAME) as f:
                 table = {
                     'name': match.group(2),
                     'key': match.group(1),
-                    'year': '2010', 
                     'size': int(match.group(3)),
                     'universe': '',
                     'labels': {}
                 }
                 
                 # Remove existing table
-                collection.remove({ 'key': table['key'], 'year': table['year'] }, safe=True)
+                collection.remove({ 'key': table['key'] }, safe=True)
 
                 hierarchy = []
                 last_key = ''

@@ -64,13 +64,13 @@ def family_as_json(request, geoid):
 
 def csv_row_header(tables=None):
     if not tables:
-        tables_list = mongoutils.get_tables_for_year("2010")
+        tables_list = mongoutils.get_tables()
     else:
         tables_list = tables
 
     row = ["sumlev", "geoid", "name"]
     for table in tables_list:
-        labels = mongoutils.get_labels_for_table("2010", table)
+        labels = mongoutils.get_labels_for_table(table)
         for statistic in sorted(labels['labels']):
             for alternative in DATA_ALTERNATIVES:
                 if alternative == '2010':
@@ -82,7 +82,7 @@ def csv_row_header(tables=None):
     
 def csv_row_for_geography(geography, tables=None):
     if not tables:
-        tables_list = mongoutils.get_tables_for_year("2010")
+        tables_list = mongoutils.get_tables()
     else:
         tables_list = tables
 
@@ -122,15 +122,15 @@ def data_as_csv(request, geoids):
 
     return response
 
-def labels_as_json(request,year,tables=None):
+def labels_as_json(request, tables=None):
     labels = {}
     if tables is None:
-        tables = mongoutils.get_tables_for_year(year)
+        tables = mongoutils.get_tables()
     else:    
         tables = tables.split(',')
 
     for t in tables:
-        l = mongoutils.get_labels_for_table(year,t)
+        l = mongoutils.get_labels_for_table(t)
         del l['_id']
         labels[t] = l
         
@@ -168,13 +168,12 @@ def report_values_for_key(g,t,key):
             d[alternative] = ''
     return d
 
-def report_for_table(geographies, year, t):
-    labels = mongoutils.get_labels_for_table(year, t)
+def report_for_table(geographies, t):
+    labels = mongoutils.get_labels_for_table(t)
 
     report = {
         'key': t,
         'name': labels['name'],
-        'year': year,
         'table': t + ". " + labels['name'],
         'universe': labels['universe'],
         'columns': [],
@@ -217,7 +216,7 @@ def data(request, geoids):
     reports = []
 
     for t in sorted(tables):
-        report = report_for_table(geographies, '2010',t)
+        report = report_for_table(geographies, t)
         reports.append(report)
 
     return render_to_response('data.html',
@@ -255,7 +254,7 @@ def _create_placemark_dict(b,j,tables=None):
     }
 
     if not tables:
-        tables_list = mongoutils.get_tables_for_year("2010")
+        tables_list = mongoutils.get_tables()
     else:
         tables_list = tables
 
@@ -278,7 +277,7 @@ KML_EXTENDED_DATA_TEMPLATE = Template("""
 def _build_kml_context_for_template(b,j,tables_list):
     kml_context = { 'data': [] }
     for table in tables_list:
-        labels = mongoutils.get_labels_for_table("2010", table)
+        labels = mongoutils.get_labels_for_table(table)
         for statistic in sorted(labels['labels']):
             for alternative in DATA_ALTERNATIVES:
                 print "t: %s, a: %s, s: %s" % (table, alternative, statistic)

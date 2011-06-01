@@ -34,8 +34,6 @@ try:
 except S3ResponseError:
     states = []
 
-print states
-
 if CLEAR == 'CLEAR':
     states = [STATE]
 else:

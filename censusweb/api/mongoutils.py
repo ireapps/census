@@ -1,24 +1,19 @@
 from django.conf import settings
-from pymongo import Connection, ASCENDING
-
-from constants import *
-
-def get_geographies_collection():
-    connection = Connection()
-    db = connection[settings.CENSUS_DB] 
-    return db[settings.GEOGRAPHIES_COLLECTION]
+from pymongo import Connection
 
 def get_labels_collection():
     connection = Connection()
-    db = connection[settings.CENSUS_DB] 
+    db = connection[settings.LABELS_DB] 
     return db[settings.LABELS_COLLECTION]
 
-def get_labels_for_table(year, table):
+def get_labels_for_table(table):
     labels = get_labels_collection()
+    dataset = labels.find_one({ 'dataset': 'SF1' }, fields=['tables'])
 
-    return labels.find_one({ 'year': year, 'key': table })
+    return dataset['tables'][table]
 
-def get_tables_for_year(year):
+def get_tables():
     labels = get_labels_collection()
+    dataset = labels.find_one({ 'dataset': 'SF1' }, fields=['tables'])
 
-    return sorted([x['key'] for x in labels.find({'year' : '2010' },fields=['key'])])
+    return sorted([x['key'] for x in dataset['tables']])
