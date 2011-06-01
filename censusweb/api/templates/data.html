@@ -28,13 +28,73 @@
     </div>
 </script>
 
+<script id="report-template" type="x-js-template">
+    <a name="report-<%= key %>"></a>
+    <table class="report" id="report-<%= key %>" data-val="<%= name %>">
+        <colgroup></colgroup><colgroup></colgroup>
+        <% _.each(columns, function(c) { %>
+        <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
+        <% }); %>
+        <tr>
+            <th rowspan="2" class="labeldef"><%= table %><br /><span class="universe">Universe: <%= universe %></span></th>
+            <% _.each(columns, function(c) { %>
+            <th colspan="4" class="locationdef">
+                <%= c.name %>
+                <div class="button-set">
+                <% if ($.inArray(c.sumlev, ["050", "160", "140", "101"])) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 2), geoid_list) === -1) { %>
+                    <span class="button add-related-state" title="Show state that contains this" data-val="<%= c.geoid %>">Add state &raquo;</span>
+                    <% } %>
+                <% } %>
+                <% if ($.inArray(c.sumlev, ["140", "101"])) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 5), geoid_list) === -1) { %>
+                    <span class="button add-related-county" title="Show county that contains this" data-val="<%= c.geoid %>">Add county &raquo;</span>
+                    <% } %>
+                <% } %>
+                <% if (show_remove_button === true) { %>
+                    <span class="button remove-column" data-val="<%= c.geoid %>">Remove</span>
+                <% } %>
+                </div>
+            </th>
+            <% }); %>
+        </tr>
+        <tr>
+            <% _.each(columns, function(c) { %>
+            <th class="subhead">2000</th>
+            <th class="subhead">2010</th>
+            <th class="subhead">Delta</th>
+            <th class="subhead">% change</th>
+            <% }); %>
+        </tr>
+        <% _.each(rows, function(row) { %>
+        <tr
+            id="<%= row.key %>" parent="{{ row.label.parent }}"
+            style="<% if (row.label.indent > 2) { %>display:none;<% } %>"
+        >
+           <td class="label"><%= row.label.text %> <span class="key"><%= row.key %></span></td>
+            <% _.each(row.data, function(d) { %>
+            <!-- TODO: int and float format --> 
+            <td class="code data-cell"><%= d["2000"] %></td>
+            <td class="code data-cell"><%= d["2010"] %></td>
+            <td class="code data-cell"><%= d["delta"] %></td>
+            <td class="code data-cell <% if (false) { %>last<% } %>"><%= d.pct_change %></td>
+            <% }); %>
+        </tr>
+        <% }); %>
+    </table>
+</script>
+
 <nav>
     <span class="button more-data">Add another geography to compare</span>
     &nbsp;or download as
-    <a class="button" href="{% url data_as_csv geoids %}">CSV</a>
-    <a class="button" href="{% url data_as_json geoids %}">JSON</a>
-    <a class="button" href="{% url data_as_kml geoids 'kml' %}">KML</a>
+    <a class="button" href="TODO">CSV</a>
+    <a class="button" href="TODO">JSON</a>
+    <a class="button" href="TODO">KML</a>
 </nav>
+
+<section id="table-container">
+</section>
+
 <div class="query-builder-popup hidden">
     {% include "_query_builder.html" %}
 </div>
@@ -49,62 +109,104 @@
                 height:600,
                 minWidth:800
             });
-            query.initializeWithGeography({{ last_geoid }});
+            // TODO
+            //query.initializeWithGeography({{ last_geoid }});
         });
     });
 </script>
 
-{% for r in reports %}
-<a name="report-{{ r.key }}"></a>
-<table class="report" id="report-{{ r.key }}" data-val="{{ r.name }}">
-    <colgroup></colgroup><colgroup></colgroup>
-    {% for c in r.columns %}
-    <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
-    {% endfor %}
-    <tr>
-        <th rowspan="2" class="labeldef">{{ r.table }}<br /><span class="universe">Universe: {{ r.universe }}</span></th>
-        {% for c in r.columns %}
-        <th colspan="4" class="locationdef">
-            {{ c.name }}
-            <div class="button-set">
-            {% if c.sumlev == "050" or c.sumlev == "160" or c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"2" not in geoid_list %}
-                <span class="button add-related-state" title="Show state that contains this" data-val="{{ c.geoid }}">Add state &raquo;</span>
-            {% endif %}{% endif %}
-            {% if c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"5" not in geoid_list %}
-                <span class="button add-related-county" title="Show county that contains this" data-val="{{ c.geoid }}">Add county &raquo;</span>
-            {% endif %}{% endif %}
-            {% if show_remove_button %}
-                <span class="button remove-column" data-val="{{ c.geoid }}">Remove</span>
-            {% endif %}
-            </div>
-        </th>
-        {% endfor %}
-    <tr>
-        {% for c in r.columns %}
-        <th class="subhead">2000</th>
-        <th class="subhead">2010</th>
-        <th class="subhead">Delta</th>
-        <th class="subhead">% change</th>
-        {% endfor %}
-    </tr>
-    </tr>
-    {% for label, data, key in r.rows %}
-    <tr
-        class="{% cycle odd,even %} indent-{{ label.indent }} row {% if label.has_children %} has-children {% if label.indent > 1 %}closed{% else %}open{% endif %}{% endif %}"
-        id="{{ key }}" parent="{{ label.parent }}"
-        style="{% if label.indent > 2 %}display:none;{% endif %}"
-    >
-        <td class="label">{{ label.text }} <span class="key">{{ key }}</span></td>
-        {% for d in data %}
-            <td class="code data-cell">{{ d.2000|intcomma }}</td>
-            <td class="code data-cell">{{ d.2010|intcomma }}</td>
-            <td class="code data-cell">{{ d.delta|floatformat|intcomma }}</td>
-            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|percent|floatformat:1 }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>
-{% endfor %}
+<script type="text/javascript">
+    // Testing loading of labels and data from S3
+    $(function(){
+        var dataset = "SF1";
+
+        $.ajax("http://s3.amazonaws.com/census-test/" + dataset + "_labels.jsonp", {
+            dataType: "jsonp",
+            jsonpCallback: "labels_" + dataset,
+            success: function(labels_data) {
+                // TODO
+                var geoid = "10";
+
+                var tables = _.keys(labels_data["tables"]);
+                tables.sort();
+
+                $.ajax("http://s3.amazonaws.com/census-test/" + geoid + ".jsonp", {
+                    dataType: "jsonp",
+                    jsonpCallback: "geoid_" + geoid,
+                    success: function(geography_data) {
+                        // TODO - temp, replace with tables var
+                        _.each(["P1"], function(table_name) {
+                            table = labels_data["tables"][table_name];
+
+                            report = {
+                                'key': table["key"],
+                                'name': table['name'],
+                                'table': table["key"] + ". " + table['name'],
+                                'universe': table['universe'],
+                                'columns': [],
+                                'rows': []
+                            };
+
+                            labels = table["labels"];
+
+                            _.each(labels, function(label) {
+                                row = {
+                                    "key": label["key"],
+                                    "label": label,
+                                    "data": []
+                                }
+
+                                data = [];
+    
+                                // TODO - iterate over geographies
+                                
+                                d = {};
+                                _.each(['2000','2010','delta','pct_change'], function(year) {
+                                    try {
+                                        d[year] = geography_data["data"][year][table_name][label["key"]];
+                                    } catch(err) {
+                                    }
+                                });
+
+                                row["data"].push(d);
+
+
+                                report["rows"].push(row);
+                            });
+
+                            column_meta = {};
+                            column_name = geography_data["metadata"]["NAME"];
+
+                            // TODO
+                            if ($.inArray(geography_data["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT])) {
+                                column_name += ", TODO"; 
+                            }
+
+                            column_meta["name"] = column_name;
+                            column_meta["geoid"] = geography_data["geoid"];
+                            column_meta["sumlev"] = geography_data["sumlev"];
+
+                            report["columns"].push(column_meta);
+
+                            // TODO
+                            report["geoid_list"] = ["10"];
+                            report["show_remove_button"] = true;
+
+                            console.log(report);
+
+                            var template = template = _.template($('#report-template').html());
+                            var html = template(report);
+
+                            $('#table-container').before(html)
+                        });
+                
+
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 <div id="status" style="display:none;"></div>
 

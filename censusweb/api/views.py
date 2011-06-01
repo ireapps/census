@@ -203,29 +203,7 @@ def report_for_table(geographies, t):
     return report
 
 def data(request, geoids):
-    geoids_list = filter(lambda g: bool(g), geoids.split(','))
-    geographies = utils.fetch_geographies(geoids_list)
-
-    tables = []
-
-    tables = mongoutils.get_tables()
-
-    reports = []
-
-    for t in tables:
-        report = report_for_table(geographies, t)
-        reports.append(report)
-
-    return render_to_response('data.html',
-        {
-            'constants': constants,
-            'reports': reports,
-            'show_remove_button': len(geoids_list) > 1,
-            'last_geoid': geoids_list[-1],
-            'geoids': geoids,
-            'geoids_list': geoids_list,
-        },
-        context_instance=RequestContext(request))
+    return render_to_response('data.html', {}, context_instance=RequestContext(request))
 
 # --- KML BEGIN ---
 def data_as_kml(request, geoids,format='kml'):
