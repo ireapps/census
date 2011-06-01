@@ -13,22 +13,22 @@ STATE_FIPS=`python get_state_fips.py $1`
 FAKE=$2
 
 echo 'Dropping previous data.'
-#./__drop_database.sh
+./__drop_database.sh
 
 echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
 echo 'Fetching data'
-#./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
 
 echo 'Loading 2000 geographies'
-#./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
+./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
 
 echo 'Loading 2000 data'
-#for i in {1..39}
-#do
-#    ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
-#done
+for i in {1..39}
+do
+    ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
+done
 
 echo 'Loading TODO labels'
 ./load_sf_labels_2010.py sf1_2010_data_labels.csv
