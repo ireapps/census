@@ -1,5 +1,6 @@
 import simplejson
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponsePermanentRedirect
 from django.shortcuts import render_to_response
@@ -20,6 +21,7 @@ DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
 def homepage(request):
     return render_to_response('homepage.html', {
         'help_text': help_text,
+        'settings': settings,
     },
     context_instance=RequestContext(request))
     
@@ -203,7 +205,7 @@ def report_for_table(geographies, t):
     return report
 
 def data(request, geoids):
-    return render_to_response('data.html', {}, context_instance=RequestContext(request))
+    return render_to_response('data.html', { 'settings': settings }, context_instance=RequestContext(request))
 
 # --- KML BEGIN ---
 def data_as_kml(request, geoids,format='kml'):

@@ -220,7 +220,7 @@ $(function(){
         },
 
         loadCounties: function() {
-            $.ajax('http://s3.amazonaws.com/census-test/counties_' + this.get(SUMLEV_STATE) + '.jsonp', {
+            $.ajax(API_URL + 'counties_' + this.get(SUMLEV_STATE) + '.jsonp', {
                 dataType: "jsonp",
                 jsonpCallback: "counties_" + this.get(SUMLEV_STATE),
                 success: _.bind(function(response) {
@@ -231,7 +231,7 @@ $(function(){
         },
 
         loadPlaces: function() {
-            $.ajax('http://s3.amazonaws.com/census-test/places_' + this.get(SUMLEV_STATE) + '.jsonp', {
+            $.ajax(API_URL + 'places_' + this.get(SUMLEV_STATE) + '.jsonp', {
                 dataType: "jsonp",
                 jsonpCallback: "places_" + this.get(SUMLEV_STATE),
                 success: _.bind(function(response) {
@@ -242,7 +242,7 @@ $(function(){
         },
 
         loadTracts: function() {
-            $.ajax('http://s3.amazonaws.com/census-test/tracts_' + this.get(SUMLEV_COUNTY) + '.jsonp', {
+            $.ajax(API_URL + 'tracts_' + this.get(SUMLEV_COUNTY) + '.jsonp', {
                 dataType: "jsonp",
                 jsonpCallback: "tracts_" + this.get(SUMLEV_COUNTY),
                 success: _.bind(function(response) {

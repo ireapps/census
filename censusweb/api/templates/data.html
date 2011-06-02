@@ -120,7 +120,7 @@
     $(function(){
         var dataset = "SF1";
 
-        $.ajax("http://s3.amazonaws.com/census-test/" + dataset + "_labels.jsonp", {
+        $.ajax(API_URL + dataset + "_labels.jsonp", {
             dataType: "jsonp",
             jsonpCallback: "labels_" + dataset,
             success: function(labels_data) {
@@ -130,7 +130,7 @@
                 var tables = _.keys(labels_data["tables"]);
                 tables.sort();
 
-                $.ajax("http://s3.amazonaws.com/census-test/" + geoid + ".jsonp", {
+                $.ajax(API_URL + geoid + ".jsonp", {
                     dataType: "jsonp",
                     jsonpCallback: "geoid_" + geoid,
                     success: function(geography_data) {
