@@ -160,6 +160,65 @@ $(function(){
         return report;
     }
 
+    window.floatFormat = function(n, decimals) {
+        if (_.isString(n)) {
+            try {
+                n = parseFloat(n);
+            } catch(err) {
+                return "";
+            }
+        }
+
+        if (_.isUndefined(n) || _.isNaN(n)) {
+            return "";
+        }
+
+        if (n % 1 == 0) {
+            return Math.round(n);
+        }
+
+        if (_.isUndefined(decimals)) {
+            decimals = 1;
+        }
+
+        pow = Math.pow(10, decimals);
+
+        return Math.round(n * pow) / pow;
+    }
+
+    window.toPercent = function(n) {
+        if (_.isString(n)) {
+            try {
+                n = parseFloat(n);
+            } catch(err) {
+                return "";
+            }
+        }
+
+        if (_.isUndefined(n) || _.isNaN(n)) {
+            return "";
+        }
+
+        return n * 100;
+    }
+
+    window.intComma = function(n) {
+        // Algorithm from Django template tags
+        // http://code.djangoproject.com/svn/django/trunk/django/contrib/humanize/templatetags/humanize.py
+        if (_.isUndefined(n) || _.isNaN(n)) {
+            return "";
+        }
+
+        orig = n
+        n = n.toString().replace(/^(-?\d+)(\d{3})/g, "$1,$2");
+
+        if (n == orig) {
+            return n;
+        } else {
+            return intComma(n);
+        }
+    }
+
     window.renderReport = function(report) {
         var html = report_template(report);
 
