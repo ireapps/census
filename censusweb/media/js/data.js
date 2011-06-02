@@ -55,44 +55,40 @@ $(function(){
                 "data": []
             }
 
-            data = [];
+            _.each(geographies, function(geography) {
+                d = {};
+                _.each(['2000','2010','delta','pct_change'], function(year) {
+                    try {
+                        d[year] = geography["data"][year][table_name][label["key"]];
+                    } catch(err) {
+                    }
+                });
 
-            // TODO - iterate over geographies
-            geography_data = geographies[0];
-            
-            d = {};
-            _.each(['2000','2010','delta','pct_change'], function(year) {
-                try {
-                    d[year] = geography_data["data"][year][table_name][label["key"]];
-                } catch(err) {
-                }
+                row["data"].push(d);
             });
-
-            row["data"].push(d);
-
 
             report["rows"].push(row);
         });
 
-        column_meta = {};
-        column_name = geography_data["metadata"]["NAME"];
+        _.each(geographies, function(geography) {
+            column_meta = {};
+            column_name = geography["metadata"]["NAME"];
 
-        // TODO
-        if ($.inArray(geography_data["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT])) {
-            column_name += ", TODO"; 
-        }
+            // TODO
+            if ($.inArray(geography["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT])) {
+                column_name += ", TODO"; 
+            }
 
-        column_meta["name"] = column_name;
-        column_meta["geoid"] = geography_data["geoid"];
-        column_meta["sumlev"] = geography_data["sumlev"];
+            column_meta["name"] = column_name;
+            column_meta["geoid"] = geography["geoid"];
+            column_meta["sumlev"] = geography["sumlev"];
 
-        report["columns"].push(column_meta);
+            report["columns"].push(column_meta);
+        });
 
         // TODO
         report["geoid_list"] = ["10"];
         report["show_remove_button"] = true;
-
-        console.log(report);
 
         var template = template = _.template($('#report-template').html());
         var html = template(report);
