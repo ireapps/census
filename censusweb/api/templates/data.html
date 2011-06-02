@@ -43,12 +43,12 @@
                 <%= c.name %>
                 <div class="button-set">
                 <% if ($.inArray(c.sumlev, ["050", "160", "140", "101"])) { %>
-                    <% if ($.inArray(c.geoid.substr(0, 2), geoid_list) === -1) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 2), geoids) === -1) { %>
                     <span class="button add-related-state" title="Show state that contains this" data-val="<%= c.geoid %>">Add state &raquo;</span>
                     <% } %>
                 <% } %>
                 <% if ($.inArray(c.sumlev, ["140", "101"])) { %>
-                    <% if ($.inArray(c.geoid.substr(0, 5), geoid_list) === -1) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 5), geoids) === -1) { %>
                     <span class="button add-related-county" title="Show county that contains this" data-val="<%= c.geoid %>">Add county &raquo;</span>
                     <% } %>
                 <% } %>
@@ -72,7 +72,7 @@
             id="<%= row.key %>" parent="{{ row.label.parent }}"
             style="<% if (row.label.indent > 2) { %>display:none;<% } %>"
         >
-           <td class="label"><%= row.label.text %> <span class="key"><%= row.key %></span></td>
+            <td class="label"><%= row.label.text %> <span class="key"><%= row.key %></span></td>
             <% _.each(row.data, function(d) { %>
             <!-- TODO: int and float format --> 
             <td class="code data-cell"><%= d["2000"] %></td>

@@ -9,14 +9,20 @@ $(function(){
         });
     }
 
+    window.parseGeoids = function() {
+        // TODO - get geoids from url
+        var geoids = ["10", "10001"];
+
+        return geoids;
+    }
+
     window.loadLabels = function() {
         apiRequest(dataset + "_labels.jsonp", "labels_" + dataset, function(labels_data) {
-            // TODO - get geoids from url
-            geoids = ["10"];
+            var geoids = parseGeoids();
 
             //var tables = _.keys(labels_data["tables"]);
             //tables.sort();
-            tables = ["P1"];
+            tables = ["P1", "H1"];
 
             var geographies = new Array();
 
@@ -28,7 +34,7 @@ $(function(){
                     if (geographies.length == geoids.length) {
                         _.each(tables, function(table) {
                             labelset =  labels_data["tables"][table];
-                            makeReport(table, labelset, geographies);
+                            makeReport(table, labelset, geoids, geographies);
                         });
                     }
                 });
@@ -36,7 +42,7 @@ $(function(){
         });
     }
 
-    window.makeReport = function(table, labelset, geographies) {
+    window.makeReport = function(table, labelset, geoids, geographies) {
         report = {
             'key': labelset["key"],
             'name': labelset['name'],
@@ -56,10 +62,11 @@ $(function(){
             }
 
             _.each(geographies, function(geography) {
-                d = {};
-                _.each(['2000','2010','delta','pct_change'], function(year) {
+                var d = new Object();
+
+                _.each(["2000", "2010", "delta", "pct_change"], function(year) {
                     try {
-                        d[year] = geography["data"][year][table_name][label["key"]];
+                        d[year] = geography["data"][year][table][label["key"]];
                     } catch(err) {
                     }
                 });
@@ -86,9 +93,10 @@ $(function(){
             report["columns"].push(column_meta);
         });
 
-        // TODO
-        report["geoid_list"] = ["10"];
-        report["show_remove_button"] = true;
+        report["geoids"] = geoids;
+        report["show_remove_button"] = (geoids.length > 1);
+
+        console.log(report);
 
         var template = template = _.template($('#report-template').html());
         var html = template(report);
