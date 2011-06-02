@@ -1,5 +1,5 @@
 $(function(){
-    var dataset = "SF1";
+    var dataset = "PL";
     var report_template = _.template($('#report-template').html());
 
     removeColumn = function() {
@@ -65,8 +65,7 @@ $(function(){
     }
 
     window.parseTables = function() {
-        //TODO - get tables from hash
-        //var tables = _.keys(labels_data["tables"]);
+        //TODO - get tables from hash;
         var tables = ["P2"];
         tables.sort();
 
@@ -76,7 +75,10 @@ $(function(){
     window.loadLabels = function() {
         apiRequest(dataset + "_labels.jsonp", "labels_" + dataset, function(labels_data) {
             var geoids = parseGeoids();
-            var tables = parseTables();
+            //var tables = parseTables();
+
+            var tables = _.keys(labels_data["tables"])
+            tables.sort();
 
             var geographies = new Array();
 
@@ -117,7 +119,7 @@ $(function(){
             row = {
                 "key": label["key"],
                 "label": label,
-                "data": []
+                "data": [] 
             }
 
             _.each(geographies, function(geography) {

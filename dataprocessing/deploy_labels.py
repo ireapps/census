@@ -24,6 +24,8 @@ for dataset in collection.find():
 
     del dataset['_id']
 
+    print dataset['dataset']
+
     k = Key(bucket)
     k.key = '%s_labels.jsonp' % dataset['dataset']
     jsonp = 'labels_%s(%s)' % (dataset['dataset'], json.dumps(dataset))
