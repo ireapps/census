@@ -210,7 +210,7 @@ $(function(){
         }
 
         orig = n
-        n = n.toString().replace(/^(-?\d+)(\d{3})/g, "$1,$2");
+        n = n.toString().replace(/^(-?\d+)(\d{3}\.?\d*)/g, "$1,$2");
 
         if (n == orig) {
             return n;

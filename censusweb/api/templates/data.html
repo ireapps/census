@@ -78,7 +78,7 @@
             <!-- TODO: int and float format --> 
             <td class="code data-cell"><%= intComma(d["2000"]) %></td>
             <td class="code data-cell"><%= intComma(d["2010"]) %></td>
-            <td class="code data-cell"><%= floatFormat(d["delta"]) %></td>
+            <td class="code data-cell"><%= intComma(floatFormat(d["delta"])) %></td>
             <td class="code data-cell <% if (i == rows.length - 1) { %>last<% } %>"><%= floatFormat(toPercent(d["pct_change"])) %></td>
             <% }); %>
         </tr>
