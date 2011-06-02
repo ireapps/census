@@ -42,13 +42,13 @@
             <th colspan="4" class="locationdef">
                 <%= c.name %>
                 <div class="button-set">
-                <% if ($.inArray(c.sumlev, ["050", "160", "140", "101"])) { %>
-                    <% if ($.inArray(c.geoid.substr(0, 2), geoids) === -1) { %>
+                <% if ($.inArray(c.sumlev, [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT]) >= 0) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 2), geoids) < 0) { %>
                     <span class="button add-related-state" title="Show state that contains this" data-val="<%= c.geoid %>">Add state &raquo;</span>
                     <% } %>
                 <% } %>
-                <% if ($.inArray(c.sumlev, ["140", "101"])) { %>
-                    <% if ($.inArray(c.geoid.substr(0, 5), geoids) === -1) { %>
+                <% if (c.sumlev === SUMLEV_TRACT) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 5), geoids) < 0) { %>
                     <span class="button add-related-county" title="Show county that contains this" data-val="<%= c.geoid %>">Add county &raquo;</span>
                     <% } %>
                 <% } %>
@@ -93,7 +93,7 @@
     <a class="button" href="TODO">KML</a>
 </nav>
 
-<section id="table-container">
+<section id="reports">
 </section>
 
 <div class="query-builder-popup hidden">

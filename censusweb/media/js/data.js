@@ -1,5 +1,47 @@
 $(function(){
     var dataset = "SF1";
+    var report_template = _.template($('#report-template').html());
+
+    removeColumn = function() {
+        geoid = $(this).attr('data-val');
+        if (document.location.pathname.indexOf('/' + geoid) > 0) {
+            document.location.pathname = document.location.pathname.replace(geoid + ',', '');
+        } else {
+            document.location.pathname = document.location.pathname.replace(',' + geoid, '');
+        }
+    }
+    
+    twistRow = function() {
+        var show_child = !$($('tr[parent=' + $(this).attr('id') + ']')[0]).is(":visible");
+        twistRowHelper($(this), show_child);
+        $(this).toggleClass('closed')
+        $(this).toggleClass('open');
+    }
+    
+    twistRowHelper = function(parent_row, show_me) {
+        $.each($('tr[parent=' + $(parent_row).attr('id') + ']'), function(index, value){
+            if(show_me){
+                $(value).show();
+            } else {
+                $(value).hide();
+            }
+            window.query.twist_row_helper(value, false);
+        });
+    }
+    
+    addRelatedState = function() {
+        this_geoid = $(this).attr('data-val');
+        state_geoid = this_geoid.slice(0,2);
+        
+        window.location.pathname = window.location.pathname.replace('.html', "," + state_geoid + '.html');
+    }
+
+    addRelatedCounty = function() {
+        this_geoid = $(this).attr('data-val');
+        county_geoid = this_geoid.slice(0,5);
+        
+        window.location.pathname = window.location.pathname.replace('.html', "," + county_geoid + '.html');
+    }
 
     window.apiRequest = function(path, callback, handler) {
         $.ajax(API_URL + path, {
@@ -10,11 +52,8 @@ $(function(){
     }
 
     window.parseGeoids = function() {
-        // Get url without path
-        var target = _.last(document.location.href.split("/"));
-
-        // Ditch the hash component
-        target = _.first(target.split("#"));
+        // Get url without hashbang
+        var target = _.last(window.location.pathname.split("/"));
 
         // Ditch the .html
         target = _.first(target.split("."));
@@ -29,9 +68,10 @@ $(function(){
         apiRequest(dataset + "_labels.jsonp", "labels_" + dataset, function(labels_data) {
             var geoids = parseGeoids();
 
+            // TODO
             //var tables = _.keys(labels_data["tables"]);
             //tables.sort();
-            tables = ["P1", "H1"];
+            var tables = ["P1", "H1"];
 
             var geographies = new Array();
 
@@ -42,9 +82,16 @@ $(function(){
                     // If all geographies have been loaded, make reports
                     if (geographies.length == geoids.length) {
                         _.each(tables, function(table) {
-                            labelset =  labels_data["tables"][table];
-                            makeReport(table, labelset, geoids, geographies);
+                            var labelset =  labels_data["tables"][table];
+                            var report = makeReport(table, labelset, geoids, geographies);
+                            renderReport(report);
                         });
+                        
+                        // Add event hooks
+                        $('.button.remove-column').click(removeColumn);
+                        $('tr.row').click(this.twistRow);
+                        $('.button.add-related-state').click(this.addRelatedState);
+                        $('.button.add-related-county').click(this.addRelatedCounty);
                     }
                 });
             });
@@ -91,7 +138,7 @@ $(function(){
             column_name = geography["metadata"]["NAME"];
 
             // TODO
-            if ($.inArray(geography["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT])) {
+            if ($.inArray(geography["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT]) >= 0) {
                 column_name += ", TODO"; 
             }
 
@@ -105,12 +152,13 @@ $(function(){
         report["geoids"] = geoids;
         report["show_remove_button"] = (geoids.length > 1);
 
-        console.log(report);
+        return report;
+    }
 
-        var template = template = _.template($('#report-template').html());
-        var html = template(report);
+    window.renderReport = function(report) {
+        var html = report_template(report);
 
-        $('#table-container').before(html);
+        $('#reports').append(html);
     }
 
     // Kick-off
