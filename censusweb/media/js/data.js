@@ -10,8 +10,17 @@ $(function(){
     }
 
     window.parseGeoids = function() {
-        // TODO - get geoids from url
-        var geoids = ["10", "10001"];
+        // Get url without path
+        var target = _.last(document.location.href.split("/"));
+
+        // Ditch the hash component
+        target = _.first(target.split("#"));
+
+        // Ditch the .html
+        target = _.first(target.split("."));
+
+        // Split the list
+        geoids = target.split(",");
 
         return geoids;
     }
