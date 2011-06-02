@@ -65,14 +65,19 @@ $(function(){
         return geoids;
     }
 
+    window.parseTables = function() {
+        //TODO - get tables from hash
+        //var tables = _.keys(labels_data["tables"]);
+        var tables = ["P2"];
+        tables.sort();
+
+        return tables;
+    }
+
     window.loadLabels = function() {
         apiRequest(dataset + "_labels.jsonp", "labels_" + dataset, function(labels_data) {
             var geoids = parseGeoids();
-
-            // TODO
-            //var tables = _.keys(labels_data["tables"]);
-            //tables.sort();
-            var tables = ["P2"];
+            var tables = parseTables();
 
             var geographies = new Array();
 
@@ -96,7 +101,7 @@ $(function(){
     }
 
     window.makeReport = function(table, labelset, geoids, geographies) {
-        report = {
+        var report = {
             'key': labelset["key"],
             'name': labelset['name'],
             'table': labelset["key"] + ". " + labelset['name'],
@@ -105,7 +110,9 @@ $(function(){
             'rows': []
         };
 
-        labels = labelset["labels"];
+        var labels = _.sortBy(labelset["labels"], function(label) {
+            return label["key"];
+        });
 
         _.each(labels, function(label) {
             row = {
@@ -131,7 +138,7 @@ $(function(){
         });
 
         _.each(geographies, function(geography) {
-            column_meta = {};
+            var column_meta = {};
             column_name = geography["metadata"]["NAME"];
 
             // TODO

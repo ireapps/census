@@ -67,10 +67,9 @@
             <th class="subhead">% change</th>
             <% }); %>
         </tr>
-        <% var i = 0; %>
-        <% _.each(rows, function(row) { %>
+        <% _.each(rows, function(row, i, rows) { %>
         <tr
-            class="<% if (i % 2 == 0) { %>even<% } else { %>odd<% } i += 1; %> indent-<%= row.label.indent %> row <% if (row.label.has_children == true) { %> has-children <% if (row.label.indent > 1) { %>closed<% } else { %>open<% } %><% } %>"
+            class="<% if (i % 2 == 0) { %>even<% } else { %>odd<% } %> indent-<%= row.label.indent %> row <% if (row.label.has_children == true) { %> has-children <% if (row.label.indent > 1) { %>closed<% } else { %>open<% } %><% } %>"
             id="<%= row.key %>" parent="<%= row.label.parent %>"
             style="<% if (row.label.indent > 2) { %>display:none;<% } %>"
         >
@@ -80,7 +79,7 @@
             <td class="code data-cell"><%= d["2000"] %></td>
             <td class="code data-cell"><%= d["2010"] %></td>
             <td class="code data-cell"><%= d["delta"] %></td>
-            <td class="code data-cell <% if (false) { %>last<% } %>"><%= d.pct_change %></td>
+            <td class="code data-cell <% if (i == rows.length - 1) { %>last<% } %>"><%= d.pct_change %></td>
             <% }); %>
         </tr>
         <% }); %>
