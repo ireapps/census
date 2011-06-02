@@ -5,6 +5,7 @@
 {% block content %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/browser.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.scrollfollow.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/data.js"></script>
 
 <span class="button" id="show-browser">show the thing</span>
 
@@ -111,99 +112,6 @@
             });
             // TODO
             //query.initializeWithGeography({{ last_geoid }});
-        });
-    });
-</script>
-
-<script type="text/javascript">
-    // Testing loading of labels and data from S3
-    $(function(){
-        var dataset = "SF1";
-
-        $.ajax(API_URL + dataset + "_labels.jsonp", {
-            dataType: "jsonp",
-            jsonpCallback: "labels_" + dataset,
-            success: function(labels_data) {
-                // TODO
-                var geoid = "10";
-
-                var tables = _.keys(labels_data["tables"]);
-                tables.sort();
-
-                $.ajax(API_URL + geoid + ".jsonp", {
-                    dataType: "jsonp",
-                    jsonpCallback: "geoid_" + geoid,
-                    success: function(geography_data) {
-                        // TODO - temp, replace with tables var
-                        _.each(["P1"], function(table_name) {
-                            table = labels_data["tables"][table_name];
-
-                            report = {
-                                'key': table["key"],
-                                'name': table['name'],
-                                'table': table["key"] + ". " + table['name'],
-                                'universe': table['universe'],
-                                'columns': [],
-                                'rows': []
-                            };
-
-                            labels = table["labels"];
-
-                            _.each(labels, function(label) {
-                                row = {
-                                    "key": label["key"],
-                                    "label": label,
-                                    "data": []
-                                }
-
-                                data = [];
-    
-                                // TODO - iterate over geographies
-                                
-                                d = {};
-                                _.each(['2000','2010','delta','pct_change'], function(year) {
-                                    try {
-                                        d[year] = geography_data["data"][year][table_name][label["key"]];
-                                    } catch(err) {
-                                    }
-                                });
-
-                                row["data"].push(d);
-
-
-                                report["rows"].push(row);
-                            });
-
-                            column_meta = {};
-                            column_name = geography_data["metadata"]["NAME"];
-
-                            // TODO
-                            if ($.inArray(geography_data["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT])) {
-                                column_name += ", TODO"; 
-                            }
-
-                            column_meta["name"] = column_name;
-                            column_meta["geoid"] = geography_data["geoid"];
-                            column_meta["sumlev"] = geography_data["sumlev"];
-
-                            report["columns"].push(column_meta);
-
-                            // TODO
-                            report["geoid_list"] = ["10"];
-                            report["show_remove_button"] = true;
-
-                            console.log(report);
-
-                            var template = template = _.template($('#report-template').html());
-                            var html = template(report);
-
-                            $('#table-container').before(html)
-                        });
-                
-
-                    }
-                });
-            }
         });
     });
 </script>
