@@ -88,6 +88,11 @@ $(function(){
 
                     // If all geographies have been loaded, make reports
                     if (geographies.length == geoids.length) {
+                        // Sort geographies by url order since the return order isn't deterministic
+                        geographies = _.sortBy(geographies, function(geography) {
+                            return _.indexOf(geoids, geography["geoid"]);
+                        });
+
                         _.each(tables, function(table) {
                             var labelset =  labels_data["tables"][table];
                             var report = makeReport(table, labelset, geoids, geographies);
@@ -144,7 +149,11 @@ $(function(){
 
             // TODO
             if ($.inArray(geography["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT]) >= 0) {
-                column_name += ", TODO"; 
+                state_fips = geography["metadata"]["STATE"];
+                state_name = _.detect(window.query.mappings.states, function(state) {
+                    return state[1] == state_fips;
+                })[0];
+                column_name += ", " + state_name; 
             }
 
             column_meta["name"] = column_name;
