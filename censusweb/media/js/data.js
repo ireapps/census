@@ -12,7 +12,6 @@ $(function(){
     }
     
     twistRow = function() {
-        console.log("here");
         var show_child = !$($('tr[parent=' + $(this).attr('id') + ']')[0]).is(":visible");
         twistRowHelper($(this), show_child);
         $(this).toggleClass('closed')
@@ -173,7 +172,7 @@ $(function(){
         $('.button.add-related-county').click(this.addRelatedCounty);
 
         // Table mouseover row highlighting.
-        $(".report").delegate('td','mouseover mouseleave', function(e) {
+        $(".report").delegate('td', 'mouseover mouseleave', function(e) {
             if (e.type == 'mouseover') {
                 status = ''
                 $(this).addClass("selected");
