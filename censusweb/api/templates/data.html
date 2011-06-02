@@ -67,9 +67,11 @@
             <th class="subhead">% change</th>
             <% }); %>
         </tr>
+        <% var i = 0; %>
         <% _.each(rows, function(row) { %>
         <tr
-            id="<%= row.key %>" parent="{{ row.label.parent }}"
+            class="<% if (i % 2 == 0) { %>even<% } else { %>odd<% } i += 1; %> indent-<%= row.label.indent %> row <% if (row.label.has_children == true) { %> has-children <% if (row.label.indent > 1) { %>closed<% } else { %>open<% } %><% } %>"
+            id="<%= row.key %>" parent="<%= row.label.parent %>"
             style="<% if (row.label.indent > 2) { %>display:none;<% } %>"
         >
             <td class="label"><%= row.label.text %> <span class="key"><%= row.key %></span></td>

@@ -12,6 +12,7 @@ $(function(){
     }
     
     twistRow = function() {
+        console.log("here");
         var show_child = !$($('tr[parent=' + $(this).attr('id') + ']')[0]).is(":visible");
         twistRowHelper($(this), show_child);
         $(this).toggleClass('closed')
@@ -25,7 +26,7 @@ $(function(){
             } else {
                 $(value).hide();
             }
-            window.query.twist_row_helper(value, false);
+            twistRowHelper(value, false);
         });
     }
     
@@ -71,7 +72,7 @@ $(function(){
             // TODO
             //var tables = _.keys(labels_data["tables"]);
             //tables.sort();
-            var tables = ["P1", "H1"];
+            var tables = ["P2"];
 
             var geographies = new Array();
 
@@ -87,11 +88,7 @@ $(function(){
                             renderReport(report);
                         });
                         
-                        // Add event hooks
-                        $('.button.remove-column').click(removeColumn);
-                        $('tr.row').click(this.twistRow);
-                        $('.button.add-related-state').click(this.addRelatedState);
-                        $('.button.add-related-county').click(this.addRelatedCounty);
+                        configureEvents();
                     }
                 });
             });
@@ -159,6 +156,36 @@ $(function(){
         var html = report_template(report);
 
         $('#reports').append(html);
+    }
+
+    window.configureEvents = function() {
+        // Add event hooks
+        $('.button.remove-column').click(removeColumn);
+        $('tr.row').click(this.twistRow);
+        $('.button.add-related-state').click(this.addRelatedState);
+        $('.button.add-related-county').click(this.addRelatedCounty);
+
+        // Table mouseover row highlighting.
+        $(".report").delegate('td','mouseover mouseleave', function(e) {
+            if (e.type == 'mouseover') {
+                status = ''
+                $(this).addClass("selected");
+                $(this).parent().addClass("highlight");
+                status = $(this).parent().find('.label').text();
+                if ($(this).index() > 0) {
+                    $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight"); //column
+                    status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
+                    status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
+                }
+                $('#status').show().text(status);
+            } else {
+                $(this).removeClass("selected");
+                $(this).parent().removeClass('highlight');
+                if ($(this).index() > 0)
+                    $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
+                $('#status').hide();
+            }
+        });
     }
 
     // Kick-off
