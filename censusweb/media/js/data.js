@@ -81,6 +81,10 @@ $(function(){
             window.tables = _.keys(labels_data["tables"])
             window.tables.sort();
 
+            _.each(window.tables, function(table) {
+                $('#reports').append($('<div id="report-wrapper-' + table + '"></div>'));
+            });
+
             geographies = new Array();
 
             _.each(geoids, function(geoid) {
@@ -227,7 +231,7 @@ $(function(){
     window.renderReport = function(report) {
         var html = report_template(report);
 
-        $('#reports').append(html);
+        $('#report-wrapper-' + report["key"]).append(html);
     }
 
     window.configureEvents = function(table) {
