@@ -26,7 +26,7 @@ c = S3Connection()
 bucket = c.get_bucket(config.S3_BUCKET)
 
 k = Key(bucket)
-k.key = 'states.json'
+k.key = 'states.jsonp'
 
 try:
     data = k.get_contents_as_string()
@@ -39,6 +39,7 @@ if CLEAR == 'CLEAR':
 else:
     states.append(STATE)
 
-k.set_contents_from_string(zlib.compress(json.dumps(states)), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
+jsonp = 'states(%s)' % json.dumps(states)
+k.set_contents_from_string(zlib.compress(jsonp), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
 
 
