@@ -74,13 +74,14 @@ $(function(){
 
     window.loadLabels = function() {
         apiRequest(dataset + "_labels.jsonp", "labels_" + dataset, function(labels_data) {
-            var geoids = parseGeoids();
+            window.labels_data = labels_data;
+            window.geoids = parseGeoids();
             //var tables = parseTables();
 
-            var tables = _.keys(labels_data["tables"])
-            tables.sort();
+            window.tables = _.keys(labels_data["tables"])
+            window.tables.sort();
 
-            var geographies = new Array();
+            geographies = new Array();
 
             _.each(geoids, function(geoid) {
                 apiRequest(geoid + ".jsonp", "geoid_" + geoid, function(geography_data) {
@@ -89,17 +90,11 @@ $(function(){
                     // If all geographies have been loaded, make reports
                     if (geographies.length == geoids.length) {
                         // Sort geographies by url order since the return order isn't deterministic
-                        geographies = _.sortBy(geographies, function(geography) {
+                        window.geographies = _.sortBy(geographies, function(geography) {
                             return _.indexOf(geoids, geography["geoid"]);
                         });
 
-                        _.each(tables, function(table) {
-                            var labelset =  labels_data["tables"][table];
-                            var report = makeReport(table, labelset, geoids, geographies);
-                            renderReport(report);
-                        });
-                        
-                        configureEvents();
+                        // Browser handles displaying reports
                         startBrowser();
                     }
                 });
@@ -235,15 +230,15 @@ $(function(){
         $('#reports').append(html);
     }
 
-    window.configureEvents = function() {
+    window.configureEvents = function(table) {
         // Add event hooks
-        $('.button.remove-column').click(removeColumn);
-        $('tr.row').click(this.twistRow);
-        $('.button.add-related-state').click(this.addRelatedState);
-        $('.button.add-related-county').click(this.addRelatedCounty);
+        $('#' + table + ' .button.remove-column').click(removeColumn);
+        $('#' + table + ' tr.row').click(this.twistRow);
+        $('#' + table + ' .button.add-related-state').click(this.addRelatedState);
+        $('#' + table + ' .button.add-related-county').click(this.addRelatedCounty);
 
         // Table mouseover row highlighting.
-        $(".report").delegate('td', 'mouseover mouseleave', function(e) {
+        $('#' + table + '.report').delegate('td', 'mouseover mouseleave', function(e) {
             if (e.type == 'mouseover') {
                 status = ''
                 $(this).addClass("selected");

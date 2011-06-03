@@ -13,15 +13,15 @@
     <div id="floater">
         <h1>Hello!</h1>
         <ul id="table-list" class="cookie1">
-        <% $('table.report').each(function(index, report) { x = $(report); %>
+        <% _.each(window.tables, function(table) { %>
             <li>
                 <input
                     type="checkbox"
-                    id="show-<%= $(report).attr('id') %>"
-                    name="show-<%= $(report).attr('id') %>"
-                    <% if ($(report).is(':visible')) { %>checked="checked"<% } %>>
-                <label for="show-<%= $(report).attr('id') %>">
-                    <a href="#<%= $(report).attr('id') %>" class="link"><%= $(report).attr('data-val') %></a>
+                    id="show-report-<%= table %>"
+                    name="show-report-<%= table %>"
+                    <% if ($.inArray(table, model.get("table_ids")) >= 0) { %>checked="checked"<% } %>
+                <label for="show-<%= table %>">
+                    <a href="#<%= table %>" class="link"><%= window.labels_data["tables"][table]["name"] %></a>
                 </label>
             </li>
         <% }); %>
