@@ -7,7 +7,7 @@ from django.shortcuts import render_to_response
 from django.contrib.gis.shortcuts import render_to_kml, render_to_kmz
 from django.template import RequestContext, Template, Context
 
-#from boundaryservice.models import Boundary
+from boundaryservice.models import Boundary
 
 import csv
 import constants
