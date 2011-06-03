@@ -16,7 +16,7 @@ FILENAME = sys.argv[1]
 YEAR = '2010'
 
 connection = Connection()
-db = connection[config.CENSUS_DB]
+db = connection[config.LABELS_DB]
 collection = db[config.LABELS_COLLECTION]
 
 with open(FILENAME) as f:
@@ -30,6 +30,8 @@ with open(FILENAME) as f:
     hierarchy = []
     last_key = ''
     last_indent = 0
+
+    tables = {} 
 
     for row in rows:
         row_count += 1
@@ -45,22 +47,18 @@ with open(FILENAME) as f:
             if re.match('^[A-Z]+[0-9]+.\s+', text):
                 # Save previous table
                 if table:
-                    collection.save(table, safe=True)
+                    tables[table['key']] = table
 
                 match = re.match('^([A-Z]+[0-9]+).\s+(.*?)\s+\[([0-9]+)\]', text)
 
                 table = {
                     'name': match.group(2),
                     'key': match.group(1),
-                    'year': '2010', 
                     'size': int(match.group(3)),
                     'universe': '',
                     'labels': {}
                 }
                 
-                # Remove existing table
-                collection.remove({ 'key': table['key'], 'year': table['year'] }, safe=True)
-
                 hierarchy = []
                 last_key = ''
                 last_indent = 0
@@ -97,11 +95,14 @@ with open(FILENAME) as f:
             parent = None
 
         table['labels'][key] = {
+            'key': key,
             'text': text.strip().strip(':'),
             'indent': indent,
             'parent': parent,
             'has_children': False, #maybe! we'll reset this later in the loop if we discover otherwise. look up.
         }
+
+        
 
         inserts += 1
 
@@ -109,7 +110,10 @@ with open(FILENAME) as f:
         last_indent = indent
 
     # Save final table
-    collection.save(table, safe=True)
+    tables[table['key']] = table
+
+    collection.remove({ 'dataset': 'PL' }, safe=True)
+    collection.save({ 'dataset': 'PL', 'tables': tables }, safe=True)
 
 print 'Row count: %i' % row_count
 print 'Inserted: %i' % inserts

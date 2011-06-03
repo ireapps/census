@@ -5,6 +5,7 @@
 {% block content %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/browser.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.scrollfollow.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/data.js"></script>
 
 <span class="button" id="show-browser">show the thing</span>
 
@@ -28,12 +29,74 @@
     </div>
 </script>
 
+<script id="report-template" type="x-js-template">
+    <a name="report-<%= key %>"></a>
+    <table class="report" id="report-<%= key %>" data-val="<%= name %>">
+        <colgroup></colgroup><colgroup></colgroup>
+        <% _.each(columns, function(c) { %>
+        <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
+        <% }); %>
+        <tr>
+            <th rowspan="2" class="labeldef"><%= table %><br /><span class="universe">Universe: <%= universe %></span></th>
+            <% _.each(columns, function(c) { %>
+            <th colspan="4" class="locationdef">
+                <%= c.name %>
+                <div class="button-set">
+                <% if ($.inArray(c.sumlev, [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT]) >= 0) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 2), geoids) < 0) { %>
+                    <span class="button add-related-state" title="Show state that contains this" data-val="<%= c.geoid %>">Add state &raquo;</span>
+                    <% } %>
+                <% } %>
+                <% if (c.sumlev === SUMLEV_TRACT) { %>
+                    <% if ($.inArray(c.geoid.substr(0, 5), geoids) < 0) { %>
+                    <span class="button add-related-county" title="Show county that contains this" data-val="<%= c.geoid %>">Add county &raquo;</span>
+                    <% } %>
+                <% } %>
+                <% if (show_remove_button === true) { %>
+                    <span class="button remove-column" data-val="<%= c.geoid %>">Remove</span>
+                <% } %>
+                </div>
+            </th>
+            <% }); %>
+        </tr>
+        <tr>
+            <% _.each(columns, function(c) { %>
+            <th class="subhead">2000</th>
+            <th class="subhead">2010</th>
+            <th class="subhead">Delta</th>
+            <th class="subhead">% change</th>
+            <% }); %>
+        </tr>
+        <% _.each(rows, function(row, i, rows) { %>
+        <tr
+            class="<% if (i % 2 == 0) { %>even<% } else { %>odd<% } %> indent-<%= row.label.indent %> row <% if (row.label.has_children == true) { %> has-children <% if (row.label.indent > 1) { %>closed<% } else { %>open<% } %><% } %>"
+            id="<%= row.key %>" parent="<%= row.label.parent %>"
+            style="<% if (row.label.indent > 2) { %>display:none;<% } %>"
+        >
+            <td class="label"><%= row.label.text %> <span class="key"><%= row.key %></span></td>
+            <% _.each(row.data, function(d) { %>
+            <!-- TODO: int and float format --> 
+            <td class="code data-cell"><%= intComma(d["2000"]) %></td>
+            <td class="code data-cell"><%= intComma(d["2010"]) %></td>
+            <td class="code data-cell"><%= intComma(floatFormat(d["delta"])) %></td>
+            <td class="code data-cell <% if (i == rows.length - 1) { %>last<% } %>"><%= floatFormat(toPercent(d["pct_change"])) %></td>
+            <% }); %>
+        </tr>
+        <% }); %>
+    </table>
+</script>
+
 <nav>
     <span class="button more-data">Add another geography to compare</span>
     &nbsp;or download as
-    <a class="button" href="{{ csv_url }}">CSV</a>
-    <a class="button" href="{{ json_url }}">JSON</a>
+    <a class="button" href="TODO">CSV</a>
+    <a class="button" href="TODO">JSON</a>
+    <a class="button" href="TODO">KML</a>
 </nav>
+
+<section id="reports">
+</section>
+
 <div class="query-builder-popup hidden">
     {% include "_query_builder.html" %}
 </div>
@@ -48,62 +111,11 @@
                 height:600,
                 minWidth:800
             });
-            query.initializeWithGeography({{ last_geoid }});
+            // TODO
+            //query.initializeWithGeography({{ last_geoid }});
         });
     });
 </script>
-
-{% for r in reports %}
-<a name="report-{{ r.key }}"></a>
-<table class="report" id="report-{{ r.key }}" data-val="{{ r.name }}">
-    <colgroup></colgroup><colgroup></colgroup>
-    {% for c in r.columns %}
-    <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
-    {% endfor %}
-    <tr>
-        <th rowspan="2" class="labeldef">{{ r.table }}<br /><span class="universe">Universe: {{ r.universe }}</span></th>
-        {% for c in r.columns %}
-        <th colspan="4" class="locationdef">
-            {{ c.name }}
-            <div class="button-set">
-            {% if c.sumlev == "050" or c.sumlev == "160" or c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"2" not in geoids %}
-                <span class="button add-related-state" title="Show state that contains this" data-val="{{ c.geoid }}">Add state &raquo;</span>
-            {% endif %}{% endif %}
-            {% if c.sumlev == "140" or c.sumlev == "101" %}{% if c.geoid|slice:"5" not in geoids %}
-                <span class="button add-related-county" title="Show county that contains this" data-val="{{ c.geoid }}">Add county &raquo;</span>
-            {% endif %}{% endif %}
-            {% if show_remove_button %}
-                <span class="button remove-column" data-val="{{ c.geoid }}">Remove</span>
-            {% endif %}
-            </div>
-        </th>
-        {% endfor %}
-    <tr>
-        {% for c in r.columns %}
-        <th class="subhead">2000</th>
-        <th class="subhead">2010</th>
-        <th class="subhead">Delta</th>
-        <th class="subhead">% change</th>
-        {% endfor %}
-    </tr>
-    </tr>
-    {% for label, data, key in r.rows %}
-    <tr
-        class="{% cycle odd,even %} indent-{{ label.indent }} row {% if label.has_children %} has-children {% if label.indent > 1 %}closed{% else %}open{% endif %}{% endif %}"
-        id="{{ key }}" parent="{{ label.parent }}"
-        style="{% if label.indent > 2 %}display:none;{% endif %}"
-    >
-        <td class="label">{{ label.text }} <span class="key">{{ key }}</span></td>
-        {% for d in data %}
-            <td class="code data-cell">{{ d.2000|intcomma }}</td>
-            <td class="code data-cell">{{ d.2010|intcomma }}</td>
-            <td class="code data-cell">{{ d.delta|floatformat|intcomma }}</td>
-            <td class="code data-cell {% if forloop.last %}last{% endif %}">{{ d.pct_change|percent|floatformat:1 }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>
-{% endfor %}
 
 <div id="status" style="display:none;"></div>
 

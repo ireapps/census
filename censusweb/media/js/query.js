@@ -25,7 +25,7 @@ $(function(){
             
             document.onkeydown = this.keydown;
             this.bind('change', this.render);
-            this.bind('change', this.loadNext);
+            //this.bind('change', this.loadNext);
             this.mappings.summarylevelDisplays[SUMLEV_TRACT] = 'Tracts';
             this.mappings.summarylevelDisplays[SUMLEV_PLACE] = 'Places';
             this.mappings.summarylevelDisplays[SUMLEV_COUNTY] = 'Counties';
@@ -51,10 +51,7 @@ $(function(){
             $('#tract-select .link').click(_.bind(this.select, this, SUMLEV_TRACT));
             $('.button.go').click(this.go);
             $('.button.csv-json').click(this.csvJson);
-            $('.button.remove-column').click(this.remove_column);
-            $('tr.row').click(this.twist_row);
-            $('.button.add-related-state').click(this.add_related_state);
-            $('.button.add-related-county').click(this.add_related_county);
+
         },
 
         isCompletable: function() {
@@ -220,64 +217,36 @@ $(function(){
         },
 
         loadCounties: function() {
-            $.getJSON('/internal/counties_for_state/' + this.get(SUMLEV_STATE) + '.json', _.bind(function(response) {
-                this.mappings.counties = response;
-                this.render();
-            }, this));
+            $.ajax(API_URL + 'counties_' + this.get(SUMLEV_STATE) + '.jsonp', {
+                dataType: "jsonp",
+                jsonpCallback: "counties_" + this.get(SUMLEV_STATE),
+                success: _.bind(function(response) {
+                    this.mappings.counties = response;
+                    this.render();
+                }, this)
+            });
         },
 
         loadPlaces: function() {
-            $.getJSON('/internal/places_for_state/' + this.get(SUMLEV_STATE) + '.json', _.bind(function(response) {
-                this.mappings.places = response;
-                this.render();
-            }, this));
+            $.ajax(API_URL + 'places_' + this.get(SUMLEV_STATE) + '.jsonp', {
+                dataType: "jsonp",
+                jsonpCallback: "places_" + this.get(SUMLEV_STATE),
+                success: _.bind(function(response) {
+                    this.mappings.places = response;
+                    this.render();
+                }, this)
+            });
         },
 
         loadTracts: function() {
-            $.getJSON('/internal/tracts_for_county/' + this.get(SUMLEV_COUNTY) + '.json', _.bind(function(response) {
-                this.mappings.tracts = response;
-                this.render();
-            }, this));
-        },
-        
-        remove_column: function() {
-            geoid = $(this).attr('data-val');
-            if (document.location.pathname.indexOf('/' + geoid) > 0) {
-                document.location.pathname = document.location.pathname.replace(geoid + ',', '');
-            } else {
-                document.location.pathname = document.location.pathname.replace(',' + geoid, '');
-            }
-        },
-        
-        twist_row: function() {
-            var show_child = !$($('tr[parent=' + $(this).attr('id') + ']')[0]).is(":visible");
-            window.query.twist_row_helper($(this), show_child);
-            $(this).toggleClass('closed')
-            $(this).toggleClass('open');
-        },
-        
-        twist_row_helper: function(parent_row, show_me) {
-            $.each($('tr[parent=' + $(parent_row).attr('id') + ']'), function(index, value){
-                if(show_me){
-                    $(value).show();
-                } else {
-                    $(value).hide();
-                }
-                window.query.twist_row_helper(value, false);
+            $.ajax(API_URL + 'tracts_' + this.get(SUMLEV_COUNTY) + '.jsonp', {
+                dataType: "jsonp",
+                jsonpCallback: "tracts_" + this.get(SUMLEV_COUNTY),
+                success: _.bind(function(response) {
+                    this.mappings.tracts = response;
+                    this.render();
+                }, this)
             });
-        },
-        
-        add_related_state: function() {
-            this_geoid = $(this).attr('data-val');
-            state_geoid = this_geoid.slice(0,2);
-            
-            window.location.pathname = window.location.pathname.replace('.html', ","+state_geoid+'.html');
-        },
-        add_related_county: function() {
-            this_geoid = $(this).attr('data-val');
-            county_geoid = this_geoid.slice(0,5);
-            
-            window.location.pathname = window.location.pathname.replace('.html', ","+county_geoid+'.html');
         },
     
         // --------------------- Data ----------------------------------------

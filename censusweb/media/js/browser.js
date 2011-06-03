@@ -45,17 +45,13 @@ $(function(){
 
         initialize: function() {
             this.template = _.template($('#browser-template').html())
-
             _.bindAll(this,'check','scroll','showsomething');
-
             this.model.bind('change', function(model) {
                 var table_ids = model.get('table_ids').join(',')
                 $.cookie('show_tables', table_ids)
                 window.location.hash = "#browser/"+table_ids 
             })
-
             this.render()
-
             $('#container').before(this.el)
             $('#show-browser').click(this.showsomething);
         },
@@ -100,8 +96,5 @@ $(function(){
                 });
             }
         }
-
     })
-
-
 })

@@ -113,7 +113,7 @@ class TestTracts(unittest.TestCase):
 class TestLabels(unittest.TestCase):
     def setUp(self):
         connection = Connection()
-        db = connection[config.CENSUS_DB]
+        db = connection[config.LABELS_DB]
         self.labels = db[config.LABELS_COLLECTION]
 
     def test_table(self):

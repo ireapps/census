@@ -18,14 +18,14 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-    #     'NAME': 'censusweb',                      # Or path to database file if using sqlite3.
-    #     'USER': 'censusweb',                      # Not used with sqlite3.
-    #     'PASSWORD': 'Xy9XKembdu',                  # Not used with sqlite3.
-    #     'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-    #     'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
-    # }
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'censusweb',                      # Or path to database file if using sqlite3.
+        'USER': 'censusweb',                      # Not used with sqlite3.
+        'PASSWORD': 'Xy9XKembdu',                  # Not used with sqlite3.
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
+    }
 }
 
 # Local time
@@ -103,6 +103,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.gis',
     'django.contrib.sitemaps',
+    'boundaryservice',
     'api',
 )
 
@@ -122,16 +123,16 @@ CACHE_MIDDLEWARE_SECONDS=90 * 60 # 90 minutes
 CACHE_BACKEND="dummy:///"
 
 # Site configuration
-CENSUS_DB = 'census'
-GEOGRAPHIES_COLLECTION = 'geographies'
-GEOGRAPHIES_2000_COLLECTION = 'geographies_2000'
+LABELS_DB = 'census_labels'
 LABELS_COLLECTION = 'labels'
+
+API_URL = 'http://s3.amazonaws.com/census-test/' 
 
 TEST_RUNNER='api.tests.TestRunner'
 
 # Logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
 )
 
 # Allow for local (per-user) override

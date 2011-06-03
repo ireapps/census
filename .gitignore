@@ -5,3 +5,7 @@ censusweb/censusweb
 raw
 dataprocessing/data
 *.swp
+shapefiles/STATE
+shapefiles/COUNTY
+shapefiles/PLACE
+shapefiles/TRACT

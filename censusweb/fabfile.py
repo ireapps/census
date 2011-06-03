@@ -372,12 +372,14 @@ def local_bootstrap():
     create_database(local)
 
     # Normal bootstrap
-    # local('python manage.py syncdb --noinput')
-    local('psql censusweb < data/psql/dump.sql')
-    # Bootstrap with south
-    # local('python manage.py syncdb --all --noinput')
-    # local('python manage.py migrate --fake')
+    local('python manage.py syncdb --noinput')
 
+def local_load_geodata():
+    local('mkdir -p /tmp/geofetch')
+    local('./fetch_geodata.sh /tmp/geofetch 10')
+    local('cp data/shapefiles/definitions.py /tmp/geofetch')
+    local('./manage.py load_shapefiles -c -d /tmp/geofetch')
+    
 """
 Utility functions (not to be called directly)
 """
