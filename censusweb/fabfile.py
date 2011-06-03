@@ -23,7 +23,6 @@ env.apache_config_path = '/home/ubuntu/apache/%(project_name)s' % env
 env.python = 'python2.6'
 env.repository_url = "git@github.com:documentcloud/census.git"
 env.memcached_server_address = "cache"
-env.cache_server = "lb"
 env.multi_server = False
 
 """
@@ -39,6 +38,7 @@ def production():
     env.user = 'ubuntu'
     env.s3_bucket = 'media.censusweb.ire.org'
     env.site_domain = 'censusweb.censusweb.ire.org'    
+    env.cache_server = 'db.censusweb.ire.org'
 
 def staging():
     """
@@ -48,7 +48,8 @@ def staging():
     env.hosts = ['censusweb.beta.tribapps.com'] 
     env.user = 'ubuntu'
     env.s3_bucket = 'media-beta.tribapps.com'
-    env.site_domain = 'censusweb.beta.tribapps.com'    
+    env.site_domain = 'censusweb.beta.tribapps.com'
+    env.cache_server = 'censusweb.beta.tribapps.com'
     
 """
 Branches
