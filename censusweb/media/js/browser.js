@@ -56,7 +56,7 @@ $(function(){
 
         initialize: function() {
             this.template = _.template($('#browser-template').html())
-            _.bindAll(this,'check','scroll','showsomething');
+            _.bindAll(this,'check','scroll','toggleBrowser');
             this.model.bind('change', function(model) {
                 var table_ids = model.get('table_ids').join(',')
                 $.cookie('show_tables', table_ids)
@@ -64,7 +64,8 @@ $(function(){
             })
             this.render()
             $('#container').before(this.el)
-            $('#show-browser').click(this.showsomething);
+            $('#toggle-browser').click(this.toggleBrowser);
+            this.toggleBrowser();
         },
 
         render: function() {
@@ -91,14 +92,14 @@ $(function(){
             return false
         },
 
-        showsomething: function() {
+        toggleBrowser: function() {
             if($(this.el).is(':visible')) {
                 $(this.el).hide();
-                $('#show-browser').text('show the thing');
+                $('#toggle-browser').text('Show table browser');
                 $('#container').removeClass('with-browser');
             } else {
                 $(this.el).show();
-                $('#show-browser').text('hide the thing')
+                $('#toggle-browser').text('Hide table browser')
                 $('#container').addClass('with-browser');
                 _.defer(function(){
                     $('#browser').height($('#container').height())
