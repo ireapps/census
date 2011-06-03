@@ -236,13 +236,13 @@ $(function(){
 
     window.configureEvents = function(table) {
         // Add event hooks
-        $('#' + table + ' .button.remove-column').click(removeColumn);
-        $('#' + table + ' tr.row').click(this.twistRow);
-        $('#' + table + ' .button.add-related-state').click(this.addRelatedState);
-        $('#' + table + ' .button.add-related-county').click(this.addRelatedCounty);
+        $('#report-' + table + ' .button.remove-column').click(removeColumn);
+        $('#report-' + table + ' tr.row').click(this.twistRow);
+        $('#report-' + table + ' .button.add-related-state').click(this.addRelatedState);
+        $('#report-' + table + ' .button.add-related-county').click(this.addRelatedCounty);
 
         // Table mouseover row highlighting.
-        $('#' + table + '.report').delegate('td', 'mouseover mouseleave', function(e) {
+        $('#report-' + table + '.report').delegate('td', 'mouseover mouseleave', function(e) {
             if (e.type == 'mouseover') {
                 status = ''
                 $(this).addClass("selected");
