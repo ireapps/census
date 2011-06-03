@@ -100,6 +100,7 @@ $(function(){
                         });
                         
                         configureEvents();
+                        startBrowser();
                     }
                 });
             });

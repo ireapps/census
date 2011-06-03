@@ -1,10 +1,10 @@
 $(function(){
-    $(document).ready(function() {
+    window.startBrowser = function() {
         reportcontroller = new ReportController
         Backbone.history.start()
         if ( !location.hash )
             location.hash="#browser"
-    })
+    }
 
     ReportController = Backbone.Controller.extend({
         routes: {
