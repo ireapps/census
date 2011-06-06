@@ -175,10 +175,10 @@ nav {
     background-repeat: no-repeat !important;
 }
 .report tr.row.has-children.closed td.label { 
-    background-image:url('/site_media/images/plus.png') !important;
+    background-image:url('../images/plus.png') !important;
 }
 .report tr.row.has-children.open td.label {
-    background-image:url('/site_media/images/minus.png') !important;
+    background-image:url('../images/minus.png') !important;
 }
 
 .report td {
