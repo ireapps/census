@@ -122,7 +122,7 @@ class TestLabels(unittest.TestCase):
         "P4.  HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE FOR THE POPULATION 18 YEARS AND OVER [73]","",""
         "Universe: Total population 18 years and over","",""
         """
-        table = self.labels.find_one({ 'key': 'P4', 'year': '2010' })
+        table = self.labels.find_one({ 'dataset': 'PL' })['tables']['P4']
 
         self.assertEqual(table['name'], 'HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE FOR THE POPULATION 18 YEARS AND OVER')
         self.assertEqual(table['size'], 73)
@@ -134,7 +134,7 @@ class TestLabels(unittest.TestCase):
         "      Population of four races:","P0020049"," P1"
         "        White; Black or African American; American Indian and Alaska Native; Asian","P0020050"," P1"
         """
-        table = self.labels.find_one({ 'key': 'P2', 'year': '2010' })
+        table = self.labels.find_one({ 'dataset': 'PL' })['tables']['P2']
         label = table['labels']['P0020050']
 
         self.assertEqual(label['text'], 'White; Black or African American; American Indian and Alaska Native; Asian')
