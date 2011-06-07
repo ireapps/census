@@ -4,13 +4,12 @@
 
 {% block content %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/browser.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.scrollfollow.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/data.js"></script>
 
 <span class="button" id="toggle-browser"></span>
 
 <script id="browser-template" type="x-js-template">
-    <div id="floater">
+    <div>
         <h1>Hello!</h1>
         <ul id="table-list" class="cookie1">
         <% _.each(window.tables, function(table) { %>

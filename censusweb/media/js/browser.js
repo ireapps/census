@@ -87,7 +87,7 @@ $(function(){
 
         scroll: function(ev) {
             var a_name = $(ev.target).attr('href').match(/^#(.*)$/)[1]
-            $("html").scrollTop($("a[name="+a_name+"]").offset().top)
+            $("html").scrollTop($("a[name=report-" + a_name + "]").offset().top)
 
             return false
         },
@@ -101,10 +101,6 @@ $(function(){
                 $(this.el).show();
                 $('#toggle-browser').text('Hide table browser')
                 $('#container').addClass('with-browser');
-                _.defer(function(){
-                    $('#browser').height($('#container').height())
-                    $('#browser').find('#floater').scrollFollow();
-                });
             }
         }
     })
