@@ -86,7 +86,7 @@ def csv_row_for_geography(geography, tables=None):
         geography['metadata']['NAME']
     ]
     for table in tables_list:
-        labels = mongoutils.get_labels_for_table("2010", table)
+        labels = mongoutils.get_labels_for_table(table)
         for statistic in sorted(labels['labels']):
             for alternative in DATA_ALTERNATIVES:
                 try:
