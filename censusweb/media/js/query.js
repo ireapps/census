@@ -1,5 +1,5 @@
 $(function(){
-    
+
     // ------------------------- Constants -----------------------------------
     SUMLEV_NATION = '010';
     SUMLEV_STATE = '040';
@@ -76,7 +76,7 @@ $(function(){
             } else {
                 $(document).keypress(this.keypress);
             }
-            
+
             document.onkeydown = this.keydown;
             this.bind('change', this.render);
             //this.bind('change', this.loadNext);
@@ -85,8 +85,6 @@ $(function(){
             this.mappings.summarylevelDisplays[SUMLEV_COUNTY] = 'Counties';
             this.mappings.summarylevelDisplays[SUMLEV_STATE] = 'States';
             this.mappings.summarylevelDisplays[SUMLEV_NATION] = 'USA';
-
-            console.log("here");
 
             $.ajax(API_URL + "states.jsonp", {
                 dataType: "jsonp",
@@ -105,7 +103,7 @@ $(function(){
                 // Don't re-render. We just selected the item we wanted so
                 // we are going to force "go" there. (See `select`.)
                 return;
-            
+
             $("#search").html(this.template({query: this}));
             $('#filter-help').toggle(!!this.shouldShowFilterHelp());
             $('#filter-display').toggle(!!this.filter).text(this.filterDisplay());
@@ -142,7 +140,7 @@ $(function(){
 
         location: function() {
             if (!this.get('summarylevel')) return '';
-            
+
             if (this.get(SUMLEV_TRACT))         return this.get(SUMLEV_TRACT);
             if (this.get(SUMLEV_PLACE))         return this.get(SUMLEV_PLACE);
             if (this.get(SUMLEV_COUNTY))        return this.get(SUMLEV_COUNTY);
@@ -181,7 +179,7 @@ $(function(){
         select: function(level, e) {
             this.filter = "";
             var attrs = {};
-            
+
             //so that we can work backwards up the builder, resetting stuff
             if(level == 'summarylevel' || level == SUMLEV_STATE) {
                 delete query.attributes[SUMLEV_NATION];
@@ -211,7 +209,7 @@ $(function(){
             this.currentLevel = level;
             this.set(attrs);
             this.loadNext();
-            
+
             // Remove this section to enable "go button" prompt:
             var q = window.query;
             if (query.get('summarylevel') && query.get(query.get("summarylevel")))
@@ -219,11 +217,11 @@ $(function(){
                 // target datatype. We just picked the value we wanted.
                 this.go();
         },
-        
+
         initializeWithGeography: function(geoid) {
             $.getJSON('/family/' + geoid + '.json', _.bind(function(response) {
                 var geographies = response;
-                var attrs = {};                
+                var attrs = {};
                 $.each(geographies, function(index,g) {
                     attrs[g.sumlev + "Display"] = g.metadata.NAME;
                     if(geoid == g.geoid) {
@@ -264,16 +262,16 @@ $(function(){
                 window.location.pathname = '/data/' + this.location() + '.html';
             }
         },
-        
+
         csvJson: function() {
             var dataType = '.' + this.innerHTML.toLowerCase()
             var geoid_list = []
             var sumlev = query.attributes.summarylevel
             var containerlev = query.currentLevel
             var container = query.attributes[query.currentLevel]
-            window.location = '/internal/download_data_for_region/' + 
+            window.location = '/internal/download_data_for_region/' +
                 sumlev + '-' +
-                containerlev + '-'+ 
+                containerlev + '-'+
                 container + dataType;
         },
 
@@ -314,18 +312,18 @@ $(function(){
                 }, this)
             });
         },
-    
+
         // --------------------- Data ----------------------------------------
-    
+
         mappings: {
 
             summarylevels: [SUMLEV_TRACT, SUMLEV_PLACE, SUMLEV_COUNTY, SUMLEV_STATE, SUMLEV_NATION],
-            
+
             summarylevelDisplays: {
                 //gets filled in during init
             },
 
-            states: [] 
+            states: []
         }
     });
 
@@ -370,5 +368,5 @@ $(function(){
             $('#status').hide();
         }
     });
-    
+
 });
