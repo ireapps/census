@@ -21,7 +21,7 @@
 ./load_pl_labels_2010.py data/pl_2010_data_labels.csv
 
 ./crosswalk.py 10
-./compute_deltas.py 10
+./compute_deltas_pl.py 10
 
 ./deploy_data.py
 ./deploy_lookups.py
