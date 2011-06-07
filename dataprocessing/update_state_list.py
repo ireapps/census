@@ -30,7 +30,16 @@ k.key = 'states.jsonp'
 
 try:
     data = k.get_contents_as_string()
-    states = json.loads(zlib.decompress(data))
+
+    # No existing file 
+    if not data:
+        raise S3ResponseError()
+
+    # Strip off jsonp wrapper
+    contents = zlib.decompress(data)
+    data = contents[7:-1]
+
+    states = json.loads(data)
 except S3ResponseError:
     states = []
 

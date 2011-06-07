@@ -1,5 +1,5 @@
 $(function(){
-    var dataset = "PL";
+    var dataset = "SF1";
     var report_template = _.template($('#report-template').html());
 
     removeColumn = function() {

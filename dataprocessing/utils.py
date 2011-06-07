@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
+import re
+
 import config
+
+TABLE_NAME_REGEX = re.compile('([A-Z1-9]+?)0*([\d]+)')
 
 def geoid_nation(r):
     # TODO
@@ -29,6 +33,11 @@ GEOID_COMPUTERS = {
     config.SUMLEV_PLACE: geoid_place,
     config.SUMLEV_BLOCK: geoid_block,
 }
+
+def parse_table_from_key(key):
+    t = key[0:-3]
+    match = TABLE_NAME_REGEX.match(t)
+    return ''.join(match.groups())
 
 def find_geography_by_xref(collection, xref, fields=None):
     return collection.find_one({ 'xrefs': { '$elemMatch': xref } }, fields=fields)

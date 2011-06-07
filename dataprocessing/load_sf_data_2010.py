@@ -16,8 +16,6 @@ FILENAME = sys.argv[1]
 
 YEAR = '2010'
 
-TABLE_NAME_REGEX = re.compile('([A-Z1-9]+?)0*([\d]+)')
-
 connection = Connection()
 db = connection[config.CENSUS_DB] 
 collection = db[config.GEOGRAPHIES_COLLECTION]
@@ -47,9 +45,7 @@ with open(FILENAME) as f:
 
         for k, v in row_dict.items():
             # Format table names to match labels
-            t = k[0:-3]
-            match = TABLE_NAME_REGEX.match(t)
-            t = ''.join(match.groups())
+            t = utils.parse_table_from_key(k) 
 
             if t not in tables:
                 tables[t] = {}

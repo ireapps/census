@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import csv
 import re
 import sys
 
@@ -11,6 +12,29 @@ import logging
 
 TABLE_NAME_PATTERN = re.compile(r'^(?P<name>.+)\[(?P<size>\d+)\].*$')
 TABLE_ID_PATTERN = re.compile(r'^(?P<letter>[A-Z]+)(?P<number>\d+)(?P<suffix>[A-Z])?')
+
+KEY_MAPPINGS = {}
+
+with open('field_mappings_2000_2010.csv', 'rU') as f:
+    reader = csv.DictReader(f)
+
+    for row in reader:
+        # Skip fields that don't map
+        if not row['field_2000']:
+            continue
+
+        if not row['field_2010']:
+            continue
+
+        # TODO - skipping computed fields
+        if '-' in row['field_2000'] or '+' in row['field_2000']:
+            continue
+
+        if '-' in row['field_2010'] or '+' in row['field_2010']:
+            continue
+
+        KEY_MAPPINGS[row['field_2010']] = row['field_2000']
+
 def generate_stat_key(table_id, line):
     """Pad and connect table and line number to get a standard identifier for a statistic."""
     match = TABLE_ID_PATTERN.match(table_id)
@@ -125,7 +149,9 @@ if __name__ == '__main__':
                         'indent': row['indent'],
                         'parent': parent_key,
                         'has_children': False, #maybe! we'll reset this later in the loop if we discover otherwise. look up.
+                        'key_2000': KEY_MAPPINGS[key] if key in KEY_MAPPINGS else None,
                     } # keep it around for later
+
                     table['labels'][key] = last_processed # but also save it...
     # Save final table
     # sanity check:

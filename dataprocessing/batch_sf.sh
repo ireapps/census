@@ -30,7 +30,7 @@ do
     ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
 done
 
-echo 'Loading TODO labels'
+echo 'Loading labels'
 ./load_sf_labels_2010.py sf1_2010_data_labels.csv
 
 # Load 2000 headers as 2010 so fake 2010 data will match to shapes
@@ -66,10 +66,11 @@ echo 'Processing crosswalk'
 ./crosswalk.py $STATE_FIPS
 
 echo 'Computing deltas'
-./compute_deltas.py $STATE_FIPS
+./compute_deltas_sf.py $STATE_FIPS
 
 echo 'Deploying to S3'
 ./deploy_data.py
 ./deploy_lookups.py
+./deploy_labels.py
 ./update_state_list.py $STATE_NAME
 
