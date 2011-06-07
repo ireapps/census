@@ -19,11 +19,6 @@ urlpatterns = patterns('',
     url(r'^data/(?P<geoids>[,\d]+)\.(?P<format>kml|kmz)$', views.data_as_kml, name="data_as_kml"),
     url(r'^data/(?P<geoids>[,\d]+)\.html$', views.data, name="data"),
 
-    (r'^family/(?P<geoid>\d+)/$', views.redirect_to_family),
-    (r'^family/(?P<geoid>\d+)\.json$', views.family_as_json),
-
-    (r'^labels/(?P<year>\d{4})(/(?P<tables>.+))?.json', views.labels_as_json),
-    
     # Generate CSV/JSON for all elements in a given region (used from within Query Builder)
     #/internal/download_data_for_region/10.csv (or .json)
     (r'^internal/download_data_for_region/(?P<sumlev>\d{3})-(?P<containerlev>\d{3})-(?P<container>\d+)\.(?P<datatype>csv|json)$', views.download_data_for_region),

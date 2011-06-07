@@ -81,6 +81,18 @@ $(function(){
             window.tables = _.keys(labels_data["tables"])
             window.tables.sort();
 
+            $('nav .csv').click(function () {
+                window.location = "/data/" + geoids.join(",") + ".csv";
+            });
+
+            $('nav .json').click(function () {
+                window.location = "/data/" + geoids.join(",") + ".json";
+            });
+
+            $('nav .kml').click(function () {
+                window.location = "/data/" + geoids.join(",") + ".kml";
+            });
+
             _.each(window.tables, function(table) {
                 $('#reports').append($('<div id="report-wrapper-' + table + '"></div>'));
             });

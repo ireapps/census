@@ -20,12 +20,16 @@ DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
 
 def homepage(request):
     return render_to_response('homepage.html', {
-        'help_text': help_text,
-        'settings': settings,
-    },
-    context_instance=RequestContext(request))
+            'help_text': help_text,
+            'settings': settings,
+        },
+        context_instance=RequestContext(request))
     
+def data(request, geoids):
+    return render_to_response('data.html', { 'settings': settings }, context_instance=RequestContext(request))
+
 def download_data_for_region(request, sumlev='', containerlev='', container='', datatype=''):
+    # TODO - reimplement
     if sumlev == '140' and containerlev == '040':
         geo_list = mongoutils.get_tracts_by_state(container)
     elif sumlev == '140' and containerlev == '050':
@@ -47,19 +51,7 @@ def data_as_json(request, geoids):
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
     for g in utils.fetch_geographies(geoids_list):
-        del g['_id']
         del g['xrefs']
-        geographies[g['geoid']] = g
-        
-    return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
-
-def family_as_json(request, geoid):
-    geographies = {}
-    
-    family_geoids = get_family_geoids(geoid)
-    for g in utils.fetch_geographies(family_geoids, ['geoid', 'sumlev', 'metadata.NAME', 'metadata.STATE', 'metadata.COUNTY']):
-        del g['_id']
-        #del g['xrefs']
         geographies[g['geoid']] = g
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
@@ -124,88 +116,6 @@ def data_as_csv(request, geoids):
 
     return response
 
-def labels_as_json(request, tables=None):
-    labels = {}
-    if tables is None:
-        tables = mongoutils.get_tables()
-    else:    
-        tables = tables.split(',')
-
-    for t in tables:
-        l = mongoutils.get_labels_for_table(t)
-        del l['_id']
-        labels[t] = l
-        
-    return HttpResponse(simplejson.dumps(labels), mimetype='application/json')
-
-def redirect_to_family(request, geoid):
-    family = get_family_geoids(geoid)
-    geoid_str = ",".join(family)
-    url = reverse("data", args=[geoid_str,])
-    return HttpResponsePermanentRedirect(url)
-
-def get_family_geoids(geoid):
-    geography = utils.fetch_geography(geoid)
-    family = [geography['metadata']['STATE'],]
-    if geography['metadata']['COUNTY']:
-        family.append(
-            "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY']])
-        )
-    if geography['metadata']['PLACE']:
-        family.append(
-            "".join([geography['metadata']['STATE'], geography['metadata']['PLACE']])
-        )
-    if geography['metadata']['TRACT']:
-        family.append(
-            "".join([geography['metadata']['STATE'], geography['metadata']['COUNTY'], geography['metadata']['TRACT']])
-        )
-    return family
-
-def report_values_for_key(g,t,key):
-    d = {}
-    for alternative in DATA_ALTERNATIVES:
-        try:
-            d[alternative] = g['data'][alternative][t][key]
-        except KeyError:
-            d[alternative] = ''
-    return d
-
-def report_for_table(geographies, t):
-    labels = mongoutils.get_labels_for_table(t)
-
-    report = {
-        'key': t,
-        'name': labels['name'],
-        'table': t + ". " + labels['name'],
-        'universe': labels['universe'],
-        'columns': [],
-        'rows': [],
-    }
-
-    for key, label in sorted(labels['labels'].items()):
-        data = []
-
-        for g in geographies:
-            data.append(report_values_for_key(g,t,key))
-
-        report['rows'].append((label, data, key))
-
-    for g in geographies:
-        column_meta = {}
-        column_name = g['metadata']['NAME']
-
-        if g['sumlev'] in [constants.SUMLEV_COUNTY, constants.SUMLEV_PLACE, constants.SUMLEV_TRACT]:
-            column_name += ', %s' % constants.FIPS_CODES_TO_STATE[g['metadata']['STATE']]
-
-        column_meta['name'] = column_name
-        column_meta['geoid'] = g['geoid']
-        column_meta['sumlev'] = g['sumlev']
-        report['columns'].append(column_meta)
-
-    return report
-
-def data(request, geoids):
-    return render_to_response('data.html', { 'settings': settings }, context_instance=RequestContext(request))
 
 # --- KML BEGIN ---
 def data_as_kml(request, geoids,format='kml'):
