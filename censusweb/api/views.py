@@ -1,8 +1,7 @@
 import simplejson
 
 from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponsePermanentRedirect
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.contrib.gis.shortcuts import render_to_kml, render_to_kmz
 from django.template import RequestContext, Template, Context
@@ -10,7 +9,6 @@ from django.template import RequestContext, Template, Context
 from boundaryservice.models import Boundary
 
 import csv
-import constants
 import help_text
 import mongoutils # TODO: factor out
 import utils
@@ -56,7 +54,7 @@ def data_as_json(request, geoids):
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
-def csv_row_header(tables=None):
+def _csv_row_header(tables=None):
     if not tables:
         tables_list = mongoutils.get_tables()
     else:
@@ -74,7 +72,7 @@ def csv_row_header(tables=None):
 
     return row
     
-def csv_row_for_geography(geography, tables=None):
+def _csv_row_for_geography(geography, tables=None):
     if not tables:
         tables_list = mongoutils.get_tables()
     else:
@@ -103,11 +101,11 @@ def data_as_csv(request, geoids):
 
     response = HttpResponse(mimetype="text/csv")
     w = csv.writer(response)
-    w.writerow(csv_row_header(tables))
+    w.writerow(_csv_row_header(tables))
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
     for g in utils.fetch_geographies(geoids_list):
-        csvrow = csv_row_for_geography(g, tables)
+        csvrow = _csv_row_for_geography(g, tables)
         w.writerow(csvrow)
 
     now = datetime.now()
