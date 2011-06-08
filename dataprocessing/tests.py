@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from django.utils import unittest
-
 from pymongo import Connection
 
 import config
@@ -17,8 +16,8 @@ class TestSimpleGeographies(unittest.TestCase):
         Shortcut to test "total population" field from the P1 (race)
         table since this table exists for both 2000 and 2010.
         """
-        known_delta = known_2010-known_2000
-        known_pct = float(known_delta)/float(known_2000)
+        known_delta = known_2010 - known_2000
+        known_pct = float(known_delta) / float(known_2000)
 
         self.assertEqual(float(obj['data']['2000']["P1"]['P0010001']), known_2000)
         self.assertEqual(float(obj['data']['2010']["P1"]['P0010001']), known_2010)
@@ -33,7 +32,9 @@ class TestSimpleGeographies(unittest.TestCase):
     #    pass
     
     def test_state(self):
-        """ Data import test against known values that Delaware should have. """
+        """
+        Data import test against known values that Delaware should have.
+        """
         states = self.geographies.find({ 'geoid': '10' })
 
         self.assertEqual(states.count(), 1)
@@ -49,7 +50,9 @@ class TestSimpleGeographies(unittest.TestCase):
         self._test_totalpop(state, pop_2000, pop_2010)
 
     def test_county(self):
-        """ Data import test against known values that Kent County, DE should have. """
+        """
+        Data import test against known values that Kent County, DE should have.
+        """
         counties = self.geographies.find({ 'geoid': '10001' })
 
         self.assertEqual(counties.count(), 1)
@@ -66,7 +69,9 @@ class TestSimpleGeographies(unittest.TestCase):
         self._test_totalpop(county, pop_2000, pop_2010)
 
     def test_place(self):
-        """ Data import test against known values that Newark city, DE should have. """
+        """
+        Data import test against known values that Newark city, DE should have.
+        """
         places = self.geographies.find({ 'geoid': '1050670' })
 
         self.assertEqual(places.count(), 1)
@@ -83,7 +88,9 @@ class TestSimpleGeographies(unittest.TestCase):
         self._test_totalpop(place, pop_2000, pop_2010)
 
     def test_simple_tract(self): 
-        """ Data import test against known values that Tract 401, Kent County, DE should have. """
+        """
+        Data import test against known values that Tract 401, Kent County, DE should have.
+        """
         tracts = self.geographies.find({ 'geoid': '10001040100' })
 
         self.assertEqual(tracts.count(), 1)
@@ -105,10 +112,46 @@ class TestTracts(unittest.TestCase):
         db = connection[config.CENSUS_DB]
         self.geographies = db[config.GEOGRAPHIES_COLLECTION]
 
-    @unittest.skip("TODO")
-    def test_tract_crosswalk(self):
-        # TODO
-        pass
+    def test_tract_split(self):
+        """
+        Verify that a split tract is calculate correctly.
+        """
+        # Check that split tract does not exist in 2010
+        split_tract = self.geographies.find({ 'geoid': '10003013902' })
+        self.assertEqual(split_tract.count(), 0)
+
+        # Validate first new tract from the split tract
+        # Tract 139.03
+        tract1 = self.geographies.find({ 'geoid': '10003013903' })
+        self.assertEqual(tract1.count(), 1)
+        tract1 = tract1[0]
+        
+        split_tract_pop_2000 = 10405
+        tract1_pop_pct = 0.3904
+        tract1_pop_2000 = int(tract1_pop_pct * split_tract_pop_2000)
+        tract1_pop_2010 = 4983 
+
+        self.assertAlmostEqual(tract1['xwalk']['10003013902'], tract1_pop_pct, places=4)
+        self.assertAlmostEqual(tract1['data']['2000']['P1']['P0010001'], tract1_pop_2000)
+        self.assertAlmostEqual(tract1['data']['2010']['P1']['P0010001'], tract1_pop_2010)
+
+        # Validate second new part from the split tract
+        # Tract 139.04
+        tract2 = self.geographies.find({ 'geoid': '10003013904' })
+        self.assertEqual(tract2.count(), 1)
+        tract2 = tract2[0]
+
+        tract2_pop_pct = 0.6096
+        tract2_pop_2000 = int(tract2_pop_pct * split_tract_pop_2000)
+        tract2_pop_2010 = 7780 
+        
+        self.assertAlmostEqual(tract2['xwalk']['10003013902'], tract2_pop_pct, places=4)
+        self.assertAlmostEqual(tract2['data']['2000']['P1']['P0010001'], tract2_pop_2000)
+        self.assertAlmostEqual(tract2['data']['2010']['P1']['P0010001'], tract2_pop_2010)
+
+        # Verify that no other tracts got crosswalk allocations from the split tract
+        allocated = self.geographies.find({ 'xwalk.10003013902': { '$exists': True } })
+        self.assertEqual(allocated.count(), 2)
 
 class TestLabels(unittest.TestCase):
     def setUp(self):
