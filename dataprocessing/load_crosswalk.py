@@ -49,11 +49,15 @@ else:
                 continue
 
             pop_pct_2000 = float(row_dict['POPPCT00']) / 100
+            house_pct_2000 = float(row_dict['HUPCT00']) / 100
 
             if 'xwalk' not in geography:
                 geography['xwalk'] = {} 
 
-            geography['xwalk'][row_dict['GEOID00']] = pop_pct_2000
+            geography['xwalk'][row_dict['GEOID00']] = {
+                'POPPCT00': pop_pct_2000,
+                'HUPCT00': house_pct_2000
+            }
 
             collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }, safe=True) 
             inserts += 1

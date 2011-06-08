@@ -34,9 +34,10 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
 
                 for g in geography_2000s:
                     value = float(g['data']['2000'][table][k])
-                    pct = geography['xwalk'][g['geoid']]
+                    pop_pct = geography['xwalk'][g['geoid']]['POPPCT00']
+                    house_pct = geography['xwalk'][g['geoid']]['HUPCT00']
 
-                    parts.append(value * pct)
+                    parts.append(value * pop_pct)
 
                 data[table][k] = int(sum(parts))
 
