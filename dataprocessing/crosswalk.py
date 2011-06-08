@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import csv
+
 from pymongo import Connection, objectid
 
 import config
@@ -12,6 +14,15 @@ collection_2000 = db[config.GEOGRAPHIES_2000_COLLECTION]
 
 row_count = 0
 inserts = 0
+
+CROSSWALK_FIELDS_BY_TABLE = {}
+
+# Load crosswalk lookup table
+with open('sf_crosswalk_key.csv') as f:
+    reader = csv.reader(f)
+
+    for row in reader:
+        CROSSWALK_FIELDS_BY_TABLE[row[0]] = row[1]
 
 for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
     row_count += 1
@@ -29,15 +40,16 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
         for table in geography_2000s[0]['data']['2000']:
             data[table] = {}
 
+            crosswalk_field = CROSSWALK_FIELDS_BY_TABLE[table]
+
             for k, v in geography_2000s[0]['data']['2000'][table].items():
                 parts = []
 
                 for g in geography_2000s:
                     value = float(g['data']['2000'][table][k])
-                    pop_pct = geography['xwalk'][g['geoid']]['POPPCT00']
-                    house_pct = geography['xwalk'][g['geoid']]['HUPCT00']
+                    pct = geography['xwalk'][g['geoid']][crosswalk_field]
 
-                    parts.append(value * pop_pct)
+                    parts.append(value * pct)
 
                 data[table][k] = int(sum(parts))
 
