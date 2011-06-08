@@ -160,7 +160,6 @@ class TestTracts(unittest.TestCase):
         """
         Verify that a merged tract is crosswalked correctly.
 
-        TODO - test delta / pct_change
         TODO - test housing
         """
         # Verify that the first dissolved tract no longer exists
@@ -176,7 +175,7 @@ class TestTracts(unittest.TestCase):
         merged_pop_2000 = tract1_pop_2000 + tract2_pop_2010
         merged_pop_2010 = 6131
         merged_pop_delta = merged_pop_2010 - merged_pop_2000
-        merged_pop_pct_change = merged_pop_delta / merged_pop_2000
+        merged_pop_pct_change = float(merged_pop_delta) / merged_pop_2000
 
         # Verify that the merged tract is correct
         merged_tract = self.geographies.find({ 'geoid': '10001043300' })
@@ -189,8 +188,8 @@ class TestTracts(unittest.TestCase):
 
         self.assertEqual(merged_tract['data']['2000']['P1']['P0010001'], merged_pop_2000)
         self.assertEqual(merged_tract['data']['2010']['P1']['P0010001'], merged_pop_2010)
-        self.assertEqual(merged_tract['data']['delta']['P1']['P0010001'], merged_pop_delta)
-        self.assertEqual(merged_tract['data']['pct_change']['P1']['P0010001'], merged_pop_pct_change)
+        self.assertEqual(float(merged_tract['data']['delta']['P1']['P0010001']), merged_pop_delta)
+        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['P1']['P0010001']), merged_pop_pct_change)
 
 class TestLabels(unittest.TestCase):
     def setUp(self):
