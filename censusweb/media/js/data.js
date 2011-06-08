@@ -1,5 +1,4 @@
 $(function(){
-    var dataset = "PL";
     var report_template = _.template($('#report-template').html());
 
     removeColumn = function() {
@@ -73,7 +72,7 @@ $(function(){
     }
 
     window.loadLabels = function() {
-        apiRequest(dataset + "_labels.jsonp", "labels_" + dataset, function(labels_data) {
+        apiRequest(window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, function(labels_data) {
             window.labels_data = labels_data;
             window.geoids = parseGeoids();
             //var tables = parseTables();

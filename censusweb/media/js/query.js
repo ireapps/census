@@ -86,7 +86,7 @@ $(function(){
             this.mappings.summarylevelDisplays[SUMLEV_STATE] = 'States';
             this.mappings.summarylevelDisplays[SUMLEV_NATION] = 'USA';
 
-            $.ajax(API_URL + "states.jsonp", {
+            $.ajax(API_URL + "/states.jsonp", {
                 dataType: "jsonp",
                 jsonpCallback: "states",
                 success: function(states) {
@@ -281,7 +281,7 @@ $(function(){
         },
 
         loadCounties: function() {
-            $.ajax(API_URL + 'counties_' + this.get(SUMLEV_STATE) + '.jsonp', {
+            $.ajax(API_URL + '/counties_' + this.get(SUMLEV_STATE) + '.jsonp', {
                 dataType: "jsonp",
                 jsonpCallback: "counties_" + this.get(SUMLEV_STATE),
                 success: _.bind(function(response) {
@@ -292,7 +292,7 @@ $(function(){
         },
 
         loadPlaces: function() {
-            $.ajax(API_URL + 'places_' + this.get(SUMLEV_STATE) + '.jsonp', {
+            $.ajax(API_URL + '/places_' + this.get(SUMLEV_STATE) + '.jsonp', {
                 dataType: "jsonp",
                 jsonpCallback: "places_" + this.get(SUMLEV_STATE),
                 success: _.bind(function(response) {
@@ -303,7 +303,7 @@ $(function(){
         },
 
         loadTracts: function() {
-            $.ajax(API_URL + 'tracts_' + this.get(SUMLEV_COUNTY) + '.jsonp', {
+            $.ajax(API_URL + '/tracts_' + this.get(SUMLEV_COUNTY) + '.jsonp', {
                 dataType: "jsonp",
                 jsonpCallback: "tracts_" + this.get(SUMLEV_COUNTY),
                 success: _.bind(function(response) {

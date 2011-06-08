@@ -10,7 +10,7 @@ from boundaryservice.models import Boundary
 
 import csv
 import help_text
-import mongoutils # TODO: factor out
+import mongoutils
 import utils
 from datetime import datetime
 
@@ -27,22 +27,21 @@ def data(request, geoids):
     return render_to_response('data.html', { 'settings': settings }, context_instance=RequestContext(request))
 
 def download_data_for_region(request, sumlev='', containerlev='', container='', datatype=''):
-    # TODO - reimplement
     if sumlev == '140' and containerlev == '040':
-        geo_list = mongoutils.get_tracts_by_state(container)
+        geo_list = utils.fetch_tracts_by_state(container)
     elif sumlev == '140' and containerlev == '050':
-        geo_list = mongoutils.get_tracts_by_county(container)
+        geo_list = utils.fetch_tracts_by_county(container)
     elif sumlev == '160' and containerlev == '040':
-        geo_list = mongoutils.get_places_by_state(container)
+        geo_list = utils.fetch_places_by_state(container)
     elif sumlev == '050' and containerlev == '040':
-        geo_list = mongoutils.get_counties_by_state(container)
+        geo_list = utils.fetch_counties_by_state(container)
 
     geoids = ','.join([g[1] for g in geo_list])
 
     if datatype == 'csv':
-        return data_as_csv(request,geoids)
+        return data_as_csv(request, geoids)
     elif datatype == 'json':
-        return data_as_json(request,geoids)
+        return data_as_json(request, geoids)
 
 def data_as_json(request, geoids):
     geographies = {}

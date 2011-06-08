@@ -126,7 +126,9 @@ CACHE_BACKEND="dummy:///"
 LABELS_DB = 'census_labels'
 LABELS_COLLECTION = 'labels'
 
-API_URL = 'http://s3.amazonaws.com/census-test/' 
+# Application settings
+DATASET = 'PL'
+API_URL = 'http://s3.amazonaws.com/census-test' 
 
 TEST_RUNNER='api.tests.TestRunner'
 
