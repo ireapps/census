@@ -42,6 +42,10 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
 
             crosswalk_field = CROSSWALK_FIELDS_BY_TABLE[table]
 
+            # Table contains medians or other values that can't be crosswalked
+            if not crosswalk_field:
+                continue
+
             for k, v in geography_2000s[0]['data']['2000'][table].items():
                 parts = []
 

@@ -26,7 +26,10 @@ if FILENAME == 'FAKE':
         if 'xwalk' not in geography:
             geography['xwalk'] = {} 
 
-        geography['xwalk'][geography['geoid']] = 1.0
+        geography['xwalk'][geography['geoid']] = {
+            'POPPCT00': 1.0,
+            'HUPCT00': 1.0
+        }
 
         collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }, safe=True) 
         row_count += 1
