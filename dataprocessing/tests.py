@@ -114,7 +114,10 @@ class TestTracts(unittest.TestCase):
 
     def test_tract_split(self):
         """
-        Verify that a split tract is calculate correctly.
+        Verify that a split tract is crosswalked correctly.
+
+        TODO - test delta / pct_change
+        TODO - test housing
         """
         # Check that split tract does not exist in 2010
         split_tract = self.geographies.find({ 'geoid': '10003013902' })
@@ -152,6 +155,38 @@ class TestTracts(unittest.TestCase):
         # Verify that no other tracts got crosswalk allocations from the split tract
         allocated = self.geographies.find({ 'xwalk.10003013902': { '$exists': True } })
         self.assertEqual(allocated.count(), 2)
+
+    def test_tract_merged(self):
+        """
+        Verify that a merged tract is crosswalked correctly.
+
+        TODO - test delta / pct_change
+        TODO - test housing
+        """
+        # Verify that the first dissolved tract no longer exists
+        tract1 = self.geographies.find({ 'geoid': '10001040600' })
+        self.assertEqual(tract1.count(), 0)
+
+        tract2 = self.geographies.find({ 'geoid': '10001040800' })
+        self.assertEqual(tract2.count(), 0)
+
+        # Compute crosswalked values
+        tract1_pop_2000 = 2380 
+        tract2_pop_2010 = 2770
+        merged_pop_2000 = tract1_pop_2000 + tract2_pop_2010
+        merged_pop_2010 = 6131
+
+        # Verify that the merged tract is correct
+        merged_tract = self.geographies.find({ 'geoid': '10001043300' })
+        self.assertEqual(merged_tract.count(), 1)        
+        merged_tract = merged_tract[0]
+
+        self.assertEqual(len(merged_tract['xwalk']), 2)
+        self.assertEqual(merged_tract['xwalk']['10001040600'], 1.0)
+        self.assertEqual(merged_tract['xwalk']['10001040800'], 1.0)
+
+        self.assertEqual(merged_tract['data']['2000']['P1']['P0010001'], merged_pop_2000)
+        self.assertEqual(merged_tract['data']['2010']['P1']['P0010001'], merged_pop_2010)
 
 class TestLabels(unittest.TestCase):
     def setUp(self):
