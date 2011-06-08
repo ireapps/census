@@ -116,7 +116,6 @@ class TestTracts(unittest.TestCase):
         """
         Verify that a split tract is crosswalked correctly.
 
-        TODO - test delta / pct_change
         TODO - test housing
         """
         # Check that split tract does not exist in 2010
@@ -133,10 +132,14 @@ class TestTracts(unittest.TestCase):
         tract1_pop_pct = 0.3904
         tract1_pop_2000 = int(tract1_pop_pct * split_tract_pop_2000)
         tract1_pop_2010 = 4983 
+        tract1_pop_delta = tract1_pop_2010 - tract1_pop_2000
+        tract1_pop_pct_change = float(tract1_pop_delta) / tract1_pop_2000
 
         self.assertAlmostEqual(tract1['xwalk']['10003013902'], tract1_pop_pct, places=4)
         self.assertAlmostEqual(tract1['data']['2000']['P1']['P0010001'], tract1_pop_2000)
         self.assertAlmostEqual(tract1['data']['2010']['P1']['P0010001'], tract1_pop_2010)
+        self.assertAlmostEqual(float(tract1['data']['delta']['P1']['P0010001']), tract1_pop_delta)
+        self.assertAlmostEqual(float(tract1['data']['pct_change']['P1']['P0010001']), tract1_pop_pct_change)
 
         # Validate second new part from the split tract
         # Tract 139.04
@@ -146,11 +149,15 @@ class TestTracts(unittest.TestCase):
 
         tract2_pop_pct = 0.6096
         tract2_pop_2000 = int(tract2_pop_pct * split_tract_pop_2000)
-        tract2_pop_2010 = 7780 
+        tract2_pop_2010 = 7780
+        tract2_pop_delta = tract2_pop_2010 - tract2_pop_2000
+        tract2_pop_pct_change = float(tract2_pop_delta) / tract2_pop_2000 
         
         self.assertAlmostEqual(tract2['xwalk']['10003013902'], tract2_pop_pct, places=4)
         self.assertAlmostEqual(tract2['data']['2000']['P1']['P0010001'], tract2_pop_2000)
         self.assertAlmostEqual(tract2['data']['2010']['P1']['P0010001'], tract2_pop_2010)
+        self.assertAlmostEqual(float(tract2['data']['delta']['P1']['P0010001']), tract2_pop_delta)
+        self.assertAlmostEqual(float(tract2['data']['pct_change']['P1']['P0010001']), tract2_pop_pct_change)
 
         # Verify that no other tracts got crosswalk allocations from the split tract
         allocated = self.geographies.find({ 'xwalk.10003013902': { '$exists': True } })
