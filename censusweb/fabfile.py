@@ -34,11 +34,11 @@ def production():
     """
     #TKTK
     env.settings = 'production'
-    env.hosts = ['db.censusweb.ire.org']
+    env.hosts = ['census.ire.org']
     env.user = 'ubuntu'
-    env.s3_bucket = 'media.censusweb.ire.org'
-    env.site_domain = 'censusweb.censusweb.ire.org'    
-    env.cache_server = 'db.censusweb.ire.org'
+    env.s3_bucket = 'media.census.ire.org'
+    env.site_domain = 'census.ire.org'    
+    env.cache_server = 'census.ire.org'
 
 def staging():
     """
