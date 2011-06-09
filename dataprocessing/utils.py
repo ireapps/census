@@ -16,6 +16,9 @@ def geoid_state(r):
 def geoid_county(r):
     return r['STATE'] + r['COUNTY']
 
+def geoid_county_subdivision(r):
+    return r['STATE'] + r['COUNTY'] + r['COUSUB']
+
 def geoid_tract(r):
     return r['STATE'] + r['COUNTY'] + r['TRACT']
 
@@ -29,6 +32,7 @@ GEOID_COMPUTERS = {
     config.SUMLEV_NATION: geoid_nation,
     config.SUMLEV_STATE: geoid_state,
     config.SUMLEV_COUNTY: geoid_county,
+    config.SUMLEV_COUNTY_SUBDIVISION: geoid_county_subdivision,
     config.SUMLEV_TRACT: geoid_tract,
     config.SUMLEV_PLACE: geoid_place,
     config.SUMLEV_BLOCK: geoid_block,

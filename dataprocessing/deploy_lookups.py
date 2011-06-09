@@ -33,6 +33,11 @@ counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 
 counties = [(c['metadata']['NAME'], c['geoid']) for c in counties]
 push('counties_%s' % state, counties)
 
+print 'Deploying counties subdivisions lookup'
+county_subdivisions = collection.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISIONS }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY_SUBDIVISION'], sort=[('metadata.NAME', 1)]) 
+county_subdivisions = [(c['metadata']['NAME'], c['geoid']) for c in county_subdivisions]
+push('county_subdivisions_%s' % state, county_subdivisions)
+
 print 'Deploying places lookup'
 places = collection.find({ 'sumlev': config.SUMLEV_PLACE }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', 1)]) 
 places = [(c['metadata']['NAME'], c['geoid']) for c in places]
