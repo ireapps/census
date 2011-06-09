@@ -46,7 +46,10 @@ $(function(){
 
             if ( ! this.browser_view ) {
                 var m = new Backbone.Model({'table_ids': show_ids})
-                this.browser_view = new Browser({model: m})
+                this.browser_view = new Browser({ model: m })
+            } else {
+                this.browser_view.model.set({'table_ids': show_ids});
+                this.browser_view.render();
             }
 
             $("#ajax-loader").hide();
@@ -67,11 +70,12 @@ $(function(){
             this.model.bind('change', function(model) {
                 var table_ids = model.get('table_ids').join(',')
                 $.cookie('show_tables', table_ids)
-                window.location.hash = table_ids 
+                window.location.hash = table_ids
             })
             this.render()
             $('#container').before(this.el)
             $('#toggle-browser').click(this.toggleBrowser);
+            $('#default-tables').click(this.defaultTables);
             this.toggleBrowser();
         },
 
@@ -109,6 +113,10 @@ $(function(){
                 $('#toggle-browser').text('Hide table browser')
                 $('#container').addClass('with-browser');
             }
+        },
+
+        defaultTables: function() {
+            window.location.hash = window.DEFAULT_TABLES;
         }
     })
 })
