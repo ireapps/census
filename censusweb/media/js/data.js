@@ -1,7 +1,7 @@
 $(function(){
     var report_template = _.template($('#report-template').html());
 
-    removeColumn = function() {
+    window.removeColumn = function() {
         geoid = $(this).attr('data-val');
         if (document.location.pathname.indexOf('/' + geoid) > 0) {
             document.location.pathname = document.location.pathname.replace(geoid + ',', '');
@@ -10,14 +10,14 @@ $(function(){
         }
     }
     
-    twistRow = function() {
+    window.twistRow = function() {
         var show_child = !$($('tr[parent=' + $(this).attr('id') + ']')[0]).is(":visible");
         twistRowHelper($(this), show_child);
         $(this).toggleClass('closed')
         $(this).toggleClass('open');
     }
     
-    twistRowHelper = function(parent_row, show_me) {
+    window.twistRowHelper = function(parent_row, show_me) {
         $.each($('tr[parent=' + $(parent_row).attr('id') + ']'), function(index, value){
             if(show_me){
                 $(value).show();
@@ -28,14 +28,14 @@ $(function(){
         });
     }
     
-    addRelatedState = function() {
+    window.addRelatedState = function() {
         this_geoid = $(this).attr('data-val');
         state_geoid = this_geoid.slice(0,2);
         
         window.location.pathname = window.location.pathname.replace('.html', "," + state_geoid + '.html');
     }
 
-    addRelatedCounty = function() {
+    window.addRelatedCounty = function() {
         this_geoid = $(this).attr('data-val');
         county_geoid = this_geoid.slice(0,5);
         
@@ -238,15 +238,15 @@ $(function(){
 
     // Add event hooks
     $('.report .button.remove-column').live("click", removeColumn);
-    $('.report tr.row').live("click", this.twistRow);
-    $('.report .button.add-related-state').live("click", this.addRelatedState);
-    $('.report .button.add-related-county').live("click", this.addRelatedCounty);
-    $('nav .csv').live("click", function () { downloadData("csv"); });
-    $('nav .json').live("click", function () { downloadData("json"); });
-    $('nav .kml').live("click", function () { downloadData("kml"); });
+    $('.report tr.row').live("click", window.twistRow);
+    $('.report .button.add-related-state').live("click", window.addRelatedState);
+    $('.report .button.add-related-county').live("click", window.addRelatedCounty);
+    $('nav .csv').live("click", function () { window.downloadData("csv"); });
+    $('nav .json').live("click", function () { window.downloadData("json"); });
+    $('nav .kml').live("click", function () { window.downloadData("kml"); });
 
     // Table mouseover row highlighting.
-    $('#report-' + table + '.report').delegate('td', 'mouseover mouseleave', function(e) {
+    $('.report').delegate('td', 'mouseover mouseleave', function(e) {
         if (e.type == 'mouseover') {
             status = ''
             $(this).addClass("selected");
