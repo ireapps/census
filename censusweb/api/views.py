@@ -83,15 +83,16 @@ def data_as_json(request, geoids):
 # --- CSV ---
 def data_as_csv(request, geoids):
     tables = get_tables_for_request(request) 
+    labelset = mongoutils.get_labelset()
 
     response = HttpResponse(mimetype="text/csv")
     w = csv.writer(response)
-    w.writerow(_csv_row_header(tables))
+    w.writerow(_csv_row_header(tables, labelset))
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
 
     for g in utils.fetch_geographies(geoids_list):
-        csvrow = _csv_row_for_geography(g, tables)
+        csvrow = _csv_row_for_geography(g, tables, labelset)
         w.writerow(csvrow)
 
     now = datetime.now()
@@ -100,13 +101,17 @@ def data_as_csv(request, geoids):
 
     return response
 
-def _csv_row_header(tables):
+def _csv_row_header(tables, labelset):
     row = ["sumlev", "geoid", "name"]
 
     for table in tables:
-        labels = mongoutils.get_labels_for_table(table)
+        # Fail gracefully if a table isn't loaded (as in test
+        try:
+            labels = labelset['tables'][table]['labels']
+        except KeyError:
+            continue
 
-        for statistic in sorted(labels['labels']):
+        for statistic in sorted(labels.keys()):
             for alternative in DATA_ALTERNATIVES:
                 if alternative == '2010':
                     row.append(statistic)
@@ -115,7 +120,7 @@ def _csv_row_header(tables):
 
     return row
     
-def _csv_row_for_geography(geography, tables):
+def _csv_row_for_geography(geography, tables, labelset):
     row = [
         geography['sumlev'],
         geography['geoid'],
@@ -123,8 +128,13 @@ def _csv_row_for_geography(geography, tables):
     ]
 
     for table in tables:
-        labels = mongoutils.get_labels_for_table(table)
-        for statistic in sorted(labels['labels']):
+        # Fail gracefully if a table isn't loaded (as in test
+        try:
+            labels = labelset['tables'][table]['labels']
+        except KeyError:
+            continue
+
+        for statistic in sorted(labels.keys()):
             for alternative in DATA_ALTERNATIVES:
                 try:
                     row.append( geography['data'][alternative][table][statistic] )
@@ -182,7 +192,7 @@ def _build_kml_context_for_template(b, j, tables, labelset):
     kml_context = { 'data': [] }
 
     for table in tables:
-        # Fail gracefully if a table isn't loaded (as in test)
+        # Fail gracefully if a table isn't loaded (as in test
         try:
             labels = labelset['tables'][table]['labels']
         except KeyError:
