@@ -78,8 +78,6 @@ $(function(){
             window.labels_data = labels_data;
             window.geoids = parseGeoids();
 
-
-
             window.tables = _.keys(labels_data["tables"])
             window.tables.sort();
 
@@ -101,6 +99,7 @@ $(function(){
                         });
 
                         // Browser handles displaying reports
+                        $("#ajax-loader").hide();
                         startBrowser();
                     }
                 });

@@ -23,6 +23,8 @@ $(function(){
                 var show_ids = window.DEFAULT_TABLES.split(','); 
             }
 
+            $("#ajax-loader").show();
+
             $("table.report").hide()
             _.each(show_ids, function(id) {
                 var report = $('#report-' + id);
@@ -46,6 +48,8 @@ $(function(){
                 var m = new Backbone.Model({'table_ids': show_ids})
                 this.browser_view = new Browser({model: m})
             }
+
+            $("#ajax-loader").hide();
         }
     })
 

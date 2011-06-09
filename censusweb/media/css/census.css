@@ -55,6 +55,20 @@ h1 {
 
 /*-------------------------------- Layout ------------------------------------*/
 
+#ajax-loader {
+    position:absolute;
+    top: 0;
+    right: 0;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+#ajax-loader img {
+    position: relative;
+    top: 3px;
+}
+
 header {
     padding: 30px 50px 25px;
     border-bottom: 1px solid #efefef;
