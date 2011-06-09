@@ -20,8 +20,7 @@ $(function(){
                 this.saveLocation($.cookie('show_tables'))
                 var show_ids = $.cookie('show_tables').split(',')
             } else {
-                // TODO
-                var show_ids = ["P1", "H1"]
+                var show_ids = window.DEFAULT_TABLES.split(','); 
             }
 
             $("table.report").hide()
@@ -34,9 +33,13 @@ $(function(){
                 // Report doesn't exist, create it
                 } else {
                     var labelset =  window.labels_data["tables"][id];
-                    var report = makeReport(id, labelset, window.geoids, window.geographies);
-                    window.renderReport(report);
-                    window.configureEvents(id);
+
+                    // Don't crash if a default table is missing (e.g. when testing)
+                    if (!_.isUndefined(labelset)) {
+                        var report = makeReport(id, labelset, window.geoids, window.geographies);
+                        window.renderReport(report);
+                        window.configureEvents(id);
+                    }
                 }
             })
 

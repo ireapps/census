@@ -49,7 +49,7 @@ def get_tables_for_request(request):
     if tables:
         tables = tables.split(",")
     else:
-        tables = mongoutils.get_tables()
+        tables = settings.DEFAULT_TABLES 
 
     return tables
 
@@ -105,6 +105,7 @@ def _csv_row_header(tables):
 
     for table in tables:
         labels = mongoutils.get_labels_for_table(table)
+
         for statistic in sorted(labels['labels']):
             for alternative in DATA_ALTERNATIVES:
                 if alternative == '2010':
