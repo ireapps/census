@@ -138,7 +138,7 @@ def data_as_kml(request, geoids,format='kml'):
 
     geoid_list = filter(lambda g: bool(g), geoids.split(','))
     boundaries = dict((b.external_id, b) for b in Boundary.objects.filter(external_id__in=geoid_list))
-    json_data = dict((j['geoid'], j) for j in mongoutils.get_geographies_list(geoid_list))
+    json_data = dict((j['geoid'], j) for j in utils.fetch_geographies(geoid_list))
     
     placemarks = [
         _create_placemark_dict(boundaries[geoid], json_data[geoid], tables) for geoid in geoid_list
@@ -182,7 +182,7 @@ def _build_kml_context_for_template(b, j, tables):
         labels = mongoutils.get_labels_for_table(table)
         for statistic in sorted(labels['labels']):
             for alternative in DATA_ALTERNATIVES:
-                print "t: %s, a: %s, s: %s" % (table, alternative, statistic)
+                #print "t: %s, a: %s, s: %s" % (table, alternative, statistic)
                 try: 
                     datum = { 'value': j['data'][alternative][table][statistic] }
                     if alternative == '2010':

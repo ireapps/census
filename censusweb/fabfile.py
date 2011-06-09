@@ -292,19 +292,11 @@ def run_unattended_batch_command(command, command_log):
     with cd(env.dataprocessing_path):
         run("source %s/bin/activate; nohup %s >> %s < /dev/null &" % (env.env_path, command, command_log))
 
-def batch_sf_2000(state, fake=''):
+def batch_sf(state, fake=''):
     """
     Kick off the SF 2000 data loader for a state.
     """
-    command = './batch_sf_2000.sh %s %s' % (state, fake)
-    loader_log = '%s/census.load.%s.log' % (env.log_path, state)
-    run_unattended_batch_command(command, loader_log)
-
-def batch_sf_2010(state, fake=''):
-    """
-    Kick off the SF 2010 data loader for a state.
-    """
-    command = './batch_sf_2010.sh %s %s' % (state, fake)
+    command = './batch_sf.sh %s %s' % (state, fake)
     loader_log = '%s/census.load.%s.log' % (env.log_path, state)
     run_unattended_batch_command(command, loader_log)
 
