@@ -4,6 +4,7 @@ $(function(){
     SUMLEV_NATION = '010';
     SUMLEV_STATE = '040';
     SUMLEV_COUNTY = '050';
+    SUMLEV_COUNTY_SUBDIVISION = '060';
     SUMLEV_TRACT = '140';
     SUMLEV_PLACE = '160';
     SUMLEV_BLOCK = '101';
@@ -83,6 +84,7 @@ $(function(){
             this.mappings.summarylevelDisplays[SUMLEV_TRACT] = 'Tracts';
             this.mappings.summarylevelDisplays[SUMLEV_PLACE] = 'Places';
             this.mappings.summarylevelDisplays[SUMLEV_COUNTY] = 'Counties';
+            this.mappings.summarylevelDisplays[SUMLEV_COUNTY_SUBDIVISION] = 'County Subdivisions';
             this.mappings.summarylevelDisplays[SUMLEV_STATE] = 'States';
             this.mappings.summarylevelDisplays[SUMLEV_NATION] = 'USA';
 
@@ -111,6 +113,7 @@ $(function(){
             $("#summarylevel-select .link").click(_.bind(this.select, this, 'summarylevel'));
             $("#state-select .link").click(_.bind(this.select, this, SUMLEV_STATE));
             $('#county-select .link').click(_.bind(this.select, this, SUMLEV_COUNTY));
+            $('#county-subdivision-select .link').click(_.bind(this.select, this, SUMLEV_COUNTY_SUBDIVISION));
             $('#place-select .link').click(_.bind(this.select, this, SUMLEV_PLACE));
             $('#tract-select .link').click(_.bind(this.select, this, SUMLEV_TRACT));
             $('.button.go').click(this.go);
@@ -141,10 +144,11 @@ $(function(){
         location: function() {
             if (!this.get('summarylevel')) return '';
 
-            if (this.get(SUMLEV_TRACT))         return this.get(SUMLEV_TRACT);
-            if (this.get(SUMLEV_PLACE))         return this.get(SUMLEV_PLACE);
-            if (this.get(SUMLEV_COUNTY))        return this.get(SUMLEV_COUNTY);
-            if (this.get(SUMLEV_STATE))         return this.get(SUMLEV_STATE);
+            if (this.get(SUMLEV_TRACT))                     return this.get(SUMLEV_TRACT);
+            if (this.get(SUMLEV_PLACE))                     return this.get(SUMLEV_PLACE);
+            if (this.get(SUMLEV_COUNTY_SUBDIVISION))        return this.get(SUMLEV_COUNTY_SUBDIVISION);
+            if (this.get(SUMLEV_COUNTY))                    return this.get(SUMLEV_COUNTY);
+            if (this.get(SUMLEV_STATE))                     return this.get(SUMLEV_STATE);
 
             return '';
         },
@@ -184,16 +188,19 @@ $(function(){
             if(level == 'summarylevel' || level == SUMLEV_STATE) {
                 delete query.attributes[SUMLEV_NATION];
                 delete query.attributes[SUMLEV_COUNTY];
+                delete query.attributes[SUMLEV_COUNTY_SUBDIVISION];
                 delete query.attributes[SUMLEV_TRACT];
                 delete query.attributes[SUMLEV_PLACE];
                 delete query.attributes[SUMLEV_BLOCK];
                 delete query.attributes[SUMLEV_NATION + 'Display'];
                 delete query.attributes[SUMLEV_COUNTY + 'Display'];
+                delete query.attributes[SUMLEV_COUNTY_SUBDIVISION + 'Display'];
                 delete query.attributes[SUMLEV_TRACT  + 'Display'];
                 delete query.attributes[SUMLEV_PLACE  + 'Display'];
                 delete query.attributes[SUMLEV_BLOCK  + 'Display'];
                 delete query.mappings['places'];
                 delete query.mappings['counties'];
+                delete query.mappings['counties_subdivisions'];
                 delete query.mappings['tracts'];
                 //the top level, reset everything
                 if(level == 'summarylevel') {
@@ -212,7 +219,7 @@ $(function(){
 
             // Remove this section to enable "go button" prompt:
             var q = window.query;
-            if (query.get('summarylevel') && query.get(query.get("summarylevel")))
+            if (this.get('summarylevel') && this.get(this.get("summarylevel")))
                 // The item we just selected is of the same type as our
                 // target datatype. We just picked the value we wanted.
                 this.go();
@@ -231,6 +238,9 @@ $(function(){
                         if(g.sumlev == SUMLEV_TRACT){
                             query.currentLevel = SUMLEV_COUNTY;
                             attrs[SUMLEV_COUNTY] = g.metadata.STATE + g.metadata.COUNTY;
+                        } else if (g.sumlev == SUMLEV_COUNTY_SUBDIVISION) {
+                            query.currentLevel = SUMLEV_COUNTY_SUBDIVISION;
+                            attrs[SUMLEV_COUNTY_SUBDIVISION] = g.metadata.STATE + g.metadata.COUNTY;
                         } else {
                             query.currentLevel = SUMLEV_STATE;
                         }
@@ -243,11 +253,13 @@ $(function(){
         loadNext: function() {
             var level = this.currentLevel;
             if (level == SUMLEV_STATE) {
-                if (_.include([SUMLEV_TRACT, SUMLEV_COUNTY], this.get('summarylevel'))) {
+                if (_.include([SUMLEV_TRACT, SUMLEV_COUNTY, SUMLEV_COUNTY_SUBDIVISION], this.get('summarylevel'))) {
                     this.loadCounties();
                 } else if (this.get('summarylevel') == SUMLEV_PLACE) {
                     this.loadPlaces();
                 }
+            } else if (level == SUMLEV_COUNTY && this.get('summarylevel') == SUMLEV_COUNTY_SUBDIVISION) {
+                this.loadCountySubdivisions();
             } else if (level == SUMLEV_COUNTY && this.get('summarylevel') == SUMLEV_TRACT) {
                 this.loadTracts();
             }
@@ -291,6 +303,17 @@ $(function(){
             });
         },
 
+        loadCountySubdivisions: function() {
+            $.ajax(API_URL + '/county_subdivisions_' + this.get(SUMLEV_COUNTY) + '.jsonp', {
+                dataType: "jsonp",
+                jsonpCallback: "county_subdivisions_" + this.get(SUMLEV_COUNTY),
+                success: _.bind(function(response) {
+                    this.mappings.county_subdivisions = response;
+                    this.render();
+                }, this)
+            });
+        },
+
         loadPlaces: function() {
             $.ajax(API_URL + '/places_' + this.get(SUMLEV_STATE) + '.jsonp', {
                 dataType: "jsonp",
@@ -317,7 +340,7 @@ $(function(){
 
         mappings: {
 
-            summarylevels: [SUMLEV_TRACT, SUMLEV_PLACE, SUMLEV_COUNTY, SUMLEV_STATE, SUMLEV_NATION],
+            summarylevels: [SUMLEV_TRACT, SUMLEV_PLACE, SUMLEV_COUNTY, SUMLEV_COUNTY_SUBDIVISION, SUMLEV_STATE, SUMLEV_NATION],
 
             summarylevelDisplays: {
                 //gets filled in during init
@@ -346,27 +369,4 @@ $(function(){
 
     query.controller = new QueryController;
     Backbone.history.start();
-
-    // Table mouseover row highlighting.
-    $(".report").delegate('td','mouseover mouseleave', function(e) {
-        if (e.type == 'mouseover') {
-            status = ''
-            $(this).addClass("selected");
-            $(this).parent().addClass("highlight");
-            status = $(this).parent().find('.label').text();
-            if ($(this).index() > 0) {
-                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight"); //column
-                status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
-                status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
-            }
-            $('#status').show().text(status);
-        } else {
-            $(this).removeClass("selected");
-            $(this).parent().removeClass('highlight');
-            if ($(this).index() > 0)
-                $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
-            $('#status').hide();
-        }
-    });
-
 });

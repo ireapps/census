@@ -46,8 +46,6 @@ except S3ResponseError:
 if CLEAR == 'CLEAR':
     states = [STATE]
 else:
-    print states
-    print STATE
     if STATE not in states:
         states.append(STATE)
 
