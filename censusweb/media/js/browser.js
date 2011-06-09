@@ -3,13 +3,13 @@ $(function(){
         reportcontroller = new ReportController
         Backbone.history.start()
         if ( !location.hash )
-            location.hash="#browser"
+            location.hash=""
     }
 
     ReportController = Backbone.Controller.extend({
         routes: {
-            "browser": "browser",
-            "browser/:set": "browser"
+            "": "browser",
+            ":set": "browser"
         },
 
         browser: function(set) {
@@ -17,7 +17,7 @@ $(function(){
             if ( set ) {
                 var show_ids = set.split(',')
             } else if($.cookie('show_tables')) {
-                this.saveLocation("browser/"+$.cookie('show_tables'))
+                this.saveLocation($.cookie('show_tables'))
                 var show_ids = $.cookie('show_tables').split(',')
             } else {
                 var show_ids = ['H1']
@@ -33,6 +33,8 @@ $(function(){
                 // Report doesn't exist, create it
                 } else {
                     var labelset =  window.labels_data["tables"][id];
+                    console.log(id);
+                    console.log(labelset);
                     var report = makeReport(id, labelset, window.geoids, window.geographies);
                     window.renderReport(report);
                     window.configureEvents(id);
@@ -60,7 +62,7 @@ $(function(){
             this.model.bind('change', function(model) {
                 var table_ids = model.get('table_ids').join(',')
                 $.cookie('show_tables', table_ids)
-                window.location.hash = "#browser/" + table_ids 
+                window.location.hash = table_ids 
             })
             this.render()
             $('#container').before(this.el)
