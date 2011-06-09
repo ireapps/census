@@ -11,7 +11,7 @@ $(function(){
     }
     
     window.twistRow = function() {
-        var show_child = !$($('tr[parent=' + $(this).attr('id') + ']')[0]).is(":visible");
+        var show_child = $(this).is('.closed');
         twistRowHelper($(this), show_child);
         $(this).toggleClass('closed')
         $(this).toggleClass('open');
@@ -25,7 +25,12 @@ $(function(){
                 $(value).hide();
             }
 
-            twistRowHelper(value, false);
+            var show_child = false;
+            if($(value).is(':visible') && $(value).is('.has-children.open')) {
+                show_child = true;
+            }
+
+            twistRowHelper(value, show_child);
         });
     }
     
