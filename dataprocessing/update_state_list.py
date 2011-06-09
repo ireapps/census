@@ -46,7 +46,10 @@ except S3ResponseError:
 if CLEAR == 'CLEAR':
     states = [STATE]
 else:
-    states.append(STATE)
+    print states
+    print STATE
+    if STATE not in states:
+        states.append(STATE)
 
 jsonp = 'states(%s)' % json.dumps(states)
 k.set_contents_from_string(zlib.compress(jsonp), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')

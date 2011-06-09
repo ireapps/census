@@ -127,7 +127,7 @@ LABELS_DB = 'census_labels'
 LABELS_COLLECTION = 'labels'
 
 # Application settings
-DATASET = 'PL'
+DATASET = 'SF'
 API_URL = 'http://s3.amazonaws.com/census-test' 
 DEFAULT_TABLES = ['P1', 'P2', 'P3', 'P5', 'P6', 'P12', 'P13', 'P29', 'P37', 'P38', 'H4', 'H5', 'H12']
 
