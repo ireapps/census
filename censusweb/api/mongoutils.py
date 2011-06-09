@@ -13,8 +13,3 @@ def get_labelset():
 
     return labelset
 
-def get_tables():
-    labels = get_labels_collection()
-    labelset = labels.find_one({ 'dataset': settings.DATASET })
-
-    return sorted(labelset['tables'].keys())
