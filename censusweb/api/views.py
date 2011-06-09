@@ -134,24 +134,26 @@ def _csv_row_for_geography(geography, tables):
     return row
 
 # --- KML ---
-def data_as_kml(request, geoids,format='kml'):
+def data_as_kml(request, geoids, format='kml'):
     tables = get_tables_for_request(request) 
 
     geoid_list = filter(lambda g: bool(g), geoids.split(','))
     boundaries = dict((b.external_id, b) for b in Boundary.objects.filter(external_id__in=geoid_list))
     json_data = dict((j['geoid'], j) for j in utils.fetch_geographies(geoid_list))
+    labelset = mongoutils.get_labelset()
     
     placemarks = [
-        _create_placemark_dict(boundaries[geoid], json_data[geoid], tables) for geoid in geoid_list
+        _create_placemark_dict(boundaries[geoid], json_data[geoid], tables, labelset) for geoid in geoid_list
     ] 
 
     if format == 'kmz':
         render = render_to_kmz
     else:
         render = render_to_kml
+
     return render('gis/kml/placemarks.kml', {'places' : placemarks})            
 
-def _create_placemark_dict(b, j, tables):
+def _create_placemark_dict(b, j, tables, labelset):
     """
     Each placemark should have a name, a description, and kml which includes <ExtraData>
     """
@@ -160,7 +162,7 @@ def _create_placemark_dict(b, j, tables):
        'description': 'Summary Level: %(sumlev)s; GeoID: %(geoid)s' % (j),
     }
 
-    kml_context = _build_kml_context_for_template(b, j, tables)
+    kml_context = _build_kml_context_for_template(b, j, tables, labelset)
     shape = b.simple_shape.transform(4326, clone=True)
     p['kml'] = shape.kml + KML_EXTENDED_DATA_TEMPLATE.render(Context(kml_context))
     
@@ -176,23 +178,34 @@ KML_EXTENDED_DATA_TEMPLATE = Template("""
   {% endfor %}
 </ExtendedData>""")
 
-def _build_kml_context_for_template(b, j, tables):
+def _build_kml_context_for_template(b, j, tables, labelset):
     kml_context = { 'data': [] }
 
     for table in tables:
-        labels = mongoutils.get_labels_for_table(table)
-        for statistic in sorted(labels['labels']):
+        # Fail gracefully if a table isn't loaded (as in test)
+        try:
+            labels = labelset['tables'][table]['labels']
+        except KeyError:
+            continue
+
+        for statistic in sorted(labels.keys()):
             for alternative in DATA_ALTERNATIVES:
                 #print "t: %s, a: %s, s: %s" % (table, alternative, statistic)
                 try: 
-                    datum = { 'value': j['data'][alternative][table][statistic] }
+                    datum = {
+                        'value': j['data'][alternative][table][statistic]
+                    }
+
                     if alternative == '2010':
                         datum['name'] = statistic
                     else:
                         datum['name'] = "%s.%s" % (statistic, alternative)
-                    datum['display_name'] = labels['labels'][statistic]['text']
+
+                    datum['display_name'] = labels[statistic]['text']
                     kml_context['data'].append(datum)
-                except KeyError: pass
+
+                except KeyError:
+                    pass
 
     return kml_context
     

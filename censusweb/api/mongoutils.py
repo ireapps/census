@@ -7,15 +7,20 @@ def get_labels_collection():
     db = connection[settings.LABELS_DB] 
     return db[settings.LABELS_COLLECTION]
 
+def get_labelset():
+    labels = get_labels_collection()
+    labelset = labels.find_one({ 'dataset': settings.DATASET })
+
+    return labelset
+
 def get_labels_for_table(table):
     labels = get_labels_collection()
-    dataset = labels.find_one({ 'dataset': settings.DATASET }, fields=['tables'])
-    print dataset
+    labelset = labels.find_one({ 'dataset': settings.DATASET })
 
-    return dataset['tables'][table]
+    return labelset['tables'][table]
 
 def get_tables():
     labels = get_labels_collection()
-    dataset = labels.find_one({ 'dataset': settings.DATASET }, fields=['tables'])
+    labelset = labels.find_one({ 'dataset': settings.DATASET })
 
-    return sorted(dataset['tables'].keys())
+    return sorted(labelset['tables'].keys())
