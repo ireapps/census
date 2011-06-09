@@ -237,10 +237,10 @@ $(function(){
     }
 
     // Add event hooks
-    $('#report-' + table + ' .button.remove-column').live("click", removeColumn);
-    $('#report-' + table + ' tr.row').live("click", this.twistRow);
-    $('#report-' + table + ' .button.add-related-state').live("click", this.addRelatedState);
-    $('#report-' + table + ' .button.add-related-county').live("click", this.addRelatedCounty);
+    $('.report .button.remove-column').live("click", removeColumn);
+    $('.report tr.row').live("click", this.twistRow);
+    $('.report .button.add-related-state').live("click", this.addRelatedState);
+    $('.report .button.add-related-county').live("click", this.addRelatedCounty);
     $('nav .csv').live("click", function () { downloadData("csv"); });
     $('nav .json').live("click", function () { downloadData("json"); });
     $('nav .kml').live("click", function () { downloadData("kml"); });
