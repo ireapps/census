@@ -1,6 +1,6 @@
 <VirtualHost *:8080>
-    ServerName censusweb.censusweb.ire.org
-    ServerAlias www.censusweb.censusweb.ire.org
+    ServerName census.ire.org
+    ServerAlias www.census.ire.org
     
     SetEnv DEPLOYMENT_TARGET production
     WSGIScriptAlias / /home/ubuntu/sites/censusweb/application.wsgi
@@ -26,8 +26,8 @@
     
     RewriteEngine on
     # canonical hostname
-    RewriteCond %{HTTP_HOST} !^censusweb.censusweb.ire.org [NC] 
-    RewriteRule ^/(.*)  http://censusweb.censusweb.ire.org/$1 [L,R]
+    RewriteCond %{HTTP_HOST} !^census.ire.org [NC] 
+    RewriteRule ^/(.*)  http://census.ire.org/$1 [L,R]
     
     RewriteCond %{REQUEST_URI} /maintenance.html$ 
     RewriteRule $ / [R=302,L]
