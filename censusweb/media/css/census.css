@@ -246,15 +246,6 @@ nav {
     background-color: #fdf4ca !important;
 }
 
-
-.report tr:last-child td {
-    border-bottom-color: #aaa;
-}
-
-.report td.last, .report th.last {
-    border-right: 1px solid #aaa;
-}
-
 .report tr.indent-0 td.label {
     font-weight: bold;
     padding-left: 25px;

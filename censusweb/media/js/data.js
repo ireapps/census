@@ -83,7 +83,6 @@ $(function(){
 
             window.tables = _.keys(labels_data["tables"])
             window.tables = _.sortBy(window.tables, function(table) {
-                console.log(table);
                 parts = table.match(/([A-Z]+)(\d+)([A-Z]+)?/);
                 
                 key = parts[1];
@@ -99,8 +98,6 @@ $(function(){
                     key += parts[3];
                 }
 
-                console.log(key);
-                
                 return key; 
             });
 
@@ -268,7 +265,7 @@ $(function(){
     $('nav .kml').live("click", function () { window.downloadData("kml"); });
 
     // Table mouseover row highlighting.
-    $('.report').delegate('td', 'mouseover mouseleave', function(e) {
+    $('.report td').live('mouseover mouseleave', function(e) {
         if (e.type == 'mouseover') {
             status = ''
             $(this).addClass("selected");
