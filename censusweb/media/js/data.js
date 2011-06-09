@@ -24,6 +24,7 @@ $(function(){
             } else {
                 $(value).hide();
             }
+
             twistRowHelper(value, false);
         });
     }
@@ -74,12 +75,34 @@ $(function(){
     }
 
     window.loadLabels = function() {
+        $("#ajax-loader").show();
+
         apiRequest("/" + window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, function(labels_data) {
             window.labels_data = labels_data;
             window.geoids = parseGeoids();
 
             window.tables = _.keys(labels_data["tables"])
-            window.tables.sort();
+            window.tables = _.sortBy(window.tables, function(table) {
+                console.log(table);
+                parts = table.match(/([A-Z]+)(\d+)([A-Z]+)?/);
+                
+                key = parts[1];
+                num = parts[2];
+                   
+                while (num.length < 3) {
+                    num = '0' + num;
+                }
+
+                key += num;
+
+                if (!_.isUndefined(parts[3])) {
+                    key += parts[3];
+                }
+
+                console.log(key);
+                
+                return key; 
+            });
 
             _.each(window.tables, function(table) {
                 $('#reports').append($('<div id="report-wrapper-' + table + '"></div>'));
