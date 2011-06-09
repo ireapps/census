@@ -63,25 +63,35 @@ $(function(){
         return geoids;
     }
 
+    window.downloadData = function(format) {
+        var url = "/data/" + window.geoids.join(",") + "." + format;
+
+        if (window.location.hash != "") {
+             url += "?tables=" + window.location.hash.substring(1);
+        }   
+
+        window.location = url;
+    }
+
     window.loadLabels = function() {
         apiRequest("/" + window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, function(labels_data) {
             window.labels_data = labels_data;
             window.geoids = parseGeoids();
 
-            window.tables = _.keys(labels_data["tables"])
-            window.tables.sort();
-
             $('nav .csv').click(function () {
-                window.location = "/data/" + geoids.join(",") + ".csv";
+                downloadData("csv");
             });
 
             $('nav .json').click(function () {
-                window.location = "/data/" + geoids.join(",") + ".json";
+                downloadData("json");
             });
 
             $('nav .kml').click(function () {
-                window.location = "/data/" + geoids.join(",") + ".kml";
+                downloadData("kml");
             });
+
+            window.tables = _.keys(labels_data["tables"])
+            window.tables.sort();
 
             _.each(window.tables, function(table) {
                 $('#reports').append($('<div id="report-wrapper-' + table + '"></div>'));

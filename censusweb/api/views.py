@@ -14,7 +14,7 @@ import mongoutils
 import utils
 from datetime import datetime
 
-DATA_ALTERNATIVES = ['2000','2010','delta','pct_change']
+DATA_ALTERNATIVES = ['2000', '2010', 'delta', 'pct_change']
 
 def homepage(request):
     return render_to_response('homepage.html', {
@@ -43,66 +43,53 @@ def download_data_for_region(request, sumlev='', containerlev='', container='', 
     elif datatype == 'json':
         return data_as_json(request, geoids)
 
+def get_tables_for_request(request):
+    tables = request.GET.get("tables", None)
+
+    if tables:
+        tables = tables.split(",")
+    else:
+        tables = mongoutils.get_tables()
+
+    return tables
+
+# --- JSON ---
 def data_as_json(request, geoids):
+    tables = get_tables_for_request(request) 
+
     geographies = {}
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
+
     for g in utils.fetch_geographies(geoids_list):
         del g['xrefs']
+
+        for table in g["data"]["2010"].keys():
+            if table not in tables:
+                del g["data"]["2010"][table]
+
+                # Not all data has 2000 values
+                try:
+                    del g["data"]["2000"][table]
+                    del g["data"]["delta"][table]
+                    del g["data"]["pct_change"][table]
+                except KeyError:
+                    continue
+
         geographies[g['geoid']] = g
         
     return HttpResponse(simplejson.dumps(geographies), mimetype='application/json')
 
-def _csv_row_header(tables=None):
-    if not tables:
-        tables_list = mongoutils.get_tables()
-    else:
-        tables_list = tables
-
-    row = ["sumlev", "geoid", "name"]
-    for table in tables_list:
-        labels = mongoutils.get_labels_for_table(table)
-        for statistic in sorted(labels['labels']):
-            for alternative in DATA_ALTERNATIVES:
-                if alternative == '2010':
-                    row.append(statistic)
-                else:
-                    row.append("%s.%s" % (statistic,alternative))
-
-    return row
-    
-def _csv_row_for_geography(geography, tables=None):
-    if not tables:
-        tables_list = mongoutils.get_tables()
-    else:
-        tables_list = tables
-
-    row = [
-        geography['sumlev'],
-        geography['geoid'],
-        geography['metadata']['NAME']
-    ]
-    for table in tables_list:
-        labels = mongoutils.get_labels_for_table(table)
-        for statistic in sorted(labels['labels']):
-            for alternative in DATA_ALTERNATIVES:
-                try:
-                    row.append( geography['data'][alternative][table][statistic] )
-                except KeyError:
-                    row.append('')
-
-    return row
-
+# --- CSV ---
 def data_as_csv(request, geoids):
-    tables = request.GET.get("tables", None)
-    if tables:
-        tables = tables.split(",")
+    tables = get_tables_for_request(request) 
 
     response = HttpResponse(mimetype="text/csv")
     w = csv.writer(response)
     w.writerow(_csv_row_header(tables))
 
     geoids_list = filter(lambda g: bool(g), geoids.split(','))
+
     for g in utils.fetch_geographies(geoids_list):
         csvrow = _csv_row_for_geography(g, tables)
         w.writerow(csvrow)
@@ -113,15 +100,48 @@ def data_as_csv(request, geoids):
 
     return response
 
+def _csv_row_header(tables):
+    row = ["sumlev", "geoid", "name"]
 
-# --- KML BEGIN ---
+    for table in tables:
+        labels = mongoutils.get_labels_for_table(table)
+        for statistic in sorted(labels['labels']):
+            for alternative in DATA_ALTERNATIVES:
+                if alternative == '2010':
+                    row.append(statistic)
+                else:
+                    row.append("%s.%s" % (statistic,alternative))
+
+    return row
+    
+def _csv_row_for_geography(geography, tables):
+    row = [
+        geography['sumlev'],
+        geography['geoid'],
+        geography['metadata']['NAME']
+    ]
+
+    for table in tables:
+        labels = mongoutils.get_labels_for_table(table)
+        for statistic in sorted(labels['labels']):
+            for alternative in DATA_ALTERNATIVES:
+                try:
+                    row.append( geography['data'][alternative][table][statistic] )
+                except KeyError:
+                    row.append('')
+
+    return row
+
+# --- KML ---
 def data_as_kml(request, geoids,format='kml'):
+    tables = get_tables_for_request(request) 
+
     geoid_list = filter(lambda g: bool(g), geoids.split(','))
-    boundaries = dict((b.external_id,b) for b in Boundary.objects.filter(external_id__in=geoid_list))
-    json_data = dict((j['geoid'],j) for j in mongoutils.get_geographies_list(geoid_list))
+    boundaries = dict((b.external_id, b) for b in Boundary.objects.filter(external_id__in=geoid_list))
+    json_data = dict((j['geoid'], j) for j in mongoutils.get_geographies_list(geoid_list))
     
     placemarks = [
-        _create_placemark_dict(boundaries[geoid],json_data[geoid]) for geoid in geoid_list
+        _create_placemark_dict(boundaries[geoid], json_data[geoid], tables) for geoid in geoid_list
     ] 
 
     if format == 'kmz':
@@ -130,20 +150,17 @@ def data_as_kml(request, geoids,format='kml'):
         render = render_to_kml
     return render('gis/kml/placemarks.kml', {'places' : placemarks})            
 
-def _create_placemark_dict(b,j,tables=None):
-    """each thing should have a name, a description, and kml which includes <ExtraData>"""
+def _create_placemark_dict(b, j, tables):
+    """
+    Each placemark should have a name, a description, and kml which includes <ExtraData>
+    """
     p = {
        'name': b.display_name,
        'description': 'Summary Level: %(sumlev)s; GeoID: %(geoid)s' % (j),
     }
 
-    if not tables:
-        tables_list = mongoutils.get_tables()
-    else:
-        tables_list = tables
-
-    kml_context = _build_kml_context_for_template(b,j,tables_list)
-    shape = b.simple_shape.transform(4326,clone=True)
+    kml_context = _build_kml_context_for_template(b, j, tables)
+    shape = b.simple_shape.transform(4326, clone=True)
     p['kml'] = shape.kml + KML_EXTENDED_DATA_TEMPLATE.render(Context(kml_context))
     
     return p
@@ -158,9 +175,10 @@ KML_EXTENDED_DATA_TEMPLATE = Template("""
   {% endfor %}
 </ExtendedData>""")
 
-def _build_kml_context_for_template(b,j,tables_list):
+def _build_kml_context_for_template(b, j, tables):
     kml_context = { 'data': [] }
-    for table in tables_list:
+
+    for table in tables:
         labels = mongoutils.get_labels_for_table(table)
         for statistic in sorted(labels['labels']):
             for alternative in DATA_ALTERNATIVES:
@@ -170,10 +188,10 @@ def _build_kml_context_for_template(b,j,tables_list):
                     if alternative == '2010':
                         datum['name'] = statistic
                     else:
-                        datum['name'] = "%s.%s" % (statistic,alternative)
+                        datum['name'] = "%s.%s" % (statistic, alternative)
                     datum['display_name'] = labels['labels'][statistic]['text']
                     kml_context['data'].append(datum)
                 except KeyError: pass
+
     return kml_context
     
-# --- KML END ---

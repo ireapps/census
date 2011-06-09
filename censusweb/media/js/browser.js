@@ -20,7 +20,8 @@ $(function(){
                 this.saveLocation($.cookie('show_tables'))
                 var show_ids = $.cookie('show_tables').split(',')
             } else {
-                var show_ids = ['H1']
+                // TODO
+                var show_ids = ["P1", "H1"]
             }
 
             $("table.report").hide()
@@ -33,8 +34,6 @@ $(function(){
                 // Report doesn't exist, create it
                 } else {
                     var labelset =  window.labels_data["tables"][id];
-                    console.log(id);
-                    console.log(labelset);
                     var report = makeReport(id, labelset, window.geoids, window.geographies);
                     window.renderReport(report);
                     window.configureEvents(id);
