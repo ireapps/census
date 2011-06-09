@@ -38,7 +38,6 @@ $(function(){
                     if (!_.isUndefined(labelset)) {
                         var report = makeReport(id, labelset, window.geoids, window.geographies);
                         window.renderReport(report);
-                        window.configureEvents(id);
                     }
                 }
             })

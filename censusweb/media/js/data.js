@@ -78,17 +78,7 @@ $(function(){
             window.labels_data = labels_data;
             window.geoids = parseGeoids();
 
-            $('nav .csv').click(function () {
-                downloadData("csv");
-            });
 
-            $('nav .json').click(function () {
-                downloadData("json");
-            });
-
-            $('nav .kml').click(function () {
-                downloadData("kml");
-            });
 
             window.tables = _.keys(labels_data["tables"])
             window.tables.sort();
@@ -246,35 +236,36 @@ $(function(){
         $('#report-wrapper-' + report["key"]).append(html);
     }
 
-    window.configureEvents = function(table) {
-        // Add event hooks
-        $('#report-' + table + ' .button.remove-column').click(removeColumn);
-        $('#report-' + table + ' tr.row').click(this.twistRow);
-        $('#report-' + table + ' .button.add-related-state').click(this.addRelatedState);
-        $('#report-' + table + ' .button.add-related-county').click(this.addRelatedCounty);
+    // Add event hooks
+    $('#report-' + table + ' .button.remove-column').live("click", removeColumn);
+    $('#report-' + table + ' tr.row').live("click", this.twistRow);
+    $('#report-' + table + ' .button.add-related-state').live("click", this.addRelatedState);
+    $('#report-' + table + ' .button.add-related-county').live("click", this.addRelatedCounty);
+    $('nav .csv').live("click", function () { downloadData("csv"); });
+    $('nav .json').live("click", function () { downloadData("json"); });
+    $('nav .kml').live("click", function () { downloadData("kml"); });
 
-        // Table mouseover row highlighting.
-        $('#report-' + table + '.report').delegate('td', 'mouseover mouseleave', function(e) {
-            if (e.type == 'mouseover') {
-                status = ''
-                $(this).addClass("selected");
-                $(this).parent().addClass("highlight");
-                status = $(this).parent().find('.label').text();
-                if ($(this).index() > 0) {
-                    $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight"); //column
-                    status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
-                    status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
-                }
-                $('#status').show().text(status);
-            } else {
-                $(this).removeClass("selected");
-                $(this).parent().removeClass('highlight');
-                if ($(this).index() > 0)
-                    $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
-                $('#status').hide();
+    // Table mouseover row highlighting.
+    $('#report-' + table + '.report').delegate('td', 'mouseover mouseleave', function(e) {
+        if (e.type == 'mouseover') {
+            status = ''
+            $(this).addClass("selected");
+            $(this).parent().addClass("highlight");
+            status = $(this).parent().find('.label').text();
+            if ($(this).index() > 0) {
+                $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight"); //column
+                status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
+                status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
             }
-        });
-    }
+            $('#status').show().text(status);
+        } else {
+            $(this).removeClass("selected");
+            $(this).parent().removeClass('highlight');
+            if ($(this).index() > 0)
+                $("colgroup", $(this).parents("table")).eq($(this).index()).removeClass("highlight");
+            $('#status').hide();
+        }
+    });
 
     // Kick-off
     loadLabels();
