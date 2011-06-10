@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from StringIO import StringIO
+import gzip
 import re
 
 import config
@@ -59,3 +61,20 @@ def xref_from_row_dict(d):
         'STUSAB': d.pop('STUSAB'),
         'LOGRECNO': d.pop('LOGRECNO')
     }
+
+def gzip_data(d):
+    s = StringIO()
+    gz = gzip.GzipFile(fileobj=s, mode='wb')
+    gz.write(d)
+    gz.close()
+
+    return s.getvalue()
+
+def gunzip_data(d):
+    s = StringIO(d)
+    gz = gzip.GzipFile(fileobj=s, mode='rb')
+    
+    content = gz.read()
+    gz.close()
+
+    return content

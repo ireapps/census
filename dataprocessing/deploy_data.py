@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from StringIO import StringIO
-import gzip
 import json
 
 from boto.s3.connection import S3Connection
@@ -9,6 +7,7 @@ from boto.s3.key import Key
 from pymongo import Connection
 
 import config
+import utils
 
 connection = Connection()
 db = connection[config.CENSUS_DB]
@@ -28,15 +27,9 @@ for geography in collection.find():
     k = Key(bucket)
     k.key = '%(geoid)s.jsonp' % geography
     jsonp = 'geoid_%s(%s)' % (geography['geoid'], json.dumps(geography))
+    compressed = utils.gzip_data(jsonp)
 
-    s = StringIO()
-    gz = gzip.GzipFile(fileobj=s, mode='wb')
-    gz.write(jsonp)
-    gz.close()
-
-    k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy='public-read')
-
-    s.close()
+    k.set_contents_from_string(compressed, headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy='public-read')
 
     if row_count % 100 == 0:
         print 'Deployed %i...' % row_count

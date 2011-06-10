@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from StringIO import StringIO
-import gzip
 import json
 import sys
 
@@ -11,6 +9,7 @@ from boto.s3.key import Key
 from pymongo import Connection
 
 import config
+import utils
 
 STATE = sys.argv[1]
 try: CLEAR = sys.argv[2]
@@ -36,10 +35,8 @@ try:
     if not data:
         raise S3ResponseError()
     
-    s = StringIO(data)
-
     # Strip off jsonp wrapper
-    contents = gzip.GzipFile(fileobj=s, mode='rb').read()
+    contents = utils.gunzip_data(data)
     data = contents[7:-1]
 
     states = json.loads(data)
@@ -53,13 +50,7 @@ else:
         states.append(STATE)
 
 jsonp = 'states(%s)' % json.dumps(states)
+compressed = utils.gzip_data(jsonp)
 
-s = StringIO()
-gz = gzip.GzipFile(fileobj=s, mode='wb')
-gz.write(jsonp)
-gz.close()
-
-k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/json' }, policy='public-read')
-
-s.close()
+k.set_contents_from_string(compressed, headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/json' }, policy='public-read')
 
