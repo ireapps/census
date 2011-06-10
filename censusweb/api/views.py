@@ -27,14 +27,19 @@ def data(request, geoids):
     return render_to_response('data.html', { 'settings': settings }, context_instance=RequestContext(request))
 
 def download_data_for_region(request, sumlev='', containerlev='', container='', datatype=''):
+    print sumlev, containerlev
     if sumlev == '140' and containerlev == '040':
         geo_list = utils.fetch_tracts_by_state(container)
     elif sumlev == '140' and containerlev == '050':
         geo_list = utils.fetch_tracts_by_county(container)
+    elif sumlev == '060' and containerlev == '050':
+        geo_list = utils.fetch_county_subdivisions_by_county(container)
     elif sumlev == '160' and containerlev == '040':
         geo_list = utils.fetch_places_by_state(container)
     elif sumlev == '050' and containerlev == '040':
         geo_list = utils.fetch_counties_by_state(container)
+    elif sumlev == '060' and containerlev == '040':
+        geo_list = utils.fetch_county_subdivisions_by_state(container)
 
     geoids = ','.join([g[1] for g in geo_list])
 

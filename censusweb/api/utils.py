@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import simplejson
-import zlib
 
 from django.conf import settings
 import requests
@@ -11,26 +10,38 @@ def strip_callback(data):
 
 def _api_fetch(url):
     r = requests.get(url)
-    content = strip_callback(zlib.decompress(r.content))
+    content = strip_callback(r.content)
     return simplejson.loads(content)
 
-def fetch_tracts_by_state(geoid):
-    url = '%s/tracts_%s.jsonp' % (settings.API_URL, geoid)
+def fetch_tracts_by_state(state):
+    url = '%s/%s/tracts.jsonp' % (settings.API_URL, state)
     return _api_fetch(url)
 
-def fetch_tracts_by_county(geoid):
-    url = '%s/tracts_%s.jsonp' % (settings.API_URL, geoid)
+def fetch_tracts_by_county(county):
+    state = county[0:2]
+    url = '%s/%s/tracts_%s.jsonp' % (settings.API_URL, state, county)
     return _api_fetch(url)
 
-def fetch_counties_by_state(geoid):
-    url = '%s/counties_%s.jsonp' % (settings.API_URL, geoid)
+def fetch_county_subdivisions_by_county(county):
+    state = county[0:2]
+    url = '%s/%s/county_subdivisions_%s.jsonp' % (settings.API_URL, state, county)
     return _api_fetch(url)
 
-def fetch_places_by_state(geoid):
-    url = '%s/places_%s.jsonp' % (settings.API_URL, geoid)
+def fetch_counties_by_state(state):
+    url = '%s/%s/counties.jsonp' % (settings.API_URL, state)
     return _api_fetch(url)
+
+def fetch_county_subdivisions_by_state(state):
+    url = '%s/%s/county_subdivisions.jsonp' % (settings.API_URL, state)
+    return _api_fetch(url)
+
+def fetch_places_by_state(state):
+    url = '%s/%s/places.jsonp' % (settings.API_URL, state)
+    return _api_fetch(url)
+
 def fetch_geography(geoid):
-    url = '%s/%s.jsonp' % (settings.API_URL, geoid)
+    state = geoid[0:2]
+    url = '%s/%s/%s.jsonp' % (settings.API_URL, state, geoid)
     return _api_fetch(url)
 
 def fetch_geographies(geoids):

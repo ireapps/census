@@ -35,6 +35,11 @@ counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 
 counties = [(c['metadata']['NAME'], c['geoid']) for c in counties]
 push(state, 'counties', counties)
 
+print 'Deploying county subdivisions lookup'
+county_subdivisions = collection.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISION }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY_SUBDIVISION'], sort=[('metadata.NAME', 1)]) 
+county_subdivisions = [(c['metadata']['NAME'], c['geoid']) for c in county_subdivisions]
+push(state, 'county_subdivisions', county_subdivisions)
+
 print 'Deploying places lookup'
 places = collection.find({ 'sumlev': config.SUMLEV_PLACE }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', 1)]) 
 places = [(c['metadata']['NAME'], c['geoid']) for c in places]
@@ -42,9 +47,16 @@ push(state, 'places', places)
 
 counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY'], sort=[('metadata.NAME', 1)]) 
 
+print 'Deploying tracts lookup'
+tracts = collection.find({ 'sumlev': config.SUMLEV_TRACT }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', 1)]) 
+tracts = [(c['metadata']['NAME'], c['geoid']) for c in tracts]
+push(state, 'tracts', tracts)
+
+counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY'], sort=[('metadata.NAME', 1)]) 
+
 for county in counties:
     print 'Deploying county subdivisions lookup for %s' % county['metadata']['NAME']
-    county_subdivisions = collection.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISION }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY_SUBDIVISION'], sort=[('metadata.NAME', 1)]) 
+    county_subdivisions = collection.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISION, 'metadata.COUNTY': county['metadata']['COUNTY'] }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY_SUBDIVISION'], sort=[('metadata.NAME', 1)]) 
     county_subdivisions = [(c['metadata']['NAME'], c['geoid']) for c in county_subdivisions]
     push(state, 'county_subdivisions_%s' % county['geoid'], county_subdivisions)
 

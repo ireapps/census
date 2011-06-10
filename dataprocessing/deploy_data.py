@@ -25,7 +25,7 @@ for geography in collection.find():
     del geography['_id']
 
     k = Key(bucket)
-    k.key = '%(geoid)s.jsonp' % geography
+    k.key = '%s/%s.jsonp' % (geography['metadata']['STATE'], geography['geoid'])
     jsonp = 'geoid_%s(%s)' % (geography['geoid'], json.dumps(geography))
     compressed = utils.gzip_data(jsonp)
 
