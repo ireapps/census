@@ -15,6 +15,9 @@ STATE_FIPS = sys.argv[2]
 c = S3Connection()
 bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
 
-for k in bucket.list('%s/' % STATE_FIPS):
+for i, k in enumerate(bucket.list('%s/' % STATE_FIPS)):
     k.make_public()
+    
+    if i % 100 == 0:
+        print 'Processed %i...' % i
 
