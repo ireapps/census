@@ -160,6 +160,7 @@ def deploy():
     gzip_assets()
     deploy_to_s3()
     maintenance_down()
+    clear_cache()
     
 def maintenance_up():
     """
