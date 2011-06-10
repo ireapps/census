@@ -26,8 +26,8 @@ ENVIRONMENT=$1
 ./compute_deltas_pl.py 10
 
 ./deploy_data.py $ENVIRONMENT 
-./make_data_public.py $ENVIRONMENT 10
 ./deploy_lookups.py $ENVIRONMENT
 ./update_state_list.py $ENVIRONMENT Delaware CLEAR
+./make_state_public.py $ENVIRONMENT Delaware
 
 ./tests.py

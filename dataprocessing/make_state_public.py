@@ -5,12 +5,13 @@ import sys
 from boto.s3.connection import S3Connection
 
 import config
+import get_state_fips
 
 if len(sys.argv) < 3:
-    sys.exit('You must "staging" or "production" and a state fips code as arguments to this script.')
+    sys.exit('You must "staging" or "production" and a state name as arguments to this script.')
 
 ENVIRONMENT = sys.argv[1]
-STATE_FIPS = sys.argv[2]
+STATE_FIPS = get_state_fips.STATE_FIPS[sys.argv[2]]
 
 c = S3Connection()
 bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
