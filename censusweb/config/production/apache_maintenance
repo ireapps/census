@@ -2,7 +2,7 @@
     ServerName censusweb.censusweb.ire.org
     ServerAlias www.censusweb.censusweb.ire.org
     
-    Redirect permanent /favicon.ico http://media.censusweb.ire.org/censusweb/na_media/favicon.ico
+    Redirect permanent /favicon.ico http://censusmedia.ire.org/na_media/favicon.ico
     
     Alias /robots.txt /home/ubuntu/sites/censusweb/media/robots.txt
 

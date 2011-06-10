@@ -36,7 +36,7 @@ def production():
     env.settings = 'production'
     env.hosts = ['census.ire.org']
     env.user = 'ubuntu'
-    env.s3_bucket = 'media.census.ire.org'
+    env.s3_bucket = 'censusmedia.ire.org'
     env.site_domain = 'census.ire.org'    
     env.cache_server = 'census.ire.org'
 
