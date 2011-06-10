@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
+from StringIO import StringIO
+import gzip
 import json
 import sys
-import zlib
 
 from boto.exception import S3ResponseError
 from boto.s3.connection import S3Connection
@@ -34,9 +35,11 @@ try:
     # No existing file 
     if not data:
         raise S3ResponseError()
+    
+    s = StringIO(data)
 
     # Strip off jsonp wrapper
-    contents = zlib.decompress(data)
+    contents = gzip.GzipFile(fileobj=s, mode='rb').read()
     data = contents[7:-1]
 
     states = json.loads(data)
@@ -50,6 +53,13 @@ else:
         states.append(STATE)
 
 jsonp = 'states(%s)' % json.dumps(states)
-k.set_contents_from_string(zlib.compress(jsonp), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/json' }, policy='public-read')
 
+s = StringIO()
+gz = gzip.GzipFile(fileobj=s, mode='wb')
+gz.write(jsonp)
+gz.close()
+
+k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/json' }, policy='public-read')
+
+s.close()
 

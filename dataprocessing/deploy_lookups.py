@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
+from StringIO import StringIO
+import gzip
 import json
-import zlib
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -24,7 +25,15 @@ def push(slug, obj):
     k.key = '%s.jsonp' % slug
     data = json.dumps(obj)
     jsonp = '%s(%s)' % (slug, data) 
-    k.set_contents_from_string(zlib.compress(jsonp), headers={ 'Content-encoding': 'deflate', 'Content-Type': 'application/javascript' }, policy='public-read')
+
+    s = StringIO()
+    gz = gzip.GzipFile(fileobj=s, mode='wb')
+    gz.write(jsonp)
+    gz.close()
+
+    k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy='public-read')
+
+    s.close()
 
 state = collection.find_one()['metadata']['STATE']
 
@@ -41,7 +50,7 @@ push('places_%s' % state, places)
 counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY'], sort=[('metadata.NAME', 1)]) 
 
 for county in counties:
-    print 'Deploying counties subdivisions lookup for %s' % county['metadata']['NAME']
+    print 'Deploying county subdivisions lookup for %s' % county['metadata']['NAME']
     county_subdivisions = collection.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISION }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY_SUBDIVISION'], sort=[('metadata.NAME', 1)]) 
     county_subdivisions = [(c['metadata']['NAME'], c['geoid']) for c in county_subdivisions]
     push('county_subdivisions_%s' % county['geoid'], county_subdivisions)
