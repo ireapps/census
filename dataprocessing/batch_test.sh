@@ -24,6 +24,7 @@
 ./compute_deltas_pl.py 10
 
 ./deploy_data.py
+./make_data_public.py 10
 ./deploy_lookups.py
 ./update_state_list.py Delaware CLEAR
 

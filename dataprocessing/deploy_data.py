@@ -29,7 +29,7 @@ for geography in collection.find():
     jsonp = 'geoid_%s(%s)' % (geography['geoid'], json.dumps(geography))
     compressed = utils.gzip_data(jsonp)
 
-    k.set_contents_from_string(compressed, headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy='public-read')
+    k.set_contents_from_string(compressed, headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy='private')
 
     if row_count % 100 == 0:
         print 'Deployed %i...' % row_count
