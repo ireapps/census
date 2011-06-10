@@ -317,6 +317,13 @@ def batch_test():
     loader_log = '%(log_path)s/census.load.test.log' % env
     run_unattended_batch_command('./batch_test.sh', loader_log)
 
+def make_state_public(state):
+    """
+    Make a state's data public.
+    """
+    loader_log = '%(log_path)s/census.make_public.log' % env
+    run_unattended_batch_command('./make_state_public.sh %s' % state, loader_log)
+
 """
 Commands - miscellaneous
 """
