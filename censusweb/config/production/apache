@@ -9,7 +9,7 @@
         Allow from all
     </Directory>
     
-    Redirect permanent /favicon.ico http://censusmedia.ire.org/na_media/favicon.ico
+    Redirect permanent /favicon.ico http://censusmedia.ire.org/censusweb/na_media/favicon.ico
     
     Alias /robots.txt /home/ubuntu/sites/censusweb/censusweb/media/robots.txt
 

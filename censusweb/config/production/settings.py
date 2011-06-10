@@ -12,12 +12,12 @@ DATABASES['default']['PASSWORD'] = 'Xy9XKembdu'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://censusmedia.ire.org/site_media/'
+MEDIA_URL = 'http://censusmedia.ire.org/censusweb/site_media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = 'http://censusmedia.ire.org/admin_media/'
+ADMIN_MEDIA_PREFIX = 'http://censusmedia.ire.org/censusweb/admin_media/'
 
 # Predefined domain
 MY_SITE_DOMAIN = 'census.ire.org'
@@ -30,7 +30,7 @@ EMAIL_PORT = 25
 CACHE_BACKEND = 'memcached://cache:11211/'
 
 # S3
-AWS_S3_URL = 's3://censusmedia.ire.org/'
+AWS_S3_URL = 's3://censusmedia.ire.org/censusweb/'
 
 # Application settings
 API_URL = 'http://censusdata.ire.org/'
