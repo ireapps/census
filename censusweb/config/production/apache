@@ -3,7 +3,7 @@
     ServerAlias www.census.ire.org
     
     SetEnv DEPLOYMENT_TARGET production
-    WSGIScriptAlias / /home/ubuntu/sites/censusweb/censuweb/application.wsgi
+    WSGIScriptAlias / /home/ubuntu/sites/censusweb/censusweb/application.wsgi
     <Directory /home/ubuntu/sites/censusweb/censusweb>
         Order deny,allow
         Allow from all
