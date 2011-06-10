@@ -137,8 +137,8 @@ def deploy_requirements_to_s3():
     Deploy the admin media to s3.
     """
     with settings(warn_only=True):
-        run('s3cmd del --recursive s3://%(s3_bucket)s/%(project_name)s/%(admin_media_prefix)s/' % env)
-    run('s3cmd -P --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(env_path)s/src/django/django/contrib/admin/media/ s3://%(s3_bucket)s/%(project_name)s/%(admin_media_prefix)s/' % env)
+        run('s3cmd del --recursive s3://%(s3_bucket)s/%(admin_media_prefix)s/' % env)
+    run('s3cmd -P --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(env_path)s/src/django/django/contrib/admin/media/ s3://%(s3_bucket)s/%(admin_media_prefix)s/' % env)
 
 
 """
@@ -180,10 +180,10 @@ def deploy_to_s3():
     Deploy the latest project site media to S3.
     """
     env.media_path = '%(site_path)s/media/' % env
-    run(('s3cmd -P --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(media_path)s s3://%(s3_bucket)s/%(project_name)s/%(site_media_prefix)s/') % env)
+    run(('s3cmd -P --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(media_path)s s3://%(s3_bucket)s/%(site_media_prefix)s/') % env)
 
     env.gzip_path = '%(site_path)s/gzip_media/' % env
-    run(('s3cmd -P --add-header=Content-encoding:gzip --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(gzip_path)s s3://%(s3_bucket)s/%(project_name)s/%(site_media_prefix)s/') % env)
+    run(('s3cmd -P --add-header=Content-encoding:gzip --guess-mime-type --rexclude-from=%(site_path)s/s3exclude sync %(gzip_path)s s3://%(s3_bucket)s/%(site_media_prefix)s/') % env)
        
 def reboot(): 
     """
@@ -356,7 +356,7 @@ def shiva_the_destroyer():
         pgpool_up()
         sudo('rm %(apache_config_path)s' % env)
         reboot()
-        run('s3cmd del --recursive s3://%(s3_bucket)s/%(project_name)s' % env)
+        run('s3cmd del --recursive s3://%(s3_bucket)s/' % env)
 
 def local_shiva():
     destroy_database(local)
