@@ -73,5 +73,4 @@ echo 'Deploying to S3'
 ./deploy_data.py $ENVIRONMENT
 ./deploy_lookups.py $ENVIRONMENT
 ./deploy_labels.py $ENVIRONMENT
-./update_state_list.py $ENVIRONMENT $STATE_NAME
 
