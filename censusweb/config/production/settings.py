@@ -33,7 +33,7 @@ CACHE_BACKEND = 'memcached://cache:11211/'
 AWS_S3_URL = 's3://censusmedia.ire.org/censusweb/'
 
 # Application settings
-API_URL = 'http://censusdata.ire.org/'
+API_URL = 'http://censusdata.ire.org'
 
 # Internal IPs for security
 INTERNAL_IPS = ()
