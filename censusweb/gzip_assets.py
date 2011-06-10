@@ -17,9 +17,6 @@ shutil.copytree('media', 'gzip_media')
 
 for path, dirs, files in os.walk('gzip_media'):
     for filename in files:
-        if filename[-3:] not in ['js', 'css', 'txt', 'html']:
-            continue
-    
         file_path = os.path.join(path, filename)
 
         f_in = open(file_path, 'rb')
