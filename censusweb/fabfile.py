@@ -322,7 +322,7 @@ def make_state_public(state):
     Make a state's data public.
     """
     loader_log = '%(log_path)s/census.make_public.log' % env
-    run_unattended_batch_command('./make_state_public.sh %s %s' % (env.settings, state), loader_log)
+    run_unattended_batch_command('python make_state_public.py %s %s' % (env.settings, state), loader_log)
 
 """
 Commands - miscellaneous
