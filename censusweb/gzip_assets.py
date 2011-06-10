@@ -13,20 +13,19 @@ class FakeTime:
 gzip.time = FakeTime()
 
 shutil.rmtree('gzip_media', ignore_errors=True)
+shutil.copytree('media', 'gzip_media')
 
-for path, dirs, files in os.walk('media'):
+for path, dirs, files in os.walk('gzip_media'):
     for filename in files:
         if filename[-3:] not in ['js', 'css', 'txt', 'html']:
             continue
     
-        src_path = os.path.join(path, filename)
-        dest_path = 'gzip_'+src_path
-        if not os.path.exists(os.path.dirname(dest_path)):
-            os.makedirs(os.path.dirname(dest_path))
+        file_path = os.path.join(path, filename)
 
-        f_in = open(src_path, 'rb')
+        f_in = open(file_path, 'rb')
         contents = f_in.read()
         f_in.close()
-        f_out = gzip.open(dest_path, 'wb')
+        f_out = gzip.open(file_path, 'wb')
         f_out.write(contents)
         f_out.close();
+
