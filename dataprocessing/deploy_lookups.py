@@ -19,9 +19,9 @@ deployed = 0
 c = S3Connection()
 bucket = c.get_bucket(config.S3_BUCKET)
 
-def push(slug, obj):
+def push(state, slug, obj):
     k = Key(bucket)
-    k.key = '%s.jsonp' % slug
+    k.key = '%s/%s.jsonp' % (state, slug)
     data = json.dumps(obj)
     jsonp = '%s(%s)' % (slug, data) 
     compressed = utils.gzip_data(jsonp)
@@ -33,12 +33,12 @@ state = collection.find_one()['metadata']['STATE']
 print 'Deploying counties lookup'
 counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY'], sort=[('metadata.NAME', 1)]) 
 counties = [(c['metadata']['NAME'], c['geoid']) for c in counties]
-push('counties_%s' % state, counties)
+push(state, 'counties', counties)
 
 print 'Deploying places lookup'
 places = collection.find({ 'sumlev': config.SUMLEV_PLACE }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', 1)]) 
 places = [(c['metadata']['NAME'], c['geoid']) for c in places]
-push('places_%s' % state, places)
+push(state, 'places', places)
 
 counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY'], sort=[('metadata.NAME', 1)]) 
 
@@ -46,10 +46,10 @@ for county in counties:
     print 'Deploying county subdivisions lookup for %s' % county['metadata']['NAME']
     county_subdivisions = collection.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISION }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY_SUBDIVISION'], sort=[('metadata.NAME', 1)]) 
     county_subdivisions = [(c['metadata']['NAME'], c['geoid']) for c in county_subdivisions]
-    push('county_subdivisions_%s' % county['geoid'], county_subdivisions)
+    push(state, 'county_subdivisions_%s' % county['geoid'], county_subdivisions)
 
     print 'Deploying tracts lookup for %s' % county['metadata']['NAME']
     tracts = collection.find({ 'sumlev': config.SUMLEV_TRACT, 'metadata.COUNTY': county['metadata']['COUNTY'] }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', 1)]) 
     tracts = [(c['metadata']['NAME'], c['geoid']) for c in tracts]
-    push('tracts_%s' % county['geoid'], tracts)
+    push(state, 'tracts_%s' % county['geoid'], tracts)
 
