@@ -2,6 +2,8 @@
 
 # See batch.sh for notes.
 
+ENVIRONMENT=$1
+
 ./__drop_database.sh
 
 ./ensure_indexes.sh
@@ -23,9 +25,9 @@
 ./crosswalk.py 10
 ./compute_deltas_pl.py 10
 
-./deploy_data.py
-./make_data_public.py 10
-./deploy_lookups.py
-./update_state_list.py Delaware CLEAR
+./deploy_data.py $ENVIRONMENT 
+./make_data_public.py $ENVIRONMENT 10
+./deploy_lookups.py $ENVIRONMENT
+./update_state_list.py $ENVIRONMENT Delaware CLEAR
 
 ./tests.py

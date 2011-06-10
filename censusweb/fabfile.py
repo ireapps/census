@@ -294,7 +294,7 @@ def batch_sf(state, fake=''):
     """
     Kick off the SF 2000 data loader for a state.
     """
-    command = './batch_sf.sh %s %s' % (state, fake)
+    command = './batch_sf.sh %s %s %s' % (env.settings, state, fake)
     loader_log = '%s/census.load.%s.log' % (env.log_path, state)
     run_unattended_batch_command(command, loader_log)
 
@@ -304,7 +304,7 @@ def batch_sf_everything(fake=''):
 
     USE WITH CAUTION!
     """
-    command = 'python batch_sf_everything.py %s' % (fake)
+    command = 'python batch_sf_everything.py %s %s' % (env.settings, fake)
     loader_log = '%s/census.load.everything.log' % (env.log_path)
     run_unattended_batch_command(command, loader_log)
 
@@ -315,14 +315,14 @@ def batch_test():
     USE WITH CAUTION!
     """
     loader_log = '%(log_path)s/census.load.test.log' % env
-    run_unattended_batch_command('./batch_test.sh', loader_log)
+    run_unattended_batch_command('./batch_test.sh %s' % env.settings, loader_log)
 
 def make_state_public(state):
     """
     Make a state's data public.
     """
     loader_log = '%(log_path)s/census.make_public.log' % env
-    run_unattended_batch_command('./make_state_public.sh %s' % state, loader_log)
+    run_unattended_batch_command('./make_state_public.sh %s %s' % (env.settings, state), loader_log)
 
 """
 Commands - miscellaneous

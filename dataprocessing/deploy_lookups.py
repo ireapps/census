@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+import sys
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -8,6 +9,11 @@ from pymongo import Connection
 
 import config
 import utils
+
+if len(sys.argv) < 2:
+    sys.exit('You must specify "staging" or "production" as an argument to this script.')
+
+ENVIRONMENT = sys.argv[1]
 
 connection = Connection()
 db = connection[config.CENSUS_DB]
@@ -17,7 +23,7 @@ row_count = 0
 deployed = 0
 
 c = S3Connection()
-bucket = c.get_bucket(config.S3_BUCKET)
+bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
 
 def push(state, slug, obj):
     k = Key(bucket)

@@ -20,4 +20,7 @@ GEOGRAPHIES_2000_COLLECTION = 'geographies_2000'
 LABELS_COLLECTION = 'labels'
 
 # S3
-S3_BUCKET = 'census-test'
+S3_BUCKETS = {
+    'staging': 'census-test',
+    'production': 'censusdata.ire.org',
+}

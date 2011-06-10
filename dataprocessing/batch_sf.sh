@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# \< 1 ]
+if [ $# \< 2 ]
 then
-    echo "You must specify the proper-case name of a state as an argument, e.g. 'Delaware'."
+    echo "You must specify 'staging' or production' and the the proper-case name of a state as arguments, e.g. 'batch_sf.sh staging Delaware'."
     exit
 fi
 
@@ -10,7 +10,8 @@ STATE_NAME=$1
 STATE_NAME_LOWER=`echo $1 | tr '[A-Z]' '[a-z]'`
 STATE_NAME_ABBR=`python get_state_abbr.py $1`
 STATE_FIPS=`python get_state_fips.py $1`
-FAKE=$2
+ENVIRONMENT=$2
+FAKE=$3
 
 echo 'Dropping previous data.'
 ./__drop_database.sh
@@ -69,8 +70,8 @@ echo 'Computing deltas'
 ./compute_deltas_sf.py $STATE_FIPS
 
 echo 'Deploying to S3'
-./deploy_data.py
-./deploy_lookups.py
-./deploy_labels.py
-./update_state_list.py $STATE_NAME
+./deploy_data.py $ENVIRONMENT
+./deploy_lookups.py $ENVIRONMENT
+./deploy_labels.py $ENVIRONMENT
+./update_state_list.py $ENVIRONMENT $STATE_NAME
 

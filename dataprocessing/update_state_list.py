@@ -11,8 +11,12 @@ from pymongo import Connection
 import config
 import utils
 
-STATE = sys.argv[1]
-try: CLEAR = sys.argv[2]
+if len(sys.argv) < 3:
+    sys.exit('You must specify either "staging" or "production" and a state as arguments to this script.')
+
+ENVIRONMENT = sys.argv[1]
+STATE = sys.argv[2]
+try: CLEAR = sys.argv[3]
 except: CLEAR = None
 
 connection = Connection()
@@ -23,7 +27,7 @@ row_count = 0
 deployed = 0
 
 c = S3Connection()
-bucket = c.get_bucket(config.S3_BUCKET)
+bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
 
 k = Key(bucket)
 k.key = 'states.jsonp'
