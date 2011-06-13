@@ -175,8 +175,7 @@ $(function(){
             var column_meta = {};
             column_name = geography["metadata"]["NAME"];
 
-            // TODO
-            if ($.inArray(geography["sumlev"], [SUMLEV_COUNTY, SUMLEV_PLACE, SUMLEV_TRACT]) >= 0) {
+            if ($.inArray(geography["sumlev"], [SUMLEV_COUNTY, SUMLEV_COUNTY_SUBDIVISION, SUMLEV_PLACE, SUMLEV_TRACT]) >= 0) {
                 state_fips = geography["metadata"]["STATE"];
                 state_name = _.detect(window.query.mappings.states, function(state) {
                     return state[1] == state_fips;
