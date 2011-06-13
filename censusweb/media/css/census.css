@@ -73,6 +73,7 @@ h1 {
 header {
     padding: 0px 50px 25px;
     border-bottom: 1px solid #efefef;
+    display:block;
 }
 
 aside {
@@ -82,10 +83,11 @@ aside {
     display:none;
     position:absolute;
     top:89px;
-    height:550px;
+    height:550px; /* default, set in javascript */
     overflow:auto;
     background-color:#E9F6FE;
     line-height:1.3em;
+    m
 }
 
 aside h2 {
