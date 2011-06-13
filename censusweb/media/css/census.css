@@ -99,17 +99,6 @@ aside strong {
     font-weight: bold;
 }
 
-aside a {
-    cursor: pointer;
-    color: #333;
-    text-decoration: none;
-}
-
-aside a.selected {
-    cursor: pointer;
-    text-decoration: underline;
-}
-
 #container {
     margin: 40px 50px;
 }
