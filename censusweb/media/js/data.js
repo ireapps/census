@@ -107,7 +107,8 @@ $(function(){
             });
 
             _.each(window.tables, function(table) {
-                $('#reports').append($('<div id="report-wrapper-' + table + '"></div>'));
+                var elem = $('<div id="report-wrapper-' + table + '"></div>');
+                $('#reports').append(elem);
             });
 
             geographies = new Array();

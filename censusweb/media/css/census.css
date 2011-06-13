@@ -71,7 +71,7 @@ h1 {
 }
 
 header {
-    padding: 30px 50px 25px;
+    padding: 0px 50px 25px;
     border-bottom: 1px solid #efefef;
 }
 
@@ -80,7 +80,8 @@ aside {
     padding:15px;
     width:300px;
     display:none;
-    position:relative;
+    position:absolute;
+    top:89px;
     height:550px;
     overflow:auto;
     background-color:#E9F6FE;
@@ -121,6 +122,7 @@ aside label {
 }
 
 #logo {
+    margin-top: 30px;
 }
 
 nav {
