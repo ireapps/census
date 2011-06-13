@@ -3,6 +3,7 @@
 {% load humanize %}
 
 {% block content %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.scrollfollow.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/browser.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/data.js"></script>
 
@@ -11,7 +12,7 @@
 
 <script id="browser-template" type="x-js-template">
     <div>
-        <h1>Hello!</h1>
+        <h2>Table Browser</h2>
         <ul id="table-list" class="cookie1">
         <% _.each(window.tables, function(table) { %>
             <li>
