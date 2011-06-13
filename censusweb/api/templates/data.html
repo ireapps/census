@@ -8,7 +8,7 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}js/data.js"></script>
 
 <span class="button" id="toggle-browser">Hide table browser</span>
-<span class="button" id="default-tables">Show default tables</span>
+<span class="button" id="default-tables">Reset to default tables</span>
 
 <script id="browser-template" type="x-js-template">
     <div>
@@ -39,7 +39,7 @@
         <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
         <% }); %>
         <tr>
-            <th rowspan="2" class="labeldef"><%= table %><br /><span class="universe">Universe: <%= universe %></span></th>
+            <th rowspan="2" class="labeldef"><strong><%=key %>.</strong> <%= name %><br /><span class="universe">Universe: <%= universe %></span></th>
             <% _.each(columns, function(c) { %>
             <th colspan="4" class="locationdef">
                 <%= c.name %>

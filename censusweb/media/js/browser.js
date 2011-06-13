@@ -23,6 +23,12 @@ $(function(){
                 var show_ids = window.DEFAULT_TABLES.split(','); 
             }
 
+            if (show_ids == window.DEFAULT_TABLES) {
+                $("#default-tables").hide();
+            } else {
+                $("#default-tables").show();
+            }
+
             $("#ajax-loader").show();
 
             $("table.report").hide()

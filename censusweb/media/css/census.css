@@ -83,20 +83,33 @@ aside {
     position:relative;
     height:550px;
     overflow:auto;
+    background-color:#E9F6FE;
+    line-height:1.3em;
 }
 
 aside h2 {
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 aside li {
-    margin-bottom: 6px;
-    font-size: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-variant:small-caps;
+}
+
+aside input {
+    float: left;
+    margin-top: 2px;
 }
 
 aside strong {
     font-weight: bold;
+}
+
+aside label {
+    display: block;
+    margin-left: 18px;
 }
 
 #container {
@@ -167,7 +180,6 @@ nav {
 
 .report th {
     font-size: 22px;
-    font-weight: bold;
     border: 1px solid #ccc; border-bottom-color: #ccc;
     padding: 12px;
     color: #333;
@@ -176,11 +188,13 @@ nav {
 .report th .universe {
 	font-weight: normal;
 	font-size: 18px;
+    display: block;
+    line-height: 1.2em;
+    margin-top: 5px;
 }
 
 .report th.subhead {
     font-size: 14px;
-    font-weight: bold;
     border: 1px solid #ccc; border-bottom-color: #ccc;
     padding: 6px;
     color: #333;
@@ -209,10 +223,15 @@ nav {
 
 .report th.labeldef {
     width: 375px !important;
+    vertical-align: top;
+}
+.report th.labeldef strong {
+    font-weight: bold;
 }
 .report th.locationdef {
     background-color: #fff !important;
     width: 300px !important;
+    font-weight: bold;
 }
 .report td.data-cell {
     width: 75px !important;
