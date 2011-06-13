@@ -105,6 +105,11 @@ aside a {
     text-decoration: none;
 }
 
+aside a.selected {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 #container {
     margin: 40px 50px;
 }
