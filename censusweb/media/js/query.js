@@ -78,7 +78,7 @@ $(function(){
                 $(document).keypress(this.keypress);
             }
 
-            document.onkeydown = this.keydown;
+            $(document).keydown(this.keydown);
             this.bind('change', this.render);
             //this.bind('change', this.loadNext);
             this.mappings.summarylevelDisplays[SUMLEV_TRACT] = 'Tracts';
@@ -161,6 +161,7 @@ $(function(){
                 _this.lazyRender();
             }
         },
+
         keypress: function(e) {
             if (e.which == 13) {
                 if (this.filter) {
@@ -168,8 +169,8 @@ $(function(){
                 } else if (this.isCompletable()) {
                     this.go();
                 }
-            } else if (e.charCode && this.isFilterable()) {
-                this.filter += String.fromCharCode(e.charCode);
+            } else if (e.which && this.isFilterable()) {
+                this.filter += String.fromCharCode(e.which);
                 this.lazyRender();
             }
         },
