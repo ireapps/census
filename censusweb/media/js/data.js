@@ -3,8 +3,11 @@ $(function(){
 
     window.removeColumn = function() {
         geoid = $(this).attr('data-val');
-        if (document.location.pathname.indexOf('/' + geoid) > 0) {
-            document.location.pathname = document.location.pathname.replace(geoid + ',', '');
+
+        // First item in list
+        if (document.location.pathname.indexOf('/' + geoid + ',') > 0) {
+            document.location.pathname = document.location.pathname.replace('/' + geoid + ',', '/');
+        // Any other item in list
         } else {
             document.location.pathname = document.location.pathname.replace(',' + geoid, '');
         }
