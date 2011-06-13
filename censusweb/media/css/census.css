@@ -67,6 +67,7 @@ h1 {
 #ajax-loader img {
     position: relative;
     top: 3px;
+    display: none;
 }
 
 header {
@@ -87,6 +88,21 @@ aside {
 aside h2 {
     font-size: 20px;
     margin-bottom: 10px;
+}
+
+aside li {
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+
+aside strong {
+    font-weight: bold;
+}
+
+aside a {
+    cursor: pointer;
+    color: #333;
+    text-decoration: none;
 }
 
 #container {

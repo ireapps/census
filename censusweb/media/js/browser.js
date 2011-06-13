@@ -80,7 +80,7 @@ $(function(){
             $("#browser").scrollFollow();
 
             var resize_function = function() {
-                $("#browser").height($(window).height() - 125);
+                $("#browser").height($(window).height() - 120);
             }
 
             resize_function();

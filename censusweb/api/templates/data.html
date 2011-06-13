@@ -22,7 +22,7 @@
                     name="show-report-<%= table %>"
                     <% if ($.inArray(table, model.get("table_ids")) >= 0) { %>checked="checked"<% } %>
                 <label for="show-<%= table %>">
-                    <a href="#<%= table %>" class="link"><%= table %>. <%= window.labels_data["tables"][table]["name"] %></a>
+                    <a href="#<%= table %>"><strong><%= table %>.</strong> <%= window.labels_data["tables"][table]["name"] %></a>
                 </label>
             </li>
         <% }); %>
