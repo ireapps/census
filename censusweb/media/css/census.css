@@ -235,6 +235,7 @@ nav {
     background-color: #fff !important;
     width: 300px !important;
     font-weight: bold;
+    vertical-align: top;
 }
 .report td.data-cell {
     width: 75px !important;
