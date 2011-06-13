@@ -127,6 +127,7 @@ aside label {
 
 nav {
     margin:20px 0;
+    display: block;
 }
 
 #help-link, #help {
