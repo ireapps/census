@@ -20,16 +20,18 @@ echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
 echo 'Fetching data'
-./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
-./fetch_sf_data_2010.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+#./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+#./fetch_sf_data_2010.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
 
 echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
 
 echo 'Loading 2000 data'
-for i in {1..39}
+# TODO == 47
+for i in {1..3}
 do
     ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
+    echo "skipping"
 done
 
 echo 'Loading labels'
@@ -53,7 +55,8 @@ else
 fi
 
 echo 'Loading 2010 data'
-for i in {1..47}
+# TODO == 47
+for i in {1..3}
 do
     if [ "$FAKE" = "FAKE" ]; then
         # Load 2000 data as 2010 for testing

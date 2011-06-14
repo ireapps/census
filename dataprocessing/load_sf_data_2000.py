@@ -33,7 +33,7 @@ with open(FILENAME) as f:
 
         xref = utils.xref_from_row_dict(row_dict)
 
-        geography = utils.find_geography_by_xref(collection, xref, fields=['data']) 
+        geography = utils.find_geography_by_xref(collection, xref) 
         if not geography:
             continue
 

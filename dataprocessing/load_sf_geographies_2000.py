@@ -41,6 +41,9 @@ with open(FILENAME) as f:
         if row_dict['SUMLEV'] not in config.SUMLEVS:
             continue
 
+        if row_dict['GEOCOMP'] != config.GEOCOMP_COMPLETE:
+            continue
+
         geography['sumlev'] = row_dict.pop('SUMLEV')
         geography['geoid'] = utils.GEOID_COMPUTERS[geography['sumlev']](row_dict)
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Geocomp value declaring a row is not a geographic compontent
+GEOCOMP_COMPLETE = '00'
+
 # Summary level constants
 SUMLEV_NATION = '010'
 SUMLEV_STATE = '040'
