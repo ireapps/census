@@ -45,64 +45,61 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 1360301
         self._test_totalpop(state, pop_2000, pop_2010)
 
-    @unittest.skip('Not migrated to 2010.')
     def test_county(self):
         """
         Data import test against known values that Kent County, DE should have.
         """
-        counties = self.geographies.find({ 'geoid': '10001' })
+        counties = self.geographies.find({ 'geoid': '15009' })
 
         self.assertEqual(counties.count(), 1)
 
         county = counties[0]
 
         self.assertEqual(county['sumlev'], '050')
-        self.assertEqual(county['metadata']['NAME'], 'Kent County')
-        self.assertEqual(county['metadata']['STATE'], '10')
-        self.assertEqual(county['metadata']['COUNTY'], '001')
+        self.assertEqual(county['metadata']['NAME'], 'Maui County')
+        self.assertEqual(county['metadata']['STATE'], '15')
+        self.assertEqual(county['metadata']['COUNTY'], '009')
 
-        pop_2000 = 126697
-        pop_2010 = 162310
+        pop_2000 = 128094 
+        pop_2010 = 154834
         self._test_totalpop(county, pop_2000, pop_2010)
 
-    @unittest.skip('Not migrated to 2010.')
     def test_place(self):
         """
         Data import test against known values that Newark city, DE should have.
         """
-        places = self.geographies.find({ 'geoid': '1050670' })
+        places = self.geographies.find({ 'geoid': '1562600' })
 
         self.assertEqual(places.count(), 1)
 
         place = places[0]
 
         self.assertEqual(place['sumlev'], '160')
-        self.assertEqual(place['metadata']['NAME'], 'Newark city')
-        self.assertEqual(place['metadata']['STATE'], '10')
-        self.assertEqual(place['metadata']['PLACE'], '50670')
+        self.assertEqual(place['metadata']['NAME'], 'Pearl City CDP')
+        self.assertEqual(place['metadata']['STATE'], '15')
+        self.assertEqual(place['metadata']['PLACE'], '62600')
 
-        pop_2000 = 28547
-        pop_2010 = 31454
+        pop_2000 = 30976
+        pop_2010 = 47698 
         self._test_totalpop(place, pop_2000, pop_2010)
 
-    @unittest.skip('Not migrated to 2010.')
     def test_simple_tract(self): 
         """
         Data import test against known values that Tract 401, Kent County, DE should have.
         """
-        tracts = self.geographies.find({ 'geoid': '10001040100' })
+        tracts = self.geographies.find({ 'geoid': '15007040500' })
 
         self.assertEqual(tracts.count(), 1)
 
         tract = tracts[0]
 
         self.assertEqual(tract['sumlev'], '140')
-        self.assertEqual(tract['metadata']['NAME'], 'Census Tract 401')
-        self.assertEqual(tract['metadata']['STATE'], '10')
-        self.assertEqual(tract['metadata']['COUNTY'], '001')
+        self.assertEqual(tract['metadata']['NAME'], 'Census Tract 405')
+        self.assertEqual(tract['metadata']['STATE'], '15')
+        self.assertEqual(tract['metadata']['COUNTY'], '007')
 
-        pop_2000 = 5337
-        pop_2010 = 6541
+        pop_2000 = 5162 
+        pop_2010 = 5943 
         self._test_totalpop(tract, pop_2000, pop_2010)
 
 class TestTracts(unittest.TestCase):
