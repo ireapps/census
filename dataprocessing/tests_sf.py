@@ -280,32 +280,28 @@ class TestLabels(unittest.TestCase):
         db = connection[config.LABELS_DB]
         self.labels = db[config.LABELS_COLLECTION]
 
-    @unittest.skip('TODO')
     def test_table(self):
         """
         Header rows from input file:
-        "P4.  HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE FOR THE POPULATION 18 YEARS AND OVER [73]","",""
-        "Universe: Total population 18 years and over","",""
+        P12F.,,0,SEX BY AGE (SOME OTHER RACE ALONE) [49],,,,,,,,2000 SF1 P12F.
+        P12F.,,0,Universe:  People who are Some Other Race alone,,,,,,,,
         """
-        table = self.labels.find_one({ 'dataset': 'PL' })['tables']['P4']
+        table = self.labels.find_one({ 'dataset': 'SF1' })['tables']['P12F']
 
-        self.assertEqual(table['name'], 'HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE FOR THE POPULATION 18 YEARS AND OVER')
-        self.assertEqual(table['size'], 73)
-        self.assertEqual(table['universe'], 'Total population 18 years and over')
+        self.assertEqual(table['name'], 'SEX BY AGE (SOME OTHER RACE ALONE)')
+        self.assertEqual(table['size'], 49)
+        self.assertEqual(table['universe'], 'People who are Some Other Race alone')
 
-    @unittest.skip('TODO')
     def test_label(self):
         """
-        Rows from input file:
-        "      Population of four races:","P0020049"," P1"
-        "        White; Black or African American; American Indian and Alaska Native; Asian","P0020050"," P1"
+        P12F.,1,0,Total:,,,,,,,,
         """
-        table = self.labels.find_one({ 'dataset': 'PL' })['tables']['P2']
-        label = table['labels']['P0020050']
+        table = self.labels.find_one({ 'dataset': 'SF1' })['tables']['P12F']
+        label = table['labels']['P012F001']
 
-        self.assertEqual(label['text'], 'White; Black or African American; American Indian and Alaska Native; Asian')
-        self.assertEqual(label['parent'], 'P0020049')
-        self.assertEqual(label['indent'], 4)
+        self.assertEqual(label['text'], 'Total:')
+        self.assertEqual(label['parent'], None)
+        self.assertEqual(label['indent'], 0)
         
 if __name__ == '__main__':
     unittest.main()

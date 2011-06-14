@@ -25,10 +25,10 @@ with open('field_mappings_2000_2010.csv', 'rU') as f:
 
     for row in reader:
         # Skip fields that don't map
-        if not row['field_2000']:
+        if not row['field_2000'].strip():
             continue
 
-        if not row['field_2010']:
+        if not row['field_2010'].strip():
             continue
 
         # TODO - skipping computed fields
@@ -51,7 +51,7 @@ with open('sf_crosswalk_key.csv') as f:
     for row in reader:
         CROSSWALK_FIELDS_BY_TABLE[row[0]] = row[1]
 
-for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
+for geography in collection.find({'geoid':'15'}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
     row_count += 1
     
     data = {}
@@ -109,12 +109,6 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
             continue
 
         for table in geography_2000['data']['2000']:
-            crosswalk_field = CROSSWALK_FIELDS_BY_TABLE[table]
-
-            # Table contains medians or other values that can't be crosswalked
-            if not crosswalk_field:
-                continue
-
             for k, v in geography_2000['data']['2000'][table].items():
                 try:
                     keys_2010 = KEY_MAPPINGS[k]

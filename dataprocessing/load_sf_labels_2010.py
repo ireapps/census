@@ -10,7 +10,7 @@ from pymongo import Connection
 import config
 import logging
 
-TABLE_NAME_PATTERN = re.compile(r'^(?P<name>.+)\[(?P<size>\d+)\].*$')
+TABLE_NAME_PATTERN = re.compile(r'^(?P<name>.+)\s+\[(?P<size>\d+)\].*$')
 TABLE_ID_PATTERN = re.compile(r'^(?P<letter>[A-Z]+)(?P<number>\d+)(?P<suffix>[A-Z])?')
 
 KEY_MAPPINGS = {}
