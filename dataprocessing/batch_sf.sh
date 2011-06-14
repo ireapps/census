@@ -35,8 +35,8 @@ done
 echo 'Loading labels'
 ./load_sf_labels_2010.py sf1_2010_data_labels.csv
 
-# Load 2000 headers as 2010 so fake 2010 data will match to shapes
 if [ "$FAKE" = "FAKE" ]; then
+    # Load 2000 headers as 2010 so fake 2010 data will match to shapes
     GEOGRAPHY_HEADER_2010=data/${STATE_NAME_ABBR}geo2000.csv
 else
     GEOGRAPHY_HEADER_2010=data/${STATE_NAME_ABBR}geo2010.csv
@@ -53,14 +53,13 @@ else
 fi
 
 echo 'Loading 2010 data'
-for i in {1..39}
+for i in {1..47}
 do
-    # Load 2000 data as 2010 for testing
     if [ "$FAKE" = "FAKE" ]; then
+        # Load 2000 data as 2010 for testing
         ./load_sf_data_2010.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
     else
         ./load_sf_data_2010.py data/sf_data_2010_${STATE_NAME_LOWER}_$i.csv
-        exit
     fi
 done
 

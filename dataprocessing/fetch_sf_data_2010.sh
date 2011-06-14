@@ -6,6 +6,8 @@ STATE_NAME_ABBR=$3
 
 CENSUS_DOMAIN="https://www.census.gov/embargo/pio"
 
+cd data
+
 # 2010
 wget $CENSUS_DOMAIN/${STATE_NAME}/${STATE_NAME_ABBR}2010.sf1.zip --user $CENSUS_USER --password $CENSUS_PASS
 unzip ${STATE_NAME_ABBR}2010.sf1.zip

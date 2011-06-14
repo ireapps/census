@@ -6,6 +6,8 @@ import sys
 
 TABLE_REGEX = re.compile('([A-Z]+)([0-9]+)([A-Z]?)')
 
+FIXED_HEADERS = ['FILEID', 'STUSAB', 'CHARITER', 'CIFSN', 'LOGRECNO']
+
 # Values are tuples of (first table in file, total number of data cells in file)
 # The latter is for a sanity check
 FILES_TO_FIRST_TABLE_MAP = {
@@ -87,7 +89,10 @@ with open(FIELD_INDEX, 'r') as f:
                     raise AssertionError('Only found %i/%i headers for file %i' % (len(headers), FILES_TO_FIRST_TABLE_MAP[current_file + 1][1], current_file))
 
                 with open('sf_data_2010_headers_%i.csv' % current_file, 'w') as f:
+                    f.write(','.join(FIXED_HEADERS))
+                    f.write(',')
                     f.write(','.join(headers))
+                    f.write('\n')
                 
                 current_file += 1
                 headers = []
