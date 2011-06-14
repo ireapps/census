@@ -44,7 +44,7 @@ with open(FILENAME) as f:
         for k, v in row_dict.items():
             # Format table names to match labels
             t = utils.parse_table_from_key(k) 
-
+            
             if t not in tables:
                 tables[t] = {}
 

@@ -6,7 +6,7 @@ import re
 
 import config
 
-TABLE_NAME_REGEX = re.compile('([A-Z1-9]+?)0*([\d]+)')
+TABLE_NAME_REGEX = re.compile('([A-Z1-9]+?)0*([\d]+)([A-Z]?)')
 
 def geoid_nation(r):
     # TODO

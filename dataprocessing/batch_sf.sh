@@ -27,11 +27,9 @@ echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
 
 echo 'Loading 2000 data'
-# TODO == 47
-for i in {1..3}
+for i in {1..39}
 do
     ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
-    echo "skipping"
 done
 
 echo 'Loading labels'
@@ -55,8 +53,7 @@ else
 fi
 
 echo 'Loading 2010 data'
-# TODO == 47
-for i in {1..3}
+for i in {1..47}
 do
     if [ "$FAKE" = "FAKE" ]; then
         # Load 2000 data as 2010 for testing
@@ -70,7 +67,7 @@ echo 'Processing crosswalk'
 ./crosswalk.py $STATE_FIPS
 
 echo 'Computing deltas'
-./compute_deltas_sf.py $STATE_FIPS
+./compute_deltas_sf.py
 
 echo 'Deploying to S3'
 ./deploy_data.py $ENVIRONMENT

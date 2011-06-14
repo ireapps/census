@@ -113,5 +113,8 @@ with open(FIELD_INDEX, 'r') as f:
 
     # Write final file
     with open('sf_data_2010_headers_%i.csv' % current_file, 'w') as f:
+        f.write(','.join(FIXED_HEADERS))
+        f.write(',')
         f.write(','.join(headers))
+        f.write('\n')
 
