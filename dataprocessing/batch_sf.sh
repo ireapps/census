@@ -21,6 +21,7 @@ echo 'Ensuring mongo indexes.'
 
 echo 'Fetching data'
 ./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+./fetch_sf_data_2010.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
 
 echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
@@ -58,7 +59,7 @@ do
     if [ "$FAKE" = "FAKE" ]; then
         ./load_sf_data_2010.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
     else
-        echo "2010 data not yet available. Specify 'FAKE' as a second command-line argument to use 2000 data."
+        ./load_sf_data_2010.py data/sf_data_2010_${STATE_NAME_LOWER}_$i.csv
         exit
     fi
 done

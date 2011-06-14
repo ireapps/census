@@ -15,3 +15,10 @@ cd ../dataprocessing
 ./batch_test.sh
 cd ../censusweb
 ./manage.py runserver
+
+NOTE FOR POSTERITY:
+
+Embargo username/password must be defined as environment variables
+
+CENSUS_USER=cgroskopf@tribune.com
+CENSUS_PASS=NotMyRealPassword
