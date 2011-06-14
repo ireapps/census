@@ -123,7 +123,7 @@ class TestTracts(unittest.TestCase):
         tract1 = tract1[0]
         
         split_tract_pop_2000 = 5834
-        tract1_pop_pct = 37.06 
+        tract1_pop_pct = 0.3706 
         tract1_pop_2000 = int(tract1_pop_pct * split_tract_pop_2000)
         tract1_pop_2010 = 2282 
         tract1_pop_delta = tract1_pop_2010 - tract1_pop_2000
@@ -131,7 +131,7 @@ class TestTracts(unittest.TestCase):
 
         self.assertAlmostEqual(tract1['xwalk']['15003003500']['POPPCT00'], tract1_pop_pct, places=4)
         self.assertAlmostEqual(tract1['data']['2000']['P1']['P001001'], tract1_pop_2000)
-        self.assertAlmostEqual(tract1['data']['2010']['P1']['P001001'], tract1_pop_2010)
+        self.assertAlmostEqual(float(tract1['data']['2010']['P1']['P001001']), tract1_pop_2010)
         self.assertAlmostEqual(float(tract1['data']['delta']['P1']['P001001']), tract1_pop_delta)
         self.assertAlmostEqual(float(tract1['data']['pct_change']['P1']['P001001']), tract1_pop_pct_change)
         
@@ -141,7 +141,7 @@ class TestTracts(unittest.TestCase):
         self.assertEqual(tract2.count(), 1)
         tract2 = tract2[0]
 
-        tract2_pop_pct = 62.94
+        tract2_pop_pct = 0.6294
         tract2_pop_2000 = int(tract2_pop_pct * split_tract_pop_2000)
         tract2_pop_2010 = 3876
         tract2_pop_delta = tract2_pop_2010 - tract2_pop_2000
@@ -149,7 +149,7 @@ class TestTracts(unittest.TestCase):
         
         self.assertAlmostEqual(tract2['xwalk']['15003003500']['POPPCT00'], tract2_pop_pct, places=4)
         self.assertAlmostEqual(tract2['data']['2000']['P1']['P001001'], tract2_pop_2000)
-        self.assertAlmostEqual(tract2['data']['2010']['P1']['P001001'], tract2_pop_2010)
+        self.assertAlmostEqual(float(tract2['data']['2010']['P1']['P001001']), tract2_pop_2010)
         self.assertAlmostEqual(float(tract2['data']['delta']['P1']['P001001']), tract2_pop_delta)
         self.assertAlmostEqual(float(tract2['data']['pct_change']['P1']['P001001']), tract2_pop_pct_change)
 
@@ -167,8 +167,8 @@ class TestTracts(unittest.TestCase):
         self.assertEqual(tract1.count(), 1)
         tract1 = tract1[0]
         
-        split_tract_house_2000 = None
-        tract1_house_pct = 38.3 
+        split_tract_house_2000 = 3370 
+        tract1_house_pct = 0.383 
         tract1_house_2000 = int(tract1_house_pct * split_tract_house_2000)
         tract1_house_2010 = 1353 
         tract1_house_delta = tract1_house_2010 - tract1_house_2000
@@ -176,7 +176,7 @@ class TestTracts(unittest.TestCase):
 
         self.assertAlmostEqual(tract1['xwalk']['15003003500']['HUPCT00'], tract1_house_pct, places=4)
         self.assertAlmostEqual(tract1['data']['2000']['H1']['H001001'], tract1_house_2000)
-        self.assertAlmostEqual(tract1['data']['2010']['H1']['H001001'], tract1_house_2010)
+        self.assertAlmostEqual(float(tract1['data']['2010']['H1']['H001001']), tract1_house_2010)
         self.assertAlmostEqual(float(tract1['data']['delta']['H1']['H001001']), tract1_house_delta)
         self.assertAlmostEqual(float(tract1['data']['pct_change']['H1']['H001001']), tract1_house_pct_change)
 
@@ -186,7 +186,7 @@ class TestTracts(unittest.TestCase):
         self.assertEqual(tract2.count(), 1)
         tract2 = tract2[0]
 
-        tract2_house_pct = 61.7
+        tract2_house_pct = 0.617
         tract2_house_2000 = int(tract2_house_pct * split_tract_house_2000)
         tract2_house_2010 = 2180 
         tract2_house_delta = tract2_house_2010 - tract2_house_2000
@@ -194,7 +194,7 @@ class TestTracts(unittest.TestCase):
         
         self.assertAlmostEqual(tract2['xwalk']['15003003500']['HUPCT00'], tract2_house_pct, places=4)
         self.assertAlmostEqual(tract2['data']['2000']['H1']['H001001'], tract2_house_2000)
-        self.assertAlmostEqual(tract2['data']['2010']['H1']['H001000'], tract2_house_2010)
+        self.assertAlmostEqual(float(tract2['data']['2010']['H1']['H001001']), tract2_house_2010)
         self.assertAlmostEqual(float(tract2['data']['delta']['H1']['H001001']), tract2_house_delta)
         self.assertAlmostEqual(float(tract2['data']['pct_change']['H1']['H001001']), tract2_house_pct_change)
 
@@ -270,6 +270,7 @@ class TestFieldCrosswalk(unittest.TestCase):
         self.assertEqual(float(state['data']['delta']['P3']['P003006']), delta)
         self.assertAlmostEqual(float(state['data']['pct_change']['P3']['P003006']), pct_change)
 
+    @unittest.skip('TODO')
     def test_different_everything(self):
         pass
 
@@ -279,7 +280,7 @@ class TestLabels(unittest.TestCase):
         db = connection[config.LABELS_DB]
         self.labels = db[config.LABELS_COLLECTION]
 
-    @unittest.skip('Not migrated to 2010.')
+    @unittest.skip('TODO')
     def test_table(self):
         """
         Header rows from input file:
@@ -292,7 +293,7 @@ class TestLabels(unittest.TestCase):
         self.assertEqual(table['size'], 73)
         self.assertEqual(table['universe'], 'Total population 18 years and over')
 
-    @unittest.skip('Not migrated to 2010.')
+    @unittest.skip('TODO')
     def test_label(self):
         """
         Rows from input file:
