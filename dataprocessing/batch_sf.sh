@@ -64,7 +64,7 @@ do
 done
 
 echo 'Processing crosswalk'
-./crosswalk.py $STATE_FIPS
+./crosswalk.py
 
 echo 'Computing deltas'
 ./compute_deltas_sf.py
