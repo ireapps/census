@@ -26,6 +26,10 @@ class TestSimpleGeographies(unittest.TestCase):
             float(obj['data']['pct_change']["P1"]['P001001']),
             known_pct
         )
+
+    @unittest.skip('TODO')
+    def test_state_count(self):
+        states = self.geographies.find({ 'sumlev': '15' })
     
     def test_state(self):
         """
@@ -45,9 +49,13 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 1360301
         self._test_totalpop(state, pop_2000, pop_2010)
 
+    @unittest.skip('TODO')
+    def test_county_count(self):
+        pass
+
     def test_county(self):
         """
-        Data import test against known values that Kent County, DE should have.
+        Data import test against known values that Maui County, HI should have.
         """
         counties = self.geographies.find({ 'geoid': '15009' })
 
@@ -64,9 +72,21 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 154834
         self._test_totalpop(county, pop_2000, pop_2010)
 
+    @unittest.skip('TODO')
+    def test_county_subdivision_count(self):
+        pass
+
+    @unittest.skip('TODO')
+    def test_county_subdivision(self):
+        pass
+
+    @unittest.skip('TODO')
+    def test_place_count(self):
+        pass
+
     def test_place(self):
         """
-        Data import test against known values that Newark city, DE should have.
+        Data import test against known values that Pearl City CDP, HI should have.
         """
         places = self.geographies.find({ 'geoid': '1562600' })
 
@@ -83,9 +103,13 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 47698 
         self._test_totalpop(place, pop_2000, pop_2010)
 
+    @unittest.skip('TODO')
+    def test_tract_count(self):
+        pass
+
     def test_simple_tract(self): 
         """
-        Data import test against known values that Tract 401, Kent County, DE should have.
+        Data import test against known values that Tract 405, HI should have.
         """
         tracts = self.geographies.find({ 'geoid': '15007040500' })
 
@@ -242,9 +266,47 @@ class TestTracts(unittest.TestCase):
         self.assertEqual(merged_tract['xwalk']['15003008608']['HUPCT00'], 1.0)
         self.assertEqual(merged_tract['xwalk']['15003008500']['HUPCT00'], 0.0)
 
-    @unittest.skip('TODO: find a better merged tract (> 0% from multiple tracts)')
-    def test_tract_merged2(self):
-        pass
+    def test_tract_complex_merge(self):
+        # Verify state of 2010 status of tracts which contributed to the merged tract
+        tract1 = self.geographies.find({ 'geoid': '15001021300' })
+        self.assertEqual(tract1.count(), 1)
+
+        tract2 = self.geographies.find({ 'geoid': '15001021400' })
+        self.assertEqual(tract2.count(), 0)
+
+        tract3 = self.geographies.find({ 'geoid': '15001021503' })
+        self.assertEqual(tract3.count(), 0)
+
+        # Compute crosswalked values
+        tract1_house_2000 = 2768
+        tract1_house_2000_pct = 0.007
+        tract2_house_2000 = 1456
+        tract2_house_2000_pct = 0.9932
+        tract3_house_2000 = 3447
+        tract3_house_2000_pct = 0.0579
+        merged_house_2000 = sum([
+            tract1_house_2000 * tract1_house_2000_pct,
+            tract2_house_2000 * tract2_house_2000_pct,
+            tract3_house_2000 * tract3_house_2000_pct
+        ])
+        merged_house_2010 = 1586 
+        merged_house_delta = merged_house_2010 - merged_house_2000
+        merged_house_pct_change = float(merged_house_delta) / merged_house_2000
+
+        # Verify that the merged tract is correct
+        merged_tract = self.geographies.find({ 'geoid': '15001021402' })
+        self.assertEqual(merged_tract.count(), 1)        
+        merged_tract = merged_tract[0]
+
+        self.assertEqual(len(merged_tract['xwalk']), 3)
+        self.assertEqual(merged_tract['xwalk']['15001021300']['HUPCT00'], tract1_house_2000_pct)
+        self.assertEqual(merged_tract['xwalk']['15001021400']['HUPCT00'], tract2_house_2000_pct)
+        self.assertEqual(merged_tract['xwalk']['15001021503']['HUPCT00'], tract3_house_2000_pct)
+
+        self.assertEqual(float(merged_tract['data']['2000']['P1']['P001001']), merged_house_2000)
+        self.assertEqual(float(merged_tract['data']['2010']['P1']['P001001']), merged_house_2010)
+        self.assertEqual(float(merged_tract['data']['delta']['P1']['P001001']), merged_house_delta)
+        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['P1']['P001001']), merged_house_pct_change)
 
 class TestFieldCrosswalk(unittest.TestCase):
     def setUp(self):
@@ -298,6 +360,10 @@ class TestLabels(unittest.TestCase):
         connection = Connection()
         db = connection[config.LABELS_DB]
         self.labels = db[config.LABELS_COLLECTION]
+
+    @unittest.skip('TODO')
+    def test_table_count(self):
+        pass
 
     def test_table(self):
         """
