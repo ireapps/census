@@ -79,9 +79,24 @@ class TestSimpleGeographies(unittest.TestCase):
 
         self.assertEqual(county_subdivisions.count(), 44)
 
-    @unittest.skip('TODO')
     def test_county_subdivision(self):
-        pass
+        """
+        Data import test against known values that Hilo CCD County Subdivision, HI should have.
+        """
+        counties = self.geographies.find({ 'geoid': '1500190630' })
+
+        self.assertEqual(counties.count(), 1)
+
+        county = counties[0]
+
+        self.assertEqual(county['sumlev'], '060')
+        self.assertEqual(county['metadata']['NAME'], 'Hilo CCD')
+        self.assertEqual(county['metadata']['STATE'], '15')
+        self.assertEqual(county['metadata']['COUNTY'], '001')
+
+        pop_2000 = 42425 
+        pop_2010 = 45714 
+        self._test_totalpop(county, pop_2000, pop_2010)
 
     def test_place_count(self):
         places = self.geographies.find({ 'sumlev': '160' })
@@ -366,9 +381,10 @@ class TestLabels(unittest.TestCase):
         db = connection[config.LABELS_DB]
         self.labels = db[config.LABELS_COLLECTION]
 
-    @unittest.skip('TODO')
     def test_table_count(self):
-        pass
+        labels = self.labels.find_one({ 'dataset': 'SF1' })
+
+        self.assertEqual(len(labels['tables']), 331)
 
     def test_table(self):
         """
