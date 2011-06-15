@@ -83,7 +83,7 @@
             id="<%= row.key %>" parent="<%= row.label.parent %>"
             style="<% if (row.label.indent > 2) { %>display:none;<% } %>"
         >
-            <td class="label"><%= row.label.text %> <span class="key"><%= row.key %></span></td>
+            <td class="label"><span class="label-text"><%= row.label.text %></span><span class="key"><%= row.key %></span></td>
             <% _.each(row.data, function(d) { %>
             <!-- TODO: int and float format --> 
             <td class="code data-cell"><%= intComma(d["2000"]) %></td>

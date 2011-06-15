@@ -101,6 +101,7 @@ aside {
     overflow:auto;
     /*height:100%;*/
     padding:15px;
+    background-color:white;
 }
 
 aside h2 {
@@ -129,12 +130,13 @@ aside label {
 }
 
 #container {
-    margin: 20px 50px;
-    padding-top: 89px;
+    padding-top: 110px;
+    padding-left:50px;
+    width:100%;
 }
 
 #container.with-browser {
-    padding-left: 300px;
+    padding-left: 350px;
 }
 
 #logo {
@@ -243,27 +245,30 @@ nav {
 }
 
 .report th.labeldef {
-    width: 375px !important;
     vertical-align: top;
+    min-width:300px;
+    width:300px;
 }
 .report th.labeldef strong {
     font-weight: bold;
 }
 .report th.locationdef {
     background-color: #fff !important;
-    width: 300px !important;
     font-weight: bold;
     vertical-align: top;
+    width:200px;
+    min-width:200px;
 }
 .report td.data-cell {
-    width: 90px !important;
+    width:70px;
 }
 .report td.label {
     color: #000;
     padding: 5px 60px 5px 10px;
     border-right: 1px solid #ccc !important;
     text-align: left;
-    width: 300px;
+    width:200px;
+    min-width:200px;
 }
 
 .report td.label .key {

@@ -86,7 +86,7 @@ $(function(){
             //$("#browser").scrollFollow();
 
             var resize_function = function() {
-                $("#browser").height($(window).height() - 89);
+                $("#browser").height($(window).height() - 89 - 30);
             }
             
             resize_function();
