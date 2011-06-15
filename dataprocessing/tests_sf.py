@@ -27,9 +27,10 @@ class TestSimpleGeographies(unittest.TestCase):
             known_pct
         )
 
-    @unittest.skip('TODO')
     def test_state_count(self):
-        states = self.geographies.find({ 'sumlev': '15' })
+        states = self.geographies.find({ 'sumlev': '040' })
+
+        self.assertEqual(states.count(), 1)
     
     def test_state(self):
         """
@@ -49,9 +50,10 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 1360301
         self._test_totalpop(state, pop_2000, pop_2010)
 
-    @unittest.skip('TODO')
     def test_county_count(self):
-        pass
+        counties = self.geographies.find({ 'sumlev': '050' })
+
+        self.assertEqual(counties.count(), 5)
 
     def test_county(self):
         """
@@ -72,17 +74,19 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 154834
         self._test_totalpop(county, pop_2000, pop_2010)
 
-    @unittest.skip('TODO')
     def test_county_subdivision_count(self):
-        pass
+        county_subdivisions = self.geographies.find({ 'sumlev': '060' })
+
+        self.assertEqual(county_subdivisions.count(), 44)
 
     @unittest.skip('TODO')
     def test_county_subdivision(self):
         pass
 
-    @unittest.skip('TODO')
     def test_place_count(self):
-        pass
+        places = self.geographies.find({ 'sumlev': '160' })
+
+        self.assertEqual(places.count(), 151)
 
     def test_place(self):
         """
@@ -103,9 +107,10 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2010 = 47698 
         self._test_totalpop(place, pop_2000, pop_2010)
 
-    @unittest.skip('TODO')
     def test_tract_count(self):
-        pass
+        tracts = self.geographies.find({ 'sumlev': '140' })
+
+        self.assertEqual(tracts.count(), 351)
 
     def test_simple_tract(self): 
         """
@@ -278,17 +283,17 @@ class TestTracts(unittest.TestCase):
         self.assertEqual(tract3.count(), 0)
 
         # Compute crosswalked values
-        tract1_house_2000 = 2768
-        tract1_house_2000_pct = 0.007
-        tract2_house_2000 = 1456
-        tract2_house_2000_pct = 0.9932
-        tract3_house_2000 = 3447
-        tract3_house_2000_pct = 0.0579
-        merged_house_2000 = sum([
+        tract1_house_2000 = 2269 
+        tract1_house_2000_pct = 0.0065
+        tract2_house_2000 = 1245
+        tract2_house_2000_pct = 0.9938
+        tract3_house_2000 = 2991
+        tract3_house_2000_pct = 0.0351
+        merged_house_2000 = int(sum([
             tract1_house_2000 * tract1_house_2000_pct,
             tract2_house_2000 * tract2_house_2000_pct,
             tract3_house_2000 * tract3_house_2000_pct
-        ])
+        ]))
         merged_house_2010 = 1586 
         merged_house_delta = merged_house_2010 - merged_house_2000
         merged_house_pct_change = float(merged_house_delta) / merged_house_2000
@@ -299,14 +304,14 @@ class TestTracts(unittest.TestCase):
         merged_tract = merged_tract[0]
 
         self.assertEqual(len(merged_tract['xwalk']), 3)
-        self.assertEqual(merged_tract['xwalk']['15001021300']['HUPCT00'], tract1_house_2000_pct)
-        self.assertEqual(merged_tract['xwalk']['15001021400']['HUPCT00'], tract2_house_2000_pct)
-        self.assertEqual(merged_tract['xwalk']['15001021503']['HUPCT00'], tract3_house_2000_pct)
+        self.assertAlmostEqual(merged_tract['xwalk']['15001021300']['HUPCT00'], tract1_house_2000_pct)
+        self.assertAlmostEqual(merged_tract['xwalk']['15001021400']['HUPCT00'], tract2_house_2000_pct)
+        self.assertAlmostEqual(merged_tract['xwalk']['15001021503']['HUPCT00'], tract3_house_2000_pct)
 
-        self.assertEqual(float(merged_tract['data']['2000']['P1']['P001001']), merged_house_2000)
-        self.assertEqual(float(merged_tract['data']['2010']['P1']['P001001']), merged_house_2010)
-        self.assertEqual(float(merged_tract['data']['delta']['P1']['P001001']), merged_house_delta)
-        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['P1']['P001001']), merged_house_pct_change)
+        self.assertEqual(float(merged_tract['data']['2000']['H1']['H001001']), merged_house_2000)
+        self.assertEqual(float(merged_tract['data']['2010']['H1']['H001001']), merged_house_2010)
+        self.assertEqual(float(merged_tract['data']['delta']['H1']['H001001']), merged_house_delta)
+        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['H1']['H001001']), merged_house_pct_change)
 
 class TestFieldCrosswalk(unittest.TestCase):
     def setUp(self):
