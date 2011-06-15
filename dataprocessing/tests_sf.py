@@ -270,9 +270,19 @@ class TestFieldCrosswalk(unittest.TestCase):
         self.assertEqual(float(state['data']['delta']['P3']['P003006']), delta)
         self.assertAlmostEqual(float(state['data']['pct_change']['P3']['P003006']), pct_change)
 
-    @unittest.skip('TODO')
     def test_different_everything(self):
-        pass
+        state = self.geographies.find_one({ 'geoid': '15' })
+
+        unmarried_partner_households_2000 = 23516 
+        unmarried_partner_households_2010 = 33068 
+        delta = unmarried_partner_households_2010 - unmarried_partner_households_2000
+        pct_change = float(unmarried_partner_households_2010 - unmarried_partner_households_2000) / unmarried_partner_households_2000
+
+        # 2000 field PCT014002
+        self.assertEqual(float(state['data']['2000']['PCT15']['PCT015013']), unmarried_partner_households_2000)
+        self.assertEqual(float(state['data']['2010']['PCT15']['PCT015013']), unmarried_partner_households_2010)
+        self.assertEqual(float(state['data']['delta']['PCT15']['PCT015013']), delta)
+        self.assertAlmostEqual(float(state['data']['pct_change']['PCT15']['PCT015013']), pct_change)
 
 class TestLabels(unittest.TestCase):
     def setUp(self):
