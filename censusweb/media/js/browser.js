@@ -83,12 +83,12 @@ $(function(){
             $('#toggle-browser').click(this.toggleBrowser);
             $('#default-tables').click(this.defaultTables);
             this.toggleBrowser();
-            $("#browser").scrollFollow();
+            //$("#browser").scrollFollow();
 
             var resize_function = function() {
                 $("#browser").height($(window).height() - 89);
             }
-
+            
             resize_function();
             $(window).resize(resize_function);
         },

@@ -74,20 +74,33 @@ header {
     padding: 0px 50px 25px;
     border-bottom: 1px solid #efefef;
     display:block;
+    position:fixed;
+    top:0;
+    width:100%;
+    background-color:white;
 }
 
-aside {
+/*aside {
     float:left;
     padding:15px;
     width:300px;
     display:none;
     position:absolute;
     top:89px;
-    height:550px; /* default, set in javascript */
+    height:550px;
     overflow:auto;
     background-color:#E9F6FE;
     line-height:1.3em;
     m
+}*/
+aside {
+    display:none;
+    width:300px;
+    position:fixed;
+    top:89px;
+    overflow:auto;
+    /*height:100%;*/
+    padding:15px;
 }
 
 aside h2 {
@@ -116,11 +129,12 @@ aside label {
 }
 
 #container {
-    margin: 40px 50px;
+    margin: 20px 50px;
+    padding-top: 89px;
 }
 
 #container.with-browser {
-    padding-left: 320px;
+    padding-left: 300px;
 }
 
 #logo {
@@ -131,6 +145,8 @@ nav {
     margin:20px 0;
     display: block;
 }
+
+.help-text{font-size:14px;}
 
 #help-link, #help {
     font-size: 16px;
