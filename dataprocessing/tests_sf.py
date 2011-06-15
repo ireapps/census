@@ -198,7 +198,6 @@ class TestTracts(unittest.TestCase):
         self.assertAlmostEqual(float(tract2['data']['delta']['H1']['H001001']), tract2_house_delta)
         self.assertAlmostEqual(float(tract2['data']['pct_change']['H1']['H001001']), tract2_house_pct_change)
 
-    @unittest.skip('Not migrated to 2010.')
     def test_tract_merged(self):
         """
         Verify that a merged tract is crosswalked correctly.
@@ -206,36 +205,46 @@ class TestTracts(unittest.TestCase):
         TODO - test housing
         """
         # Verify that the first dissolved tract no longer exists
-        tract1 = self.geographies.find({ 'geoid': '10001040600' })
+        tract1 = self.geographies.find({ 'geoid': '15003008607' })
         self.assertEqual(tract1.count(), 0)
 
-        tract2 = self.geographies.find({ 'geoid': '10001040800' })
+        tract2 = self.geographies.find({ 'geoid': '15003008608' })
         self.assertEqual(tract2.count(), 0)
 
+        tract3 = self.geographies.find({ 'geoid': '15003008500' })
+        self.assertEqual(tract3.count(), 0)
+
         # Compute crosswalked values
-        tract1_pop_2000 = 2380 
-        tract2_pop_2010 = 2770
-        merged_pop_2000 = tract1_pop_2000 + tract2_pop_2010
-        merged_pop_2010 = 6131
+        tract1_pop_2000 = 1544 
+        tract2_pop_2000 = 0 
+        tract3_pop_2000 = 1311
+        merged_pop_2000 = tract1_pop_2000 # only this tract contributed population
+        merged_pop_2010 = 5493 
         merged_pop_delta = merged_pop_2010 - merged_pop_2000
         merged_pop_pct_change = float(merged_pop_delta) / merged_pop_2000
 
         # Verify that the merged tract is correct
-        merged_tract = self.geographies.find({ 'geoid': '10001043300' })
+        merged_tract = self.geographies.find({ 'geoid': '15003011500' })
         self.assertEqual(merged_tract.count(), 1)        
         merged_tract = merged_tract[0]
 
-        self.assertEqual(len(merged_tract['xwalk']), 2)
-        self.assertEqual(merged_tract['xwalk']['10001040600']['POPPCT00'], 1.0)
-        self.assertEqual(merged_tract['xwalk']['10001040800']['POPPCT00'], 1.0)
+        self.assertEqual(len(merged_tract['xwalk']), 3)
+        self.assertEqual(merged_tract['xwalk']['15003008607']['POPPCT00'], 1.0)
+        self.assertEqual(merged_tract['xwalk']['15003008608']['POPPCT00'], 1.0)
+        self.assertEqual(merged_tract['xwalk']['15003008500']['POPPCT00'], 0.0)
 
-        self.assertEqual(merged_tract['data']['2000']['P1']['P0010001'], merged_pop_2000)
-        self.assertEqual(merged_tract['data']['2010']['P1']['P0010001'], merged_pop_2010)
-        self.assertEqual(float(merged_tract['data']['delta']['P1']['P0010001']), merged_pop_delta)
-        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['P1']['P0010001']), merged_pop_pct_change)
+        self.assertEqual(float(merged_tract['data']['2000']['P1']['P001001']), merged_pop_2000)
+        self.assertEqual(float(merged_tract['data']['2010']['P1']['P001001']), merged_pop_2010)
+        self.assertEqual(float(merged_tract['data']['delta']['P1']['P001001']), merged_pop_delta)
+        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['P1']['P001001']), merged_pop_pct_change)
         
-        self.assertEqual(merged_tract['xwalk']['10001040600']['HUPCT00'], 1.0)
-        self.assertEqual(merged_tract['xwalk']['10001040800']['HUPCT00'], 1.0)
+        self.assertEqual(merged_tract['xwalk']['15003008607']['HUPCT00'], 1.0)
+        self.assertEqual(merged_tract['xwalk']['15003008608']['HUPCT00'], 1.0)
+        self.assertEqual(merged_tract['xwalk']['15003008500']['HUPCT00'], 0.0)
+
+    @unittest.skip('TODO: find a better merged tract (> 0% from multiple tracts)')
+    def test_tract_merged2(self):
+        pass
 
 class TestFieldCrosswalk(unittest.TestCase):
     def setUp(self):
