@@ -124,9 +124,6 @@ for geography in collection.find({'geoid':'15'}, fields=['data', 'geoid', 'metad
                 for key_2010 in keys_2010:
                     table_2010 = utils.parse_table_from_key(key_2010)
 
-                    if k[-3:] != key_2010[-3:] and table != table_2010:
-                        print k, key_2010, table, table_2010
-
                     if table_2010 not in data:
                         data[table_2010] = {}
 
