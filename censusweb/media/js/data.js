@@ -213,17 +213,13 @@ $(function(){
             return "";
         }
 
-        if (n % 1 == 0) {
-            return Math.round(n);
-        }
-
         if (_.isUndefined(decimals)) {
-            decimals = 1;
+            decimals = 2;
         }
 
-        pow = Math.pow(10, decimals);
+        s = n.toFixed(decimals);
 
-        return Math.round(n * pow) / pow;
+        return s 
     }
 
     window.toPercent = function(n) {

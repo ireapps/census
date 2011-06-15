@@ -12,7 +12,7 @@ collection = db[config.GEOGRAPHIES_COLLECTION]
 row_count = 0
 computations = 0
 
-for geography in collection.find({}, fields=['data']):
+for geography in collection.find({'geoid': '01'}, fields=['data']):
     row_count += 1
 
     if 'delta' not in geography['data']:
