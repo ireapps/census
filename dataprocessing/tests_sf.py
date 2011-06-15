@@ -27,6 +27,10 @@ class TestSimpleGeographies(unittest.TestCase):
             known_pct
         )
 
+    def test_only_complete_geographies(self):
+        geos = self.geographies.find({ 'metadata.GEOCOMP': { '$ne': '00' }})
+        self.assertEqual(geos.count(), 0)
+
     def test_state_count(self):
         states = self.geographies.find({ 'sumlev': '040' })
 
@@ -381,6 +385,9 @@ class TestLabels(unittest.TestCase):
         db = connection[config.LABELS_DB]
         self.labels = db[config.LABELS_COLLECTION]
 
+        db = connection[config.CENSUS_DB]
+        self.geographies = db[config.GEOGRAPHIES_COLLECTION]
+
     def test_table_count(self):
         labels = self.labels.find_one({ 'dataset': 'SF1' })
 
@@ -409,6 +416,31 @@ class TestLabels(unittest.TestCase):
         self.assertEqual(label['parent'], None)
         self.assertEqual(label['indent'], 0)
         
+    def test_labels_match_geographies(self):
+        """
+        Hawaii should have a key for every label.
+        Every label should have a key for Hawaii.
+        """
+        geo = self.geographies.find_one({ 'geoid': '15' })
+        labels = self.labels.find_one({ 'dataset': 'SF1' })
+
+        geo_tables = geo['data']['2010']
+        labels_tables = labels['tables']
+
+        self.assertEqual(sorted(geo_tables.keys()), sorted(labels_tables.keys()))
+
+        # Test table has labels
+        for table_name, geo_keys in geo_tables.items():
+            label_keys = labels_tables[table_name]['labels']
+
+            self.assertEqual(sorted(geo_keys.keys()), sorted(label_keys.keys()))
+
+        for table_name, label_data in labels_tables.items():
+            label_keys = label_data['labels']
+            geo_keys = geo_tables[table_name]
+
+            self.assertEqual(sorted(geo_keys.keys()), sorted(label_keys.keys()))
+
 if __name__ == '__main__':
     unittest.main()
         
