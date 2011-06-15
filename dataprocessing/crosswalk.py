@@ -51,7 +51,7 @@ with open('sf_crosswalk_key.csv') as f:
     for row in reader:
         CROSSWALK_FIELDS_BY_TABLE[row[0]] = row[1]
 
-for geography in collection.find({'geoid':'15'}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
+for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
     row_count += 1
     
     data = {}

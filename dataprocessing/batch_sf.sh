@@ -20,8 +20,8 @@ echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
 echo 'Fetching data'
-#./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
-#./fetch_sf_data_2010.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+./fetch_sf_data_2010.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
 
 echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
