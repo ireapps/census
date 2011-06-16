@@ -21,7 +21,7 @@ env.site_path = '%(repo_path)s/censusweb' % env
 env.dataprocessing_path = '%(repo_path)s/dataprocessing' % env
 env.apache_config_path = '/home/ubuntu/apache/%(project_name)s' % env
 env.python = 'python2.7'
-env.repository_url = "git@github.com:documentcloud/census.git"
+env.repository_url = "git@github.com:ireapps/census.git"
 env.memcached_server_address = "cache"
 env.multi_server = False
 
