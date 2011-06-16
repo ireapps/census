@@ -441,6 +441,15 @@ class TestLabels(unittest.TestCase):
 
             self.assertEqual(sorted(geo_keys.keys()), sorted(label_keys.keys()))
 
+    def test_table_sizes(self):
+        """
+        Test that the tables documented size matches its actual label count.
+        """
+        labels_tables = self.labels.find_one({ 'dataset': 'SF1' })['tables']
+
+        for label_data in labels_tables.values():
+            self.assertEqual(label_data['size'], len(label_data['labels']))
+
 if __name__ == '__main__':
     unittest.main()
         
