@@ -88,3 +88,4 @@ License
 =======
 
 This software is licensed under the permissive MIT license. See COPYING for details.
+
