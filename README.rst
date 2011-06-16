@@ -28,13 +28,12 @@ To get the web application running::
     cd censusweb
     mkvirtualenv --no-site-packages censusweb
     pip install -r requirements.txt
-    cd ../censusweb
-    ./manage.py runserver
+    python manage.py runserver
 
 Configuring the webapp
 ======================
 
-By default the webapp is going to use the data published to the IRE test site, which may not be accessible to you. To use you're own data open censusweb/config/settings.py and modify the following line::
+By default the webapp is going to use the data published to the IRE test site, which may not be accessible to you. To use your own data open censusweb/config/settings.py and modify the following line::
 
     API_URL = 'http://s3.amazonaws.com/census-test' 
 
@@ -65,3 +64,27 @@ To load SF1 data for Hawaii make sure you have Mongo running and then execute th
     cd dataprocessing
     ./batch_sf.sh Hawaii staging
 
+Credits
+=======
+
+This application was a project of `Investigative Reporters and Editors (IRE) <http://www.ire.org/>`_ / `National Institute for Computer-Assisted Reporting (NICAR) <http://data.nicar.org/>`_. Funding was generously provided by `The Reynolds Journalism Institute <http://www.rjionline.org/>`_
+
+The following journolists and nerds contributed to this project:
+
+* Jeremy Ashkenas (DocumentCloud)
+* Brian Boyer (Chicago Tribune)
+* Christopher Groskopf (Chicago Tribune)
+* Joe Germuska (Chicago Tribune)
+* Mark Horvit (IRE)
+* Ryan Mark (Chicago Tribune)
+* Curt Merrill (CNN)
+* Paul Overberg (USA Today)
+* Ted Peterson (IRE)
+* Aron Pilhofer (New York Times)
+* Mike Tigas (Spokesman-Review)
+* Matt Waite (University of Nebraska)
+
+License
+=======
+
+This software is licensed under the permissive MIT license. See COPYING for details.
