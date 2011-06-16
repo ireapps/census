@@ -4,12 +4,19 @@ STATE_NAME=$1
 STATE_NAME_LOWER=$2
 STATE_NAME_ABBR=$3
 
-CENSUS_DOMAIN="https://www.census.gov/embargo/pio"
+EMBARGO_DOMAIN="https://www.census.gov/embargo/pio"
+CENSUS_DOMAIN="http://www2.census.gov/census_2010/04-Summary_File_1/"
 
 cd data
 
 # 2010
-wget $CENSUS_DOMAIN/${STATE_NAME}/${STATE_NAME_ABBR}2010.sf1.zip --user $CENSUS_USER --password $CENSUS_PASS
+wget $EMBARGO_DOMAIN/${STATE_NAME}/${STATE_NAME_ABBR}2010.sf1.zip --user $CENSUS_USER --password $CENSUS_PASS
+
+if [ ! -f ${STATE_NAME_ABBR}2010.sf1.zip ]
+then
+    wget $CENSUS_DOMAIN/${STATE_NAME}/${STATE_NAME_ABBR}2010.sf1.zip --user $CENSUS_USER --password $CENSUS_PASS
+fi
+
 unzip ${STATE_NAME_ABBR}2010.sf1.zip
 
 # Generate headers
