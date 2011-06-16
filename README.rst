@@ -71,7 +71,7 @@ This application was a project of `Investigative Reporters and Editors <http://w
 
 The following journalists and nerds contributed to this project:
 
-* Jeremy Ashkenas (DocumentCloud)
+* Jeremy Ashkenas (New York Times)
 * Brian Boyer (Chicago Tribune)
 * Joe Germuska (Chicago Tribune)
 * Christopher Groskopf (Chicago Tribune)
