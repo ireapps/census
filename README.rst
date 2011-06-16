@@ -69,12 +69,12 @@ Credits
 
 This application was a project of `Investigative Reporters and Editors <http://www.ire.org/>`_ / `National Institute for Computer-Assisted Reporting <http://data.nicar.org/>`_. Funding was generously provided by `The Reynolds Journalism Institute <http://www.rjionline.org/>`_.
 
-The following journolists and nerds contributed to this project:
+The following journalists and nerds contributed to this project:
 
 * Jeremy Ashkenas (DocumentCloud)
 * Brian Boyer (Chicago Tribune)
-* Christopher Groskopf (Chicago Tribune)
 * Joe Germuska (Chicago Tribune)
+* Christopher Groskopf (Chicago Tribune)
 * Mark Horvit (IRE)
 * Ryan Mark (Chicago Tribune)
 * Curt Merrill (CNN)
