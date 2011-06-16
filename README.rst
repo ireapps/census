@@ -67,7 +67,7 @@ To load SF1 data for Hawaii make sure you have Mongo running and then execute th
 Credits
 =======
 
-This application was a project of `Investigative Reporters and Editors (IRE) <http://www.ire.org/>`_ / `National Institute for Computer-Assisted Reporting (NICAR) <http://data.nicar.org/>`_. Funding was generously provided by `The Reynolds Journalism Institute <http://www.rjionline.org/>`_
+This application was a project of `Investigative Reporters and Editors <http://www.ire.org/>`_ / `National Institute for Computer-Assisted Reporting <http://data.nicar.org/>`_. Funding was generously provided by `The Reynolds Journalism Institute <http://www.rjionline.org/>`_.
 
 The following journolists and nerds contributed to this project:
 
