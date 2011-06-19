@@ -7,10 +7,6 @@ from django.shortcuts import render_to_response
 from django.contrib.gis.shortcuts import render_to_kml, render_to_kmz
 from django.template import RequestContext, Template, Context
 
-from sqlalchemy import Column, MetaData, Table
-from sqlalchemy import Float, Integer, String
-from sqlalchemy.schema import CreateTable
-
 from boundaryservice.models import Boundary
 
 import csv
@@ -230,61 +226,24 @@ def _build_kml_context_for_template(b, j, tables, labelset):
     return kml_context
     
 def generate_sql(request, file_ids=None, table_ids=None, aggregate=None):
-    r = HttpResponse(mimetype='text/plain')
-
     if aggregate == 'all_files':
-        file_ids = ','.join(map(str,range(1,48)))
+        sql = utils.generate_create_sql_by_file()
+        return HttpResponse(sql,mimetype='text/plain')
     elif aggregate == 'all_tables':
-        table_ids = []
-        for f in utils.SF1_FILE_SEGMENTS[1:]:
-            table_ids.extend(f)
-        table_ids = ','.join(table_ids)
+        sql = utils.generate_sql_by_table()
+        return HttpResponse(sql,mimetype='text/plain')
     elif aggregate is not None:
         return HttpResponseNotFound()
 
-    try:
+    if file_ids:
         ids = map(int,file_ids.split(','))
-        id_handler = _create_statement_for_file_id
-    except:
-        ids = table_ids.split(',')
-        id_handler = _create_statement_for_table_code
-    try:    
-        for sql_table in map(id_handler,ids):
-            r.write(unicode(CreateTable(sql_table).compile(dialect=None)).strip() + ';\n\n')
-    except KeyError:
-        return HttpResponseNotFound()
-    return r
+        sql = utils.generate_create_sql_by_file(file_numbers=ids)
+        return HttpResponse(sql,mimetype='text/plain')
 
-def _create_statement_for_file_id(id):
-    sql_table = _create_base_table('file%s' % id)
-    for table in utils.SF1_FILE_SEGMENTS[id]:
-        _add_sql_columns_for_table(sql_table,table)
-    return sql_table
-        
+    if table_ids:    
+        table_ids = table_ids.split(',')
+        sql = utils.generate_sql_by_table(table_ids)
+        return HttpResponse(sql,mimetype='text/plain')
 
-def _create_statement_for_table_code(code):
-    sql_table = _create_base_table(code)
-    _add_sql_columns_for_table(sql_table,code)
-    return sql_table
+    return HttpResponseNotFound()
 
-def _add_sql_columns_for_table(sql_table,code):
-    labels = mongoutils.get_labelset()
-    table_labels = labels['tables'][code]
-    if table_labels['name'].find('AVERAGE') != -1 or table_labels['name'].find('MEDIAN') != -1:
-        col_type = Float
-    else:
-        col_type = Integer
-    for label in sorted(table_labels['labels']):
-        sql_table.append_column(Column(label, col_type(), nullable=False))
-
-def _create_base_table(name):
-    metadata = MetaData()
-    sql_table = Table(name, metadata)
-    sql_table.append_column(Column('FILEID', String(length=6), nullable=False))
-    sql_table.append_column(Column('STUSAB', String(length=2), nullable=False))
-    sql_table.append_column(Column('CHARITER', String(length=3), nullable=False))
-    sql_table.append_column(Column('CIFSN', String(length=3), nullable=False))
-    sql_table.append_column(Column('LOGRECNO', String(length=7), nullable=False))
-
-    return sql_table
-    

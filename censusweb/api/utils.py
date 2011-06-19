@@ -2,6 +2,12 @@
 
 import simplejson
 
+from sqlalchemy import Column, MetaData, Table
+from sqlalchemy import Float, Integer, String
+from sqlalchemy.schema import CreateTable
+
+from api import mongoutils
+
 from django.conf import settings
 import requests
 
@@ -51,52 +57,33 @@ def fetch_labels(dataset):
     url = '%s/%s_labels.jsonp' % (settings.API_URL, dataset)
     return _api_fetch(url)
 
-def generate_sql(file_ids=None, table_ids=None, aggregate=None):
-    r = []
-    if aggregate == 'all_files':
-        file_ids = ','.join(map(str,range(1,48)))
-    elif aggregate == 'all_tables':
-        table_ids = []
-        for f in utils.SF1_FILE_SEGMENTS[1:]:
-            table_ids.extend(f)
-        table_ids = ','.join(table_ids)
-    elif aggregate is not None:
-        return HttpResponseNotFound()
+def generate_create_sql_by_file(file_numbers=None):
+    if file_numbers is None:
+        file_numbers = range(1,48)
 
-    try:
-        ids = map(int,file_ids.split(','))
-        id_handler = _create_statement_for_file_id
-    except:
-        ids = table_ids.split(',')
-        id_handler = _create_statement_for_table_code
-    try:    
-        for sql_table in map(id_handler,ids):
-            r.append(unicode(CreateTable(sql_table).compile(dialect=None)).strip() + ';')
-    except KeyError:
-        return HttpResponseNotFound()
-    return "\n\n".join(r)
+    statements = []
+    for file_number in file_numbers:
+        sql_table = _create_base_table('file%s' % file_number)
+        for table in SF1_FILE_SEGMENTS[file_number]:
+            _add_sql_columns_for_table(sql_table,table)
+        statements.append(unicode(CreateTable(sql_table).compile(dialect=None)).strip() + ';')
 
-def _create_statement_for_file_id(id):
-    sql_table = _create_base_table('file%s' % id)
-    for table in utils.SF1_FILE_SEGMENTS[id]:
-        _add_sql_columns_for_table(sql_table,table)
-    return sql_table
+    return "\n\n".join(statements)
+        
+def generate_sql_by_table(table_codes=None):
+    statements = []
+    if table_codes is None:
+        table_codes = []
+        for f in SF1_FILE_SEGMENTS[1:]:
+            table_codes.extend(f)
 
-
-def _create_statement_for_table_code(code):
-    sql_table = _create_base_table(code)
-    _add_sql_columns_for_table(sql_table,code)
-    return sql_table
-
-def _add_sql_columns_for_table(sql_table,code):
-    labels = mongoutils.get_labelset()
-    table_labels = labels['tables'][code]
-    if table_labels['name'].find('AVERAGE') != -1 or table_labels['name'].find('MEDIAN') != -1:
-        col_type = Float
-    else:
-        col_type = Integer
-    for label in sorted(table_labels['labels']):
-        sql_table.append_column(Column(label, col_type(), nullable=False))
+    statements = []
+    for table_code in table_codes:
+        sql_table = _create_base_table(table_code)
+        _add_sql_columns_for_table(sql_table,table_code)
+        statements.append(unicode(CreateTable(sql_table).compile(dialect=None)).strip() + ';')
+    
+    return "\n\n".join(statements)
 
 def _create_base_table(name):
     metadata = MetaData()
@@ -109,8 +96,16 @@ def _create_base_table(name):
 
     return sql_table
 
+def _add_sql_columns_for_table(sql_table,code):
+    labels = mongoutils.get_labelset()
+    table_labels = labels['tables'][code]
+    if table_labels['name'].find('AVERAGE') != -1 or table_labels['name'].find('MEDIAN') != -1:
+        col_type = Float
+    else:
+        col_type = Integer
+    for label in sorted(table_labels['labels']):
+        sql_table.append_column(Column(label, col_type(), nullable=False))
 
- 
 SF1_FILE_SEGMENTS = [
     [ 'no file zero, this is a place_holder'],
     ['P1'], # file 1
