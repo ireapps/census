@@ -45,23 +45,55 @@
             
   <div class="section" id="data-overview">
 <h1>Data Overview<a class="headerlink" href="#data-overview" title="Permalink to this headline">¶</a></h1>
-<p>The census.ire.org site will contain data from Summary File 1 of the 2010 Decennial Census. For full details about the data contained in these tables, please refer to Chapter 6 of the <a class="reference external" href="http://www.census.gov/prod/cen2010/doc/sf1.pdf">Technical Documentation</a> provided by the Census Bureau.</p>
-<p>The Census Bureau is releasing the Summary File 1 data on a rolling basis beginning in mid June. Data for a few states will be released each week and added to the census.ire.org site until all data are available sometime in August.</p>
+<p>The census.ire.org site will contain data from Summary File 1 of the 2010 Decennial Census.
+For full details about the data contained in these tables,
+please refer to Chapter 6 of the <a class="reference external" href="http://www.census.gov/prod/cen2010/doc/sf1.pdf">Technical Documentation</a> provided by the Census Bureau.</p>
+<p>The Census Bureau is releasing the Summary File 1 data on a rolling basis
+beginning in mid June.
+Data for a few states will be released each week
+and added to the census.ire.org site until all data are available sometime in August.</p>
+<div class="section" id="deltas">
+<h2>Deltas<a class="headerlink" href="#deltas" title="Permalink to this headline">¶</a></h2>
+<p>For many tables and fields we were able to calculate the amount of change between 2000 and 2010.
+However, due to changes in the Census questionaire, not all fields have direct equivalents.</p>
+<p>For instance: In 2000, questions about family households asked about &#8220;own&#8221; children in the household,
+but in 2010, the questions were about &#8220;related&#8221; children, so the figures are not directly comparable.</p>
+<p>Also, some questions had more responses available in 2010 than in 2000, or vice versa.</p>
+<p>For example: The Housing Tenure table in 2000 includes number of housing units owned. But in 2010,
+the table includes units owned with a mortgage or loan and units owned free and clear.</p>
+<p>Because the responses were not separated in 2000, we can only provide a delta for the total number owned.</p>
+</div>
 <div class="section" id="geographies">
-<h2>Geographies<a class="headerlink" href="#geographies" title="Permalink to this headline">¶</a></h2>
-<p>The census.ire.org site will provide data at several key levels of geography: place, county subdivision, county and state.</p>
-<div class="section" id="places-and-county-subdivisions">
-<h3>Places and county subdivisions<a class="headerlink" href="#places-and-county-subdivisions" title="Permalink to this headline">¶</a></h3>
+<span id="geography-label"></span><h2>Geographies<a class="headerlink" href="#geographies" title="Permalink to this headline">¶</a></h2>
+<p>The census.ire.org site will provide data at several key levels of geography:
+census tract, place, county subdivision, county and state.</p>
+<div class="section" id="tract">
+<h3>Tract<a class="headerlink" href="#tract" title="Permalink to this headline">¶</a></h3>
+<p>Tracts are created by the Census Bureau to contain an average of 4,000 people.
+Their boundaries may change between decennial censuses and vary in size from city blocks to entire counties, depending on population density</p>
+<p>In order to compare 2000 tracts to 2010 tracts,
+we&#8217;ve calculated how the population and housing units from 2000 boundaries
+would be distributed in the new 2010 boundaries using formulas provided by the Census Bureau.</p>
+<p>U.S. Census: <a class="reference external" href="http://www.census.gov/geo/www/geo_defn.html#CensusTract">Tract definition</a></p>
 </div>
-<div class="section" id="counties">
-<h3>Counties<a class="headerlink" href="#counties" title="Permalink to this headline">¶</a></h3>
-<p>Counties in most states.</p>
-<p>Parishes in Louisiana.</p>
-<p>Alaska has boroughs, and county-equivalents for areas of the state not part of borough.</p>
+<div class="section" id="place">
+<h3>Place<a class="headerlink" href="#place" title="Permalink to this headline">¶</a></h3>
+<p>Places in Census Parlance include incorporated places legally established under state law;
+consolidated cities, where functions of local and county governments have merged;
+and Census Designated Places, areas of significant population with a well-known name, but not legally incorporated.</p>
+<p>U.S. Census: <a class="reference external" href="http://www.census.gov/geo/www/geo_defn.html#Place">Place definition</a></p>
 </div>
-<div class="section" id="states">
-<h3>States<a class="headerlink" href="#states" title="Permalink to this headline">¶</a></h3>
-<p>Self explanatory.</p>
+<div class="section" id="county-subdivision">
+<h3>County Subdivision<a class="headerlink" href="#county-subdivision" title="Permalink to this headline">¶</a></h3>
+<p>In some states, townships are considered County Subdivisions, not &#8220;places.&#8221;</p>
+<p>U.S. Census: <a class="reference external" href="http://www.census.gov/geo/www/geo_defn.html#CountySubdivision">County Subdivision definition</a></p>
+</div>
+<div class="section" id="county-and-county-equivalents">
+<h3>County and county equivalents<a class="headerlink" href="#county-and-county-equivalents" title="Permalink to this headline">¶</a></h3>
+<p>Counties are the primary division of most states.
+In Alaska, county-equivalent areas are known as &#8220;boroughs,&#8221;
+and in Louisiana they are known as &#8220;parishes.&#8221;</p>
+<p>U.S. Census: <a class="reference external" href="http://www.census.gov/geo/www/geo_defn.html#County">County definition</a></p>
 </div>
 </div>
 <div class="section" id="formats">
@@ -69,7 +101,7 @@
 <div class="section" id="csv">
 <h3>CSV<a class="headerlink" href="#csv" title="Permalink to this headline">¶</a></h3>
 <p>These are comma-separated-value files. They are plain-text files that can be opened in Excel or other programs for further analysis of the data.</p>
-<p>The fields in the CSV files will be transposed.</p>
+<p>CSV files will be transposed from the format seen on the web site.</p>
 </div>
 <div class="section" id="kml">
 <h3>KML<a class="headerlink" href="#kml" title="Permalink to this headline">¶</a></h3>
@@ -91,10 +123,12 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Data Overview</a><ul>
+<li><a class="reference internal" href="#deltas">Deltas</a></li>
 <li><a class="reference internal" href="#geographies">Geographies</a><ul>
-<li><a class="reference internal" href="#places-and-county-subdivisions">Places and county subdivisions</a></li>
-<li><a class="reference internal" href="#counties">Counties</a></li>
-<li><a class="reference internal" href="#states">States</a></li>
+<li><a class="reference internal" href="#tract">Tract</a></li>
+<li><a class="reference internal" href="#place">Place</a></li>
+<li><a class="reference internal" href="#county-subdivision">County Subdivision</a></li>
+<li><a class="reference internal" href="#county-and-county-equivalents">County and county equivalents</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#formats">Formats</a><ul>
@@ -145,7 +179,7 @@
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011, Curt.
+        &copy; Copyright 2011, IRE.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
