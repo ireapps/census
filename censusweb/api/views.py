@@ -1,7 +1,8 @@
 import simplejson
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
+
 from django.shortcuts import render_to_response
 from django.contrib.gis.shortcuts import render_to_kml, render_to_kmz
 from django.template import RequestContext, Template, Context
@@ -224,3 +225,25 @@ def _build_kml_context_for_template(b, j, tables, labelset):
 
     return kml_context
     
+def generate_sql(request, file_ids=None, table_ids=None, aggregate=None):
+    if aggregate == 'all_files':
+        sql = utils.generate_create_sql_by_file()
+        return HttpResponse(sql,mimetype='text/plain')
+    elif aggregate == 'all_tables':
+        sql = utils.generate_sql_by_table()
+        return HttpResponse(sql,mimetype='text/plain')
+    elif aggregate is not None:
+        return HttpResponseNotFound()
+
+    if file_ids:
+        ids = map(int,file_ids.split(','))
+        sql = utils.generate_create_sql_by_file(file_numbers=ids)
+        return HttpResponse(sql,mimetype='text/plain')
+
+    if table_ids:    
+        table_ids = table_ids.split(',')
+        sql = utils.generate_sql_by_table(table_ids)
+        return HttpResponse(sql,mimetype='text/plain')
+
+    return HttpResponseNotFound()
+
