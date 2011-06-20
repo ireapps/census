@@ -12,7 +12,9 @@ Question 1: How does the racial/ethnic make-up of my town compare to my county a
 .. note:: For the purposes of this tutorial, you live in Anniston, Alabama.
 
 When census.ire.org first loads, you'll be asked what geography level you're interested in.
-For a detailed explanation of these terms, please see <tk>.
+For a detailed explanation of these terms, please see the `Census Geography Documentation`_.
+
+.. _Census Geography Documentation: http://www.census.gov/geo/www/geo_defn.html
 
 We are interested in the town of Anniston,
 which is a place according to the Census Bureau,
@@ -26,7 +28,7 @@ We're looking for a place in Alabama, so find the link for Alabama and click it.
 
 You should now see several columns of places in Alabama.
 
-.. note:: The Census Bureau has several suffixes for "places": town, city and CDP. For details on what these mean, please see <tk>.
+.. note:: The Census Bureau has several suffixes for "places": town, city and CDP. For details on what these mean, please see :ref:`geography-label`.
 
 The list of places is fairly long; you have two options:
 
@@ -57,3 +59,5 @@ To download the data for further analysis in Excel or another program, click on 
 
 Question 2: What part of my town has the lowest median age?
 =========================================================== 
+
+[coming soon]
