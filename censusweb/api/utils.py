@@ -63,7 +63,7 @@ def generate_create_sql_by_file(file_numbers=None):
 
     statements = []
     for file_number in file_numbers:
-        sql_table = _create_base_table('file%s' % file_number)
+        sql_table = _create_base_table('sf1_%02i' % file_number)
         for table in SF1_FILE_SEGMENTS[file_number]:
             _add_sql_columns_for_table(sql_table,table)
         statements.append(unicode(CreateTable(sql_table).compile(dialect=None)).strip() + ';')
