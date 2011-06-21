@@ -18,6 +18,9 @@ urlpatterns = patterns('',
     url(r'^data/(?P<geoids>[,\d]+)\.csv$', views.data_as_csv, name="data_as_csv"),
     url(r'^data/(?P<geoids>[,\d]+)\.(?P<format>kml|kmz)$', views.data_as_kml, name="data_as_kml"),
     url(r'^data/(?P<geoids>[,\d]+)\.html$', views.data, name="data"),
+    url(r'^util/create_table/(?P<aggregate>(all_files|all_tables))\.sql$', views.generate_sql, name="generate_sql"), # order matters. keep this first to catch only numbers before tables
+    url(r'^util/create_table/(?P<file_ids>[,\d{1,2}]+)\.sql$', views.generate_sql, name="generate_sql"), # order matters. keep this first to catch only numbers before tables
+    url(r'^util/create_table/(?P<table_ids>[,\w]+)\.sql$', views.generate_sql, name="generate_sql"),
 
     # Generate CSV/JSON for all elements in a given region (used from within Query Builder)
     #/internal/download_data_for_region/10.csv (or .json)
