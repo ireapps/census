@@ -21,7 +21,7 @@ db = connection[config.CENSUS_DB]
 collection = db[config.GEOGRAPHIES_2000_COLLECTION]
 
 with open(FILENAME) as f:
-    rows = UnicodeCSVReader(f, encoding='latin-1')
+    rows = UnicodeCSVReader(f)
     headers = rows.next()
 
     updates = 0
