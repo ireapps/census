@@ -7,6 +7,8 @@ STATE_NAME_ABBR=$3
 EMBARGO_DOMAIN="https://www.census.gov/embargo/pio"
 CENSUS_DOMAIN="http://www2.census.gov/census_2010/04-Summary_File_1/"
 
+DATAPROCESSING_DIR=`pwd`
+
 cd data
 
 # 2010
@@ -20,7 +22,7 @@ fi
 unzip ${STATE_NAME_ABBR}2010.sf1.zip
 
 # Generate headers
-../make_sf_data_2010_headers.py ../sf1_2010_data_labels.csv
+${DATAPROCESSING_DIR}/make_sf_data_2010_headers.py ${DATAPROCESSING_DIR}/sf1_2010_data_labels.csv
 
 for i in {1..47}
 do
@@ -30,5 +32,5 @@ do
     cat ${STATE_NAME_ABBR}${FILE_NUMBER}2010.sf1 >> sf_data_2010_${STATE_NAME_LOWER}_$i.csv
 done
 
-in2csv -f fixed -s ../census2010_geo_schema.csv ${STATE_NAME_ABBR}geo2010.sf1 > ${STATE_NAME_ABBR}geo2010.csv
+in2csv -f fixed -s ${DATAPROCESSING_DIR}/census2010_geo_schema.csv ${STATE_NAME_ABBR}geo2010.sf1 > ${STATE_NAME_ABBR}geo2010.csv
 
