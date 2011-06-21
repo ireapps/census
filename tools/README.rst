@@ -15,7 +15,12 @@ tool called 'in2csv' which can be used to convert fixed-width files to CSV.
 
 * Install CSVKit using "easy_install csvkit" or from https://github.com/onyxfish/csvkit
 * execute a command like this, taking care to use the correct paths and adjust for the specific geoheader file you are adapting:
-    in2csv -s census2010_geo_schema.csv higeo2010.sf1> higeo2010.csv
+    in2csv -e latin1 -s census2010_geo_schema.csv higeo2010.sf1> higeo2010.csv
+
+NOTE: Take care with character encoding. Some place names (such as those with Spanish words) 
+contain non-ASCII characters. The Census Bureau encodes the files using "latin-1" encoding.
+The in2csv example above handles this correctly. in2csv always writes output files in UTF-8, so 
+adjust your database load scripts accordingly.
 
 Thanks to Ron Campbell of the Orange County Register for contributing the basis of the **geo_2010.sql**
 
