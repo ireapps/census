@@ -18,3 +18,9 @@ tool called 'in2csv' which can be used to convert fixed-width files to CSV.
     in2csv -s census2010_geo_schema.csv higeo2010.sf1> higeo2010.csv
 
 Thanks to Ron Campbell of the Orange County Register for contributing the basis of the **geo_2010.sql**
+
+SAS
+===
+Dan Keating of the Washington Post has contributed a SAS script for loading the SF1 tables into 
+a SAS environment.
+
