@@ -46,7 +46,7 @@ def parse_table_from_key(key):
     return ''.join(match.groups())
 
 def find_geography_by_xref(collection, xref, fields=None):
-    return collection.find_one({ 'xrefs': { '$elemMatch': xref } }, fields=fields)
+    return collection.find_one({ 'xrefs.FILEID': xref['FILEID'], 'xrefs.STUSAB': xref['STUSAB'], 'xrefs.LOGRECNO': xref['LOGRECNO'] }, fields=fields)
 
 def find_geographies_for_xwalk(collection, geography, fields=None):
     return collection.find({ 'geoid': { '$in': geography['xwalk'].keys() } }, fields=fields)
