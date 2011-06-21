@@ -39,7 +39,7 @@ do
     cat ${STATE_NAME_ABBR}${FILE_NUMBER}.uf1 >> sf_data_2000_${STATE_NAME_LOWER}_$i.csv
 done
 
-in2csv -f fixed -s ${DATAPROCESSING_DIR}/census2000_geo_schema.csv ${STATE_NAME_ABBR}geo.uf1 > ${STATE_NAME_ABBR}geo2000.csv
+in2csv -e "latin-1" -f fixed -s ${DATAPROCESSING_DIR}/census2000_geo_schema.csv ${STATE_NAME_ABBR}geo.uf1 > ${STATE_NAME_ABBR}geo2000.csv
 
 # Crosswalk
 

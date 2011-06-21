@@ -32,5 +32,5 @@ do
     cat ${STATE_NAME_ABBR}${FILE_NUMBER}2010.sf1 >> sf_data_2010_${STATE_NAME_LOWER}_$i.csv
 done
 
-in2csv -f fixed -s ${DATAPROCESSING_DIR}/census2010_geo_schema.csv ${STATE_NAME_ABBR}geo2010.sf1 > ${STATE_NAME_ABBR}geo2010.csv
+in2csv -e "latin-1" -f fixed -s ${DATAPROCESSING_DIR}/census2010_geo_schema.csv ${STATE_NAME_ABBR}geo2010.sf1 > ${STATE_NAME_ABBR}geo2010.csv
 
