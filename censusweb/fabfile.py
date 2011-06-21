@@ -293,7 +293,7 @@ def batch_sf(state, fake=''):
     """
     Kick off the SF 2000 data loader for a state.
     """
-    command = './batch_sf.sh %s %s %s' % (env.settings, state, fake)
+    command = './batch_sf.sh %s %s %s' % (state, env.settings, fake)
     loader_log = '%s/census.load.%s.log' % (env.log_path, state)
     run_unattended_batch_command(command, loader_log)
 
