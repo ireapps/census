@@ -30,6 +30,13 @@ do
     wget "ftp://ftp2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_${STATE_FIPS_CODE}_tract10.zip"
 
     cd $start_dir
+
+    mkdir -p "${DATA_DIR}/COUSUB"
+    cd "${DATA_DIR}/COUSUB"
+    wget "ftp://ftp2.census.gov/geo/tiger/TIGER2010/COUSUB/2010/tl_2010_${STATE_FIPS_CODE}_cousub10.zip"
+
+    cd $start_dir
+
 done
 echo "Done"
 
