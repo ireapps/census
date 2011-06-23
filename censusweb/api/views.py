@@ -232,6 +232,9 @@ def generate_sql(request, file_ids=None, table_ids=None, aggregate=None):
     elif aggregate == 'all_tables':
         sql = utils.generate_sql_by_table()
         return HttpResponse(sql,mimetype='text/plain')
+    elif aggregate == 'all_table_views':
+        sql = utils.generate_views_by_table()
+        return HttpResponse(sql,mimetype='text/plain')
     elif aggregate is not None:
         return HttpResponseNotFound()
 

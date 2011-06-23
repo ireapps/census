@@ -57,19 +57,30 @@ def fetch_labels(dataset):
     url = '%s/%s_labels.jsonp' % (settings.API_URL, dataset)
     return _api_fetch(url)
 
+LINKING_COLUMNS = [
+    ('FILEID',6),
+    ('STUSAB',2),
+    ('CHARITER',3),
+    ('CIFSN',3),
+    ('LOGRECNO',7),
+]    
+
 def generate_create_sql_by_file(file_numbers=None):
     if file_numbers is None:
         file_numbers = range(1,48)
 
     statements = []
     for file_number in file_numbers:
-        sql_table = _create_base_table('sf1_%02i' % file_number)
+        sql_table = _create_base_table(_table_name_for_number(file_number))
         for table in SF1_FILE_SEGMENTS[file_number]:
             _add_sql_columns_for_table(sql_table,table)
         statements.append(unicode(CreateTable(sql_table).compile(dialect=None)).strip() + ';')
 
     return "\n\n".join(statements)
-        
+
+def _table_name_for_number(file_number):
+    return 'sf1_%02i' % file_number
+
 def generate_sql_by_table(table_codes=None):
     statements = []
     if table_codes is None:
@@ -85,14 +96,32 @@ def generate_sql_by_table(table_codes=None):
     
     return "\n\n".join(statements)
 
+def generate_views_by_table(table_codes=None):
+    labels = mongoutils.get_labelset()
+
+    statements = []
+    if table_codes is None:
+        table_codes = []
+        for f in SF1_FILE_SEGMENTS[1:]:
+            table_codes.extend(f)
+
+    statements = []
+    for table_code in table_codes:
+        table_name = _table_name_for_number(FILE_NUMBER_BY_TABLE_CODE[table_code])
+        columns = ['"%s"' % x[0] for x in LINKING_COLUMNS]
+        for label in sorted(labels['tables'][table_code]['labels']):
+            columns.append('"%s"' % label)
+
+        columns = ',\n'.join(columns)
+        statements.append('CREATE VIEW sf1_%s as SELECT %s from %s;' % (table_code,columns,table_name))
+    
+    return "\n\n".join(statements)
+
 def _create_base_table(name):
     metadata = MetaData()
     sql_table = Table(name, metadata)
-    sql_table.append_column(Column('FILEID', String(length=6), nullable=False))
-    sql_table.append_column(Column('STUSAB', String(length=2), nullable=False))
-    sql_table.append_column(Column('CHARITER', String(length=3), nullable=False))
-    sql_table.append_column(Column('CIFSN', String(length=3), nullable=False))
-    sql_table.append_column(Column('LOGRECNO', String(length=7), nullable=False))
+    for name,length in LINKING_COLUMNS:
+        sql_table.append_column(Column(name, String(length=length), nullable=False))
 
     return sql_table
 
@@ -156,3 +185,10 @@ SF1_FILE_SEGMENTS = [
     ['H17D','H17E','H17F','H17G','H17H','H17I'], # file 46
     ['HCT1','HCT2','HCT3','HCT4'], # file 47
 ]
+
+FILE_NUMBER_BY_TABLE_CODE = {}
+for i,x in enumerate(SF1_FILE_SEGMENTS):
+    if i > 0:
+        for table_code in x:
+            FILE_NUMBER_BY_TABLE_CODE[table_code] = i
+
