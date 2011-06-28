@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
-from pymongo import Connection, objectid
+from pymongo import objectid
 
 import config
 import utils
 
-connection = Connection()
-db = connection[config.CENSUS_DB]
-collection = db[config.GEOGRAPHIES_COLLECTION]
+collection = utils.get_geography_collection()
 
 row_count = 0
 computations = 0

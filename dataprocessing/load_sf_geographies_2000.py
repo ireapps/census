@@ -3,7 +3,6 @@
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection
 
 import config
 import utils
@@ -13,9 +12,7 @@ if len(sys.argv) < 2:
 
 FILENAME = sys.argv[1]
 
-connection = Connection()
-db = connection[config.CENSUS_DB]
-collection = db[config.GEOGRAPHIES_2000_COLLECTION]
+collection = utils.get_geography2000_collection()
 
 with open(FILENAME) as f:
     rows = UnicodeCSVReader(f)

@@ -4,10 +4,14 @@ from StringIO import StringIO
 import gzip
 import re
 
+from pymongo import Connection
+
 import config
 
 TABLE_NAME_REGEX = re.compile('([A-Z1-9]+?)0*([\d]+)([A-Z]?)')
 TABLE_ID_PATTERN = re.compile(r'^(?P<letter>[A-Z]+)(?P<number>\d+)(?P<suffix>[A-Z])?')
+
+_MONGO_CONNECTION = Connection()
 
 def parse_table_id(table_id):
     return TABLE_ID_PATTERN.match(table_id).groupdict()
@@ -90,3 +94,15 @@ def gunzip_data(d):
     gz.close()
 
     return content
+
+def get_label_collection():
+    db = _MONGO_CONNECTION[config.LABELS_DB]
+    return db[config.LABELS_COLLECTION]
+
+def get_geography_collection():
+    db = _MONGO_CONNECTION[config.CENSUS_DB]
+    return db[config.GEOGRAPHIES_COLLECTION]
+
+def get_geography2000_collection():
+    db = _MONGO_CONNECTION[config.CENSUS_DB] 
+    return db[config.GEOGRAPHIES_2000_COLLECTION]

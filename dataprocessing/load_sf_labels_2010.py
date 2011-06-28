@@ -5,7 +5,6 @@ import re
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection
 
 import config, utils
 import logging
@@ -158,9 +157,7 @@ if __name__ == '__main__':
             except KeyError:
                 print "Unexpectedly missing size for table %s keys: %s" % (k, ','.join(v.keys()))
 
-    connection = Connection()
-    db = connection[config.LABELS_DB]
-    collection = db[config.LABELS_COLLECTION]
+    collection = utils.get_label_collection()
     collection.remove({ 'dataset': 'SF1' }, safe=True)
     collection.save({ 'dataset': 'SF1', 'tables': tables}, safe=True)
 

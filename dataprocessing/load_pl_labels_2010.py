@@ -4,9 +4,9 @@ import re
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection
 
 import config
+import utils
 
 if len(sys.argv) < 2:
     sys.exit('You must provide the filename of a CSV as an argument to this script.')
@@ -15,9 +15,7 @@ FILENAME = sys.argv[1]
 
 YEAR = '2010'
 
-connection = Connection()
-db = connection[config.LABELS_DB]
-collection = db[config.LABELS_COLLECTION]
+collection = utils.get_label_collection()
 
 with open(FILENAME) as f:
     rows = UnicodeCSVReader(f)

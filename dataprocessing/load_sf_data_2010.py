@@ -3,7 +3,7 @@
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection, objectid 
+from pymongo import objectid 
 
 import config
 import utils
@@ -15,9 +15,7 @@ FILENAME = sys.argv[1]
 
 YEAR = '2010'
 
-connection = Connection()
-db = connection[config.CENSUS_DB] 
-collection = db[config.GEOGRAPHIES_COLLECTION]
+collection = utils.get_geography_collection()
 
 with open(FILENAME) as f:
     rows = UnicodeCSVReader(f)

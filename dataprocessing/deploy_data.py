@@ -5,7 +5,6 @@ import sys
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
-from pymongo import Connection
 
 import config
 import utils
@@ -15,9 +14,7 @@ if len(sys.argv) < 2:
 
 ENVIRONMENT = sys.argv[1]
 
-connection = Connection()
-db = connection[config.CENSUS_DB]
-collection = db[config.GEOGRAPHIES_COLLECTION]
+collection = utils.get_geography_collection()
 
 row_count = 0
 deployed = 0

@@ -3,9 +3,10 @@
 import sys
 
 from csvkit.unicsv import UnicodeCSVReader
-from pymongo import Connection, objectid
+from pymongo import objectid
 
 import config
+import utils
 
 if len(sys.argv) < 2:
     sys.exit('You must provide a state fips code and the filename of a CSV as an argument to this script.')
@@ -13,9 +14,7 @@ if len(sys.argv) < 2:
 STATE_FIPS = sys.argv[1]
 FILENAME = sys.argv[2]
 
-connection = Connection()
-db = connection[config.CENSUS_DB] 
-collection = db[config.GEOGRAPHIES_COLLECTION]
+collection = utils.get_geography_collection()
 
 inserts = 0
 row_count = 0

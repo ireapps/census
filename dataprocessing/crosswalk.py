@@ -3,15 +3,13 @@
 import csv
 import sys
 
-from pymongo import Connection, objectid
+from pymongo import objectid
 
 import config
 import utils
 
-connection = Connection()
-db = connection[config.CENSUS_DB]
-collection = db[config.GEOGRAPHIES_COLLECTION]
-collection_2000 = db[config.GEOGRAPHIES_2000_COLLECTION]
+collection = utils.get_geography_collection()
+collection_2000 = utils.get_geography2000_collection()
 
 row_count = 0
 inserts = 0

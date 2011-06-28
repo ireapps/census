@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pymongo import Connection, objectid 
+from pymongo import objectid 
 
 from csvkit.unicsv import UnicodeCSVWriter
 
@@ -8,6 +8,7 @@ import sys
 import re
 
 import config
+import utils
 
 TABLE_CODE_PATTERN = re.compile('^(\D+)(\d+)(\D+)?$')
 
@@ -30,9 +31,7 @@ if __name__ == '__main__':
 
     FILENAME = sys.argv[1]
     with open(FILENAME,"w") as f:
-        connection = Connection()
-        db = connection[config.LABELS_DB] 
-        collection = db[config.LABELS_COLLECTION]
+        collection = utils.get_label_collection()
 
         labelset = collection.find_one({ 'dataset': 'SF1' })
 
