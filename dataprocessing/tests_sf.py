@@ -7,7 +7,7 @@ import utils
 
 class TestSimpleGeographies(unittest.TestCase):
     def setUp(self):
-        collection = utils.get_geography_collection()
+        self.geographies = utils.get_geography_collection()
 
     def _test_totalpop(self, obj, known_2000, known_2010):
         """
@@ -150,9 +150,7 @@ class TestSimpleGeographies(unittest.TestCase):
 
 class TestTracts(unittest.TestCase):
     def setUp(self):
-        connection = Connection()
-        db = connection[config.CENSUS_DB]
-        self.geographies = db[config.GEOGRAPHIES_COLLECTION]
+        self.geographies = utils.get_geography_collection()
 
     def test_tract_split(self):
         """
@@ -332,9 +330,7 @@ class TestTracts(unittest.TestCase):
 
 class TestFieldCrosswalk(unittest.TestCase):
     def setUp(self):
-        connection = Connection()
-        db = connection[config.CENSUS_DB]
-        self.geographies = db[config.GEOGRAPHIES_COLLECTION]
+        self.geographies = utils.get_geography_collection()
 
     def test_exact_same_name(self):
         state = self.geographies.find_one({ 'geoid': '15' })
@@ -380,9 +376,7 @@ class TestFieldCrosswalk(unittest.TestCase):
 class TestLabels(unittest.TestCase):
     def setUp(self):
         self.labels = utils.get_label_collection()
-
-        db = connection[config.CENSUS_DB]
-        self.geographies = db[config.GEOGRAPHIES_COLLECTION]
+        self.geographies = utils.get_geography_collection()
 
     def test_table_count(self):
         labels = self.labels.find_one({ 'dataset': 'SF1' })
