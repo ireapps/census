@@ -8,8 +8,8 @@ fi
 
 STATE_NAME=$1
 STATE_NAME_LOWER=`echo $1 | tr '[A-Z]' '[a-z]'`
-STATE_NAME_ABBR=`python get_state_abbr.py $1`
-STATE_FIPS=`python get_state_fips.py $1`
+STATE_NAME_ABBR=`python get_state_abbr.py $1` || exit $?
+STATE_FIPS=`python get_state_fips.py $1` || exit $?
 ENVIRONMENT=$2
 FAKE=$3
 
