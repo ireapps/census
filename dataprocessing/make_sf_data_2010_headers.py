@@ -4,6 +4,8 @@ import csv
 import re
 import sys
 
+import utils
+
 TABLE_REGEX = re.compile('([A-Z]+)([0-9]+)([A-Z]?)')
 
 FIXED_HEADERS = ['FILEID', 'STUSAB', 'CHARITER', 'CIFSN', 'LOGRECNO']
@@ -101,14 +103,7 @@ with open(FIELD_INDEX, 'r') as f:
         
         parts = TABLE_REGEX.match(table_name)
 
-        key = parts.group(1)
-        key += parts.group(2).rjust(3, '0')
-        
-        if parts.group(3):
-            key += parts.group(3)
-
-        key += field_num.rjust(3, '0')
-
+        key = utils.generate_stat_key(table_name,field_num)
         headers.append(key)
 
     # Write final file

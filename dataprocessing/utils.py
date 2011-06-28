@@ -21,7 +21,7 @@ def generate_stat_key(table_id, line):
     d = parse_table_id(table_id)
     if d['suffix'] is None: d['suffix'] = ''
     d['number'] = int(d['number'])
-    d['line'] = line
+    d['line'] = int(line)
     return "%(letter)s%(number)03i%(suffix)s%(line)03i" % d
         
 def geoid_nation(r):
