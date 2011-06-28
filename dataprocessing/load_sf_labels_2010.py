@@ -7,11 +7,11 @@ import sys
 from csvkit.unicsv import UnicodeCSVReader
 from pymongo import Connection
 
-import config
+import config, utils
 import logging
 
 TABLE_NAME_PATTERN = re.compile(r'^(?P<name>.+)\s+\[(?P<size>\d+)\].*$')
-TABLE_ID_PATTERN = re.compile(r'^(?P<letter>[A-Z]+)(?P<number>\d+)(?P<suffix>[A-Z])?')
+
 
 KEY_MAPPINGS = {}
 
@@ -34,15 +34,6 @@ with open('field_mappings_2000_2010.csv', 'rU') as f:
             continue
 
         KEY_MAPPINGS[row['field_2010']] = row['field_2000']
-
-def generate_stat_key(table_id, line):
-    """Pad and connect table and line number to get a standard identifier for a statistic."""
-    match = TABLE_ID_PATTERN.match(table_id)
-    d = match.groupdict()
-    if d['suffix'] is None: d['suffix'] = ''
-    d['number'] = int(d['number'])
-    d['line'] = line
-    return "%(letter)s%(number)03i%(suffix)s%(line)03i" % d
 
 YEAR = '2010'
 
@@ -130,13 +121,13 @@ if __name__ == '__main__':
                             table['name'] = name_dict['name']
                             table['size'] = int(name_dict['size'])
                 else: # there's a line number
-                    key = generate_stat_key(row['table_id'],row['line'])
+                    key = utils.generate_stat_key(row['table_id'],row['line'])
                     parent = parent_key = None
                     if row['indent'] > 0:
                         chk_line = row['line']
                         while parent is None and chk_line > 1:
                             chk_line -= 1
-                            parent_key = generate_stat_key(row['table_id'],chk_line)
+                            parent_key = utils.generate_stat_key(row['table_id'],chk_line)
                             chk_parent = table['labels'][parent_key]
                             if chk_parent['indent'] == row['indent'] - 1:
                                 parent = chk_parent

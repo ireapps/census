@@ -7,7 +7,19 @@ import re
 import config
 
 TABLE_NAME_REGEX = re.compile('([A-Z1-9]+?)0*([\d]+)([A-Z]?)')
+TABLE_ID_PATTERN = re.compile(r'^(?P<letter>[A-Z]+)(?P<number>\d+)(?P<suffix>[A-Z])?')
 
+def parse_table_id(table_id):
+    return TABLE_ID_PATTERN.match(table_id).groupdict()
+
+def generate_stat_key(table_id, line):
+    """Pad and connect table and line number to get a standard identifier for a statistic."""
+    d = parse_table_id(table_id)
+    if d['suffix'] is None: d['suffix'] = ''
+    d['number'] = int(d['number'])
+    d['line'] = line
+    return "%(letter)s%(number)03i%(suffix)s%(line)03i" % d
+        
 def geoid_nation(r):
     # TODO
     return ''
