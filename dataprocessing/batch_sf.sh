@@ -6,12 +6,13 @@ then
     exit
 fi
 
-STATE_NAME=$1
-STATE_NAME_LOWER=`echo $1 | tr '[A-Z]' '[a-z]'`
-STATE_NAME_ABBR=`python get_state_abbr.py $1` || exit $?
-STATE_FIPS=`python get_state_fips.py $1` || exit $?
-ENVIRONMENT=$2
-FAKE=$3
+STATE_NAME="${@:1:1}"
+STATE_NAME_SPACE_FIXED=`echo "${STATE_NAME}" | tr '[ ]' '[_]'`
+STATE_NAME_LOWER=`echo "${STATE_NAME}" | tr '[A-Z ]' '[a-z_]'`
+STATE_NAME_ABBR=`python get_state_abbr.py "${STATE_NAME}"` || exit $?
+STATE_FIPS=`python get_state_fips.py "${STATE_NAME}"` || exit $?
+ENVIRONMENT="${@:2:1}"
+FAKE="${@:3:1}"
 
 echo Begin $STATE_NAME at `date`
 echo 'Dropping previous data.'
@@ -21,8 +22,8 @@ echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
 echo 'Fetching data'
-./fetch_sf_data_2000.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
-./fetch_sf_data_2010.sh $STATE_NAME $STATE_NAME_LOWER $STATE_NAME_ABBR
+./fetch_sf_data_2000.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
+./fetch_sf_data_2010.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
 
 echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
