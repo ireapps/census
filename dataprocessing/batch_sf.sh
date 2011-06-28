@@ -2,7 +2,7 @@
 
 if [ $# \< 2 ]
 then
-    echo "You must specify 'staging' or production' and the the proper-case name of a state as arguments, e.g. 'batch_sf.sh staging Delaware'."
+    echo "You must specify exactly two arguments: (1) the proper-case name of a state, (2) 'staging' or production' e.g. 'batch_sf.sh Delaware staging'."
     exit
 fi
 
