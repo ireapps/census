@@ -13,6 +13,45 @@ import gzip
 from csvkit.unicsv import UnicodeCSVWriter
 
 METADATA_HEADERS = ['COUNTY', 'CBSA', 'CSA', 'NECTA', 'CNECTA', 'NAME', 'POP100', 'HU100']
+def deploy_table(state_fips,sumlev, bucket, table_id, metadata):
+    query = {'sumlev': sumlev, 'metadata.STATE': state_fips }
+    s = StringIO()
+    gz = gzip.GzipFile(fileobj=s, mode='wb')
+    w = UnicodeCSVWriter(gz)
+
+    header = ['GEOID'] + METADATA_HEADERS
+    for key in sorted(metadata['labels']):
+        header.extend([key,"%s.2000" % key])
+
+    w.writerow(header)
+
+    for geography in collection.find(query,fields=['geoid','metadata','data.2010.%s' % table_id,'data.2000.%s' % table_id]):
+        row = [geography['geoid']]
+        for h in METADATA_HEADERS:
+            row.append(geography['metadata'][h])
+        
+        for key in sorted(metadata['labels']):
+            try:
+                row.append(geography['data']['2010'][table_id][key])
+            except KeyError, e:
+                if table_id.startswith('PCO'):
+                    print "No data for %s at %s" % (table_id, sumlev)
+                    return
+                raise e
+            try:
+                row.append(geography['data']['2000'][table_id][key])
+            except KeyError:
+                row.append('')
+        w.writerow(row)
+
+    gz.close()
+    query['table_id'] = table_id
+    k = Key(bucket)
+    k.key = '%(metadata.STATE)s/all_%(sumlev)s_in_%(metadata.STATE)s.%(table_id)s.csv' % (query)
+    k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy='private')
+    print "S3: wrote ",k.key," to ", ENVIRONMENT
+
+
 
 def fetch_tables_and_labels():
     lc = utils.get_label_collection()
@@ -37,39 +76,10 @@ collection = utils.get_geography_collection()
 
 tables = fetch_tables_and_labels()
 
-d = { 'state_fips': STATE_FIPS, 'sumlev': SUMLEV }
 c = S3Connection()
 bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
 
-for table_id,metadata in tables.items():
-    s = StringIO()
-    gz = gzip.GzipFile(fileobj=s, mode='wb')
-    w = UnicodeCSVWriter(gz)
-
-    header = ['GEOID'] + METADATA_HEADERS
-    for key in sorted(metadata['labels']):
-        header.extend([key,"%s.2000" % key])
-
-    w.writerow(header)
-
-    for geography in collection.find({'sumlev': SUMLEV, 'metadata.STATE': STATE_FIPS },fields=['geoid','metadata','data.2010.%s' % table_id,'data.2000.%s' % table_id]):
-        row = [geography['geoid']]
-        for h in METADATA_HEADERS:
-            row.append(geography['metadata'][h])
+for table_id in sorted(tables):
+    metadata = tables[table_id]
+    deploy_table(STATE_FIPS,SUMLEV,bucket, table_id, metadata)
         
-        for key in sorted(metadata['labels']):
-            row.append(geography['data']['2010'][table_id][key])
-            try:
-                row.append(geography['data']['2000'][table_id][key])
-            except:
-                row.append('')
-        w.writerow(row)
-
-    gz.close()
-    d['table_id'] = table_id
-    k = Key(bucket)
-    k.key = '%(state_fips)s/all_%(sumlev)s_in_%(state_fips)s.%(table_id)s.csv' % (d)
-    k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy='private')
-    print "S3: wrote ",k.key," to ", ENVIRONMENT
-
-
