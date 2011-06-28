@@ -13,6 +13,7 @@ STATE_FIPS=`python get_state_fips.py $1`
 ENVIRONMENT=$2
 FAKE=$3
 
+echo Begin $STATE_NAME at `date`
 echo 'Dropping previous data.'
 ./__drop_database.sh
 
@@ -73,4 +74,5 @@ echo 'Deploying to S3'
 ./deploy_data.py $ENVIRONMENT
 ./deploy_lookups.py $ENVIRONMENT
 ./deploy_labels.py $ENVIRONMENT
+echo Complete $STATE_NAME at `date`
 
