@@ -64,7 +64,8 @@ with open(FILENAME) as f:
         collection.save(geography, safe=True)
         inserts += 1
 
-print 'Row count: %i' % row_count
-print 'Inserted: %i' % inserts
-print 'Updated: %i' % updates
+print 'File: %s' % FILENAME
+print ' Row count: %i' % row_count
+print ' Inserted: %i' % inserts
+print ' Updated: %i' % updates
 

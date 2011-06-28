@@ -161,7 +161,8 @@ if __name__ == '__main__':
     collection.remove({ 'dataset': 'SF1' }, safe=True)
     collection.save({ 'dataset': 'SF1', 'tables': tables}, safe=True)
 
-    print 'Row count: %i' % row_count
-    print 'Skipped: %i' % skipped
-    print 'Tables: %i' % len(tables)
+    print 'load_sf_labels_2010:'
+    print ' Row count: %i' % row_count
+    print ' Skipped: %i' % skipped
+    print ' Tables: %i' % len(tables)
 

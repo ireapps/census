@@ -134,6 +134,6 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
     collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } }, safe=True)
     inserts += 1
 
-print 'Row count: %i' % row_count
-print 'Inserted: %i' % inserts
+print ' Row count: %i' % row_count
+print ' Inserted: %i' % inserts
 

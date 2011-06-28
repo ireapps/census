@@ -75,5 +75,10 @@ echo 'Deploying to S3'
 ./deploy_data.py $ENVIRONMENT
 ./deploy_lookups.py $ENVIRONMENT
 ./deploy_labels.py $ENVIRONMENT
+./deploy_csv.py $STATE_FIPS 040 $ENVIRONMENT
+./deploy_csv.py $STATE_FIPS 050 $ENVIRONMENT
+./deploy_csv.py $STATE_FIPS 060 $ENVIRONMENT
+./deploy_csv.py $STATE_FIPS 140 $ENVIRONMENT
+./deploy_csv.py $STATE_FIPS 160 $ENVIRONMENT
 echo Complete $STATE_NAME at `date`
 

@@ -64,6 +64,8 @@ else:
             collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'xwalk': geography['xwalk'] } }, safe=True) 
             inserts += 1
 
-print 'Row count: %i' % row_count
-print 'Inserted: %i' % inserts
+print "State: %s" % STATE_FIPS
+print "File: %s" % FILENAME
+print ' Row count: %i' % row_count
+print ' Inserted: %i' % inserts
 

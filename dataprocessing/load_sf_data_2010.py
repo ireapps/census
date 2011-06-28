@@ -54,6 +54,7 @@ with open(FILENAME) as f:
         collection.update({ '_id': objectid.ObjectId(geography['_id']) }, { '$set': { 'data': geography['data'] } }, safe=True)
         updates += 1
 
-print 'Row count: %i' % row_count
-print 'Updated: %i' % updates
+print "File: %s" % FILENAME
+print ' Row count: %i' % row_count
+print ' Updated: %i' % updates
 

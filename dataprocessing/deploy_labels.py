@@ -38,6 +38,7 @@ for dataset in collection.find():
 
     deployed += 1
 
-print 'Row count: %i' % row_count
-print 'Deployed: %i' % deployed
+print 'deploy_labels:'
+print ' Row count: %i' % row_count
+print ' Deployed: %i' % deployed
 

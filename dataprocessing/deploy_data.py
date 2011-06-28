@@ -35,10 +35,10 @@ for geography in collection.find():
     k.set_contents_from_string(compressed, headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy='private')
 
     if row_count % 100 == 0:
-        print 'Deployed %i...' % row_count
+        print ' Deployed %i...' % row_count
 
     deployed += 1
 
-print 'Row count: %i' % row_count
-print 'Deployed: %i' % deployed
+print '  Row count: %i' % row_count
+print '  Deployed: %i' % deployed
 
