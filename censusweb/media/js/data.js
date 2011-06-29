@@ -81,7 +81,25 @@ $(function(){
 
         window.location = url;
     }
+    window.table_comparator = function(table) {
+        parts = table.match(/([A-Z]+)(\d+)([A-Z]+)?/);
+        
+        key = parts[1];
+        num = parts[2];
+           
+        while (num.length < 3) {
+            num = '0' + num;
+        }
 
+        key += num;
+
+        if (!_.isUndefined(parts[3])) {
+            key += parts[3];
+        }
+
+        return key; 
+    }
+    
     window.loadLabels = function() {
         $("#ajax-loader").show();
 
@@ -90,24 +108,7 @@ $(function(){
             window.geoids = parseGeoids();
 
             window.tables = _.keys(labels_data["tables"])
-            window.tables = _.sortBy(window.tables, function(table) {
-                parts = table.match(/([A-Z]+)(\d+)([A-Z]+)?/);
-                
-                key = parts[1];
-                num = parts[2];
-                   
-                while (num.length < 3) {
-                    num = '0' + num;
-                }
-
-                key += num;
-
-                if (!_.isUndefined(parts[3])) {
-                    key += parts[3];
-                }
-
-                return key; 
-            });
+            window.tables = _.sortBy(window.tables, window.table_comparator);
 
             _.each(window.tables, function(table) {
                 var elem = $('<div id="report-wrapper-' + table + '"></div>');
