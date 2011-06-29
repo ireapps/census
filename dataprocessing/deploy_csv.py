@@ -37,7 +37,7 @@ def deploy_table(state_fips,sumlev, bucket, table_id, metadata):
                 if table_id.startswith('PCO'):
                     print "No data for %s at %s" % (table_id, sumlev)
                     return
-                raise e
+                raise e # don't otherwise expect this error, so raise it...
             try:
                 row.append(geography['data']['2000'][table_id][key])
             except KeyError:
