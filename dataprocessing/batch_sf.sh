@@ -26,16 +26,16 @@ echo 'Fetching data'
 ./fetch_sf_data_2010.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
 
 echo 'Loading 2000 geographies'
-./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
+./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv || exit $?
 
 echo 'Loading 2000 data'
 for i in {1..39}
 do
-    ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv
+    ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv 
 done
 
 echo 'Loading labels'
-./load_sf_labels_2010.py sf1_2010_data_labels.csv
+./load_sf_labels_2010.py sf1_2010_data_labels.csv || exit $?
 
 if [ "$FAKE" = "FAKE" ]; then
     # Load 2000 headers as 2010 so fake 2010 data will match to shapes
@@ -45,13 +45,13 @@ else
 fi
 
 echo 'Loading 2010 geographies'
-./load_sf_geographies_2010.py $GEOGRAPHY_HEADER_2010 
+./load_sf_geographies_2010.py $GEOGRAPHY_HEADER_2010 || exit $?
    
 echo 'Loading crosswalk'
 if [ "$FAKE" = "FAKE" ]; then
-    ./load_crosswalk.py $STATE_FIPS $FAKE
+    ./load_crosswalk.py $STATE_FIPS $FAKE || exit $?
 else
-    ./load_crosswalk.py $STATE_FIPS data/us2010trf.csv
+    ./load_crosswalk.py $STATE_FIPS data/us2010trf.csv || exit $?
 fi
 
 echo 'Loading 2010 data'
@@ -66,19 +66,19 @@ do
 done
 
 echo 'Processing crosswalk'
-./crosswalk.py
+./crosswalk.py || exit $?
 
 echo 'Computing deltas'
-./compute_deltas_sf.py
+./compute_deltas_sf.py || exit $?
 
 echo 'Deploying to S3'
-./deploy_data.py $ENVIRONMENT
-./deploy_lookups.py $ENVIRONMENT
-./deploy_labels.py $ENVIRONMENT
-./deploy_csv.py $STATE_FIPS 040 $ENVIRONMENT
-./deploy_csv.py $STATE_FIPS 050 $ENVIRONMENT
-./deploy_csv.py $STATE_FIPS 060 $ENVIRONMENT
-./deploy_csv.py $STATE_FIPS 140 $ENVIRONMENT
-./deploy_csv.py $STATE_FIPS 160 $ENVIRONMENT
+./deploy_data.py $ENVIRONMENT || exit $?
+./deploy_lookups.py $ENVIRONMENT || exit $?
+./deploy_labels.py $ENVIRONMENT || exit $?
+./deploy_csv.py $STATE_FIPS 040 $ENVIRONMENT || exit $?
+./deploy_csv.py $STATE_FIPS 050 $ENVIRONMENT || exit $?
+./deploy_csv.py $STATE_FIPS 060 $ENVIRONMENT || exit $?
+./deploy_csv.py $STATE_FIPS 140 $ENVIRONMENT || exit $?
+./deploy_csv.py $STATE_FIPS 160 $ENVIRONMENT || exit $?
 echo Complete $STATE_NAME at `date`
 
