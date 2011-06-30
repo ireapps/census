@@ -24,8 +24,9 @@ def homepage(request):
         },
         context_instance=RequestContext(request))
     
-def data(request, geoids):
-    return render_to_response('data.html', { 'settings': settings }, context_instance=RequestContext(request))
+def generic_view(request, template=None, **kwargs):
+    return render_to_response(template, { 'settings': settings }, context_instance=RequestContext(request))
+
 
 def download_data_for_region(request, sumlev='', containerlev='', container='', datatype=''):
     print sumlev, containerlev
