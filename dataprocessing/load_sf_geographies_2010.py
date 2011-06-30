@@ -15,7 +15,7 @@ FILENAME = sys.argv[1]
 collection = utils.get_geography_collection()
 
 with open(FILENAME) as f:
-    rows = UnicodeCSVReader(f,encoding="latin-1")
+    rows = UnicodeCSVReader(f)
     headers = rows.next()
 
     inserts = 0
