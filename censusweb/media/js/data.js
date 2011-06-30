@@ -81,25 +81,7 @@ $(function(){
 
         window.location = url;
     }
-    window.table_comparator = function(table) {
-        parts = table.match(/([A-Z]+)(\d+)([A-Z]+)?/);
-        
-        key = parts[1];
-        num = parts[2];
-           
-        while (num.length < 3) {
-            num = '0' + num;
-        }
 
-        key += num;
-
-        if (!_.isUndefined(parts[3])) {
-            key += parts[3];
-        }
-
-        return key; 
-    }
-    
     window.loadLabels = function() {
         $("#ajax-loader").show();
 
