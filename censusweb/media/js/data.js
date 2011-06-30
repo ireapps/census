@@ -77,7 +77,7 @@ $(function(){
     window.loadLabels = function() {
         $("#ajax-loader").show();
 
-        apiRequest("/" + window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, function(labels_data) {
+        do_with_labels(function(labels_data) {
             window.labels_data = labels_data;
             window.geoids = parseGeoids();
 

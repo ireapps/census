@@ -5,29 +5,19 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}js/bulkdata.js"></script>
 <h1>Download Bulk Census Data</h1>
 <p>You can download all data for a given "summary level" in a state as a CSV file. These files contain comparison values for the 2000 census which take into account changes in the table layout, and for census tracts, which have been adjusted for changes in census tract geography.</p>
-<p>Because of the volume of data, each SF1 table is a separate download. You can use the form below to construct download URLs, or simply follow this simple pattern:</p>
-<p>{{ API_URL }}/<strong>SS</strong>/all_<strong>LLL</strong>_in_<strong>SS</strong>.<strong>TT</strong>.csv</p>
-<p>with the following substitutions:
-    <dl>
+<p>Because of the volume of data, each SF1 table is a separate download. Use this form to select a state, summary level, and table.
+</p>
+<form id="bulk-download-builder">
+    <label for="state-download" class="bulk-download">State</label><select id="state-download"></select>
+    <label for="sumlev-download" class="bulk-download">Summary Level</label><select id="sumlev-download"></select>
+    <label for="table-download" class="bulk-download">Table</label><select id="table-download"></select>
+    <button type="button" id="start-download">Download</button>
+</form>
+<p id="bulk-download-url-format-explainer">
+    Instead of the form, you can build your own download URLs using this simple pattern: <div id="bulk-download-url-format"><span>{{ settings.API_URL }}/<strong>SS</strong>/all_<strong>LLL</strong>_in_<strong>SS</strong>.<strong>TT</strong>.csv</span></div> with the following substitutions:</p>
+    <dl id="bulk-download-url-format-explainer-list">
         <dt>SS</dt><dd>The two-digit State FIPS code (note this appears twice in the URL)</dd>
         <dt>LLL</dt><dd>The three-digit summary level code.</dd>
         <dt>TT</dt><dd>The variable length table code, e.g. <strong>P1</strong> or <strong>H12G</strong></dd>
     </dl>
-</p>
-<form>
-    <select id="state-download">
-    </select>
-    <select id="sumlev-download">
-        <option value="040">State</option>
-        <option value="050">County</option>
-        <option value="060">County Subdivision</option>
-        <option value="140">Census Tract</option>
-        <option value="160">Place</option>
-    </select>
-    <select id="table-download">
-        <option value="P1">P1. Total Population</option>
-        <option value="P2">P2. Urban and Rural</option>
-        <option value="P3">P3. Race</option>
-    </select>
-</form>
 {% endblock content %}

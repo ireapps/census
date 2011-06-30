@@ -20,6 +20,17 @@ function table_comparator (table) {
     return key; 
 }
     
+function build_bulk_data_url(state,sumlev,table,format) {
+    if (!format) {
+        format = 'csv';
+    }
+    if (table) {
+        table = "." + table;
+    } else {
+        table = "";
+    }
+    return API_URL + "/" + state + "/all_" + sumlev + "_in_"+state+table+"." + format;
+}
 
 function apiRequest(path, callback, handler) {
     $.ajax(API_URL + path, {
@@ -29,10 +40,13 @@ function apiRequest(path, callback, handler) {
     });
 }
 
-function availableStates(handler) {
+function do_with_available_states(handler) {
     apiRequest("/states.jsonp", "states", handler);
 }
 
+function do_with_labels(handler) {
+    apiRequest("/" + window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, handler);
+}
 STATES = {
     "Alabama": "01",
     "Alaska": "02",
@@ -87,3 +101,10 @@ STATES = {
     "Wyoming": "56"
 }
 
+SUMLEVS = [
+    ['040','State'],
+    ['050','County'],
+    ['060','County Subdivision'],
+    ['140','Census Tract'],
+    ['160','Place'],
+]

@@ -34,7 +34,7 @@ $(function(){
             this.mappings.summarylevelDisplays[SUMLEV_STATE] = 'States';
             this.mappings.summarylevelDisplays[SUMLEV_NATION] = 'USA';
 
-            availableStates(function(states) {
+            do_with_available_states(function(states) {
                 _.each(states, function(state) {
                     query.mappings.states.push([state, STATES[state]]);
                 });
