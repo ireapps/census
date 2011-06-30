@@ -34,7 +34,7 @@ def update_state_list(environment, state, clear=False, remove=False):
     if remove:
         states.remove(state)
         print 'Removed %s from list of available states' % state
-    if clear:
+    elif clear:
         states = [state]
         print 'Reset list of available states and added %s' % state
     else:
