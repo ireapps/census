@@ -10,7 +10,7 @@ from boto.s3.key import Key
 import config
 import utils
 
-def update_state_list(environment, state, clear=False):
+def update_state_list(environment, state, clear=False, remove=False):
     c = S3Connection()
     bucket = c.get_bucket(config.S3_BUCKETS[environment])
 
@@ -31,11 +31,12 @@ def update_state_list(environment, state, clear=False):
         states = json.loads(data)
     except S3ResponseError:
         states = []
-
+    if remove:
+        states.remove(state)
+        print 'Removed %s from list of available states' % state
     if clear:
         states = [state]
-        
-        print 'Reset list of avialable states and added %s' % state
+        print 'Reset list of available states and added %s' % state
     else:
         if state not in states:
             states.append(state)
@@ -43,7 +44,8 @@ def update_state_list(environment, state, clear=False):
             print '%s added to available state list' % state
         else:
             print '%s is already available' % state
-
+    
+    states.sort()
     jsonp = 'states(%s)' % json.dumps(states)
     compressed = utils.gzip_data(jsonp)
 
@@ -56,8 +58,8 @@ if __name__ == '__main__':
     ENVIRONMENT = sys.argv[1]
     STATE = sys.argv[2]
     try:
-        CLEAR = sys.argv[3]
+        OPERATION = sys.argv[3]
     except:
-        CLEAR = None
+        OPERATION = None
 
-    update_state_list(ENVIRONMENT, STATE, (CLEAR == 'CLEAR'))
+    update_state_list(ENVIRONMENT, STATE, (OPERATION == 'CLEAR'), (OPERATION == 'REMOVE'))
