@@ -51,14 +51,6 @@ $(function(){
         window.location.pathname = window.location.pathname.replace('.html', "," + county_geoid + '.html');
     }
 
-    window.apiRequest = function(path, callback, handler) {
-        $.ajax(API_URL + path, {
-            dataType: "jsonp",
-            jsonpCallback: callback,
-            success: handler
-        });
-    }
-
     window.parseGeoids = function() {
         // Get url without hashbang
         var target = _.last(window.location.pathname.split("/"));
