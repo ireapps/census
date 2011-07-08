@@ -86,7 +86,11 @@ def fetch_tables_and_labels():
 
 def fetch_table_label(table_id):
     return fetch_tables_and_labels()[table_id]
-    
+
+def deploy_table_pooled(table_id):
+    """goof to get a one-arg version for eventlet..."""
+    deploy_table(STATE_FIPS, SUMLEV, bucket, table_id)
+
 # BEGIN MAIN OPERATION
 if __name__ == '__main__':
     if len(sys.argv) < 3:
@@ -114,7 +118,7 @@ if __name__ == '__main__':
 #        print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
         
     # eventlety
-    args = [(STATE_FIPS,SUMLEV,bucket,table_id) for table_id in sorted(tables)]
+    args = [(STATE_FIPS,SUMLEV,bucket,table_id) for table_id in ]
     pool = eventlet.greenpool.GreenPool(size=32)
-    for key, policy in pool.imap(deploy_table, args):
+    for key, policy in pool.imap(deploy_table_pooled, sorted(tables)):
         print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
