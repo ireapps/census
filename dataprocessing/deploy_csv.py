@@ -26,7 +26,11 @@ def get_2000_top_level_counts(geography):
         return '',''
 METADATA_HEADERS = ['STATE','COUNTY', 'CBSA', 'CSA', 'NECTA', 'CNECTA', 'NAME', 'POP100', 'HU100']
 
-def deploy_table(state_fips,sumlev, bucket, table_id):
+def deploy_table(state_fips,sumlev, bucket, table_id,public=True):
+    if public:
+        policy = 'public-read'
+    else:
+        policy = 'private'
     s = StringIO()
     gz = gzip.GzipFile(fileobj=s, mode='wb')
     write_table_data(gz,state_fips,sumlev, table_id)
@@ -34,7 +38,7 @@ def deploy_table(state_fips,sumlev, bucket, table_id):
     tokens = {'sumlev': sumlev, 'state': state_fips, 'table_id': table_id }
     k = Key(bucket)
     k.key = '%(state)s/all_%(sumlev)s_in_%(state)s.%(table_id)s.csv' % (tokens)
-    k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy='private')
+    k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy=policy)
     print "S3: wrote ",k.key," to ", ENVIRONMENT
 
 def write_table_data(flo, state_fips, sumlev, table_id):
