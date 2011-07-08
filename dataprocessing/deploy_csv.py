@@ -108,13 +108,13 @@ if __name__ == '__main__':
     c = S3Connection()
     bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
 
-    eventlet.monkey_patch()
-    pile = eventlet.GreenPile(32)
+#    eventlet.monkey_patch()
+#    pile = eventlet.GreenPile(32)
     for table_id in sorted(tables):
         metadata = tables[table_id]
-        pile.spawn(deploy_table,STATE_FIPS,SUMLEV,bucket, table_id)
-#        deploy_table(STATE_FIPS,SUMLEV,bucket, table_id)
+#        pile.spawn(deploy_table,STATE_FIPS,SUMLEV,bucket, table_id)
+        deploy_table(STATE_FIPS,SUMLEV,bucket, table_id)
 
     # Wait for all greenlets to finish
-    list(pile)
+#    list(pile)
     
