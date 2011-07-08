@@ -28,7 +28,8 @@ def get_2000_top_level_counts(geography):
         return '',''
 METADATA_HEADERS = ['STATE','COUNTY', 'CBSA', 'CSA', 'NECTA', 'CNECTA', 'NAME', 'POP100', 'HU100']
 
-def deploy_table(state_fips,sumlev, bucket, table_id,public=True):
+def deploy_table(state_fips, sumlev, table_id, public=True):
+
     if public:
         policy = 'public-read'
     else:
@@ -38,6 +39,8 @@ def deploy_table(state_fips,sumlev, bucket, table_id,public=True):
     write_table_data(gz,state_fips,sumlev, table_id)
     gz.close()
     tokens = {'sumlev': sumlev, 'state': state_fips, 'table_id': table_id }
+    c = S3Connection()
+    bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
     k = Key(bucket)
     k.key = '%(state)s/all_%(sumlev)s_in_%(state)s.%(table_id)s.csv' % (tokens)
     k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy=policy)
@@ -87,10 +90,6 @@ def fetch_tables_and_labels():
 def fetch_table_label(table_id):
     return fetch_tables_and_labels()[table_id]
 
-def deploy_table_pooled(table_id):
-    """goof to get a one-arg version for eventlet..."""
-    deploy_table(STATE_FIPS, SUMLEV, bucket, table_id)
-
 # BEGIN MAIN OPERATION
 if __name__ == '__main__':
     if len(sys.argv) < 3:
@@ -109,15 +108,16 @@ if __name__ == '__main__':
     # import a padded_label from utils... 
     tables = fetch_tables_and_labels()
 
-    c = S3Connection()
-    bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
-
     # non-eventlety
 #    for table_id in sorted(tables):
-#        key, policy = deploy_table(STATE_FIPS,SUMLEV,bucket, table_id)
+#        key, policy = deploy_table(STATE_FIPS, SUMLEV, table_id)
 #        print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
         
     # eventlety
-    pool = eventlet.greenpool.GreenPool(size=32)
-    for key, policy in pool.imap(deploy_table_pooled, sorted(tables)):
+    pile = eventlet.GreenPile(32)
+    for table_id in sorted(tables):
+        pile.spawn(deploy_table, STATE_FIPS, SUMLEV, table_id)
+
+    # Wait for all greenlets to finish
+    for key, policy in pile:
         print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
