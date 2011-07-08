@@ -44,7 +44,7 @@ def deploy_table(state_fips, sumlev, table_id, public=True):
     k = Key(bucket)
     k.key = '%(state)s/all_%(sumlev)s_in_%(state)s.%(table_id)s.csv' % (tokens)
     k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy=policy)
-    return (k.key,policy)
+    print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
 
 def write_table_data(flo, state_fips, sumlev, table_id):
     """Given a File-Like Object, write a table to it"""
@@ -110,14 +110,11 @@ if __name__ == '__main__':
 
     # non-eventlety
 #    for table_id in sorted(tables):
-#        key, policy = deploy_table(STATE_FIPS, SUMLEV, table_id)
-#        print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
+#        deploy_table(STATE_FIPS, SUMLEV, table_id)
         
     # eventlety
     pile = eventlet.GreenPile(32)
     for table_id in sorted(tables):
         pile.spawn(deploy_table, STATE_FIPS, SUMLEV, table_id)
-
     # Wait for all greenlets to finish
-    for key, policy in pile:
-        print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
+    list(pile)
