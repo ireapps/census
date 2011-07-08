@@ -72,13 +72,16 @@ echo 'Computing deltas'
 ./compute_deltas_sf.py || exit $?
 
 echo 'Deploying to S3'
-./deploy_data.py $ENVIRONMENT || exit $?
-./deploy_lookups.py $ENVIRONMENT || exit $?
-./deploy_labels.py $ENVIRONMENT || exit $?
+# ./deploy_data.py $ENVIRONMENT || exit $?
+# ./deploy_lookups.py $ENVIRONMENT || exit $?
+# ./deploy_labels.py $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 040 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 050 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 060 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 140 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 160 $ENVIRONMENT || exit $?
+
+mkdir -p data/mongodumps/${STATE_FIPS}
+mongodump -d census -o data/mongodumps/${STATE_FIPS}
 echo Complete $STATE_NAME at `date`
 
