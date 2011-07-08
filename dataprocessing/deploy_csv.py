@@ -41,7 +41,7 @@ def deploy_table(state_fips,sumlev, bucket, table_id,public=True):
     k = Key(bucket)
     k.key = '%(state)s/all_%(sumlev)s_in_%(state)s.%(table_id)s.csv' % (tokens)
     k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy=policy)
-    print "S3: wrote ",k.key," to ", ENVIRONMENT, " using policy ", policy
+    return (k.key,policy)
 
 def write_table_data(flo, state_fips, sumlev, table_id):
     """Given a File-Like Object, write a table to it"""
@@ -108,13 +108,13 @@ if __name__ == '__main__':
     c = S3Connection()
     bucket = c.get_bucket(config.S3_BUCKETS[ENVIRONMENT])
 
-#    eventlet.monkey_patch()
-#    pile = eventlet.GreenPile(32)
-    for table_id in sorted(tables):
-        metadata = tables[table_id]
-#        pile.spawn(deploy_table,STATE_FIPS,SUMLEV,bucket, table_id)
-        deploy_table(STATE_FIPS,SUMLEV,bucket, table_id)
-
-    # Wait for all greenlets to finish
-#    list(pile)
-    
+    # non-eventlety
+#    for table_id in sorted(tables):
+#        key, policy = deploy_table(STATE_FIPS,SUMLEV,bucket, table_id)
+#        print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
+        
+    # eventlety
+    args = [(STATE_FIPS,SUMLEV,bucket,table_id) for table_id in sorted(tables)]
+    pool = eventlet.greenpool.GreenPool(size=32)
+    for key, policy in pool.imap(deploy_table, args):
+        print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
