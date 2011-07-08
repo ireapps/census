@@ -39,7 +39,7 @@ def deploy_table(state_fips,sumlev, bucket, table_id,public=True):
     k = Key(bucket)
     k.key = '%(state)s/all_%(sumlev)s_in_%(state)s.%(table_id)s.csv' % (tokens)
     k.set_contents_from_string(s.getvalue(), headers={ 'Content-encoding': 'gzip', 'Content-Type': 'text/csv' }, policy=policy)
-    print "S3: wrote ",k.key," to ", ENVIRONMENT
+    print "S3: wrote ",k.key," to ", ENVIRONMENT, " using policy ", policy
 
 def write_table_data(flo, state_fips, sumlev, table_id):
     """Given a File-Like Object, write a table to it"""
