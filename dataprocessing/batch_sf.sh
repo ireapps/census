@@ -81,7 +81,7 @@ echo 'Deploying to S3'
 ./deploy_csv.py $STATE_FIPS 140 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 160 $ENVIRONMENT || exit $?
 
-mkdir -p data/mongodumps/${STATE_FIPS}
-mongodump -d census -o data/mongodumps/${STATE_FIPS}
+mkdir -p /mnt/data/mongodumps/${STATE_FIPS}
+mongodump -d census -o /mnt/data/mongodumps/${STATE_FIPS}
 echo Complete $STATE_NAME at `date`
 
