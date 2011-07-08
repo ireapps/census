@@ -21,3 +21,4 @@ wsgiref==0.1.2
 xlrd==0.7.1
 requests==0.4.1
 boto==2.0rc1
+eventlet==0.9.16
