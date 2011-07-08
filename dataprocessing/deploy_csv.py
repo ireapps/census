@@ -118,7 +118,6 @@ if __name__ == '__main__':
 #        print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
         
     # eventlety
-    args = [(STATE_FIPS,SUMLEV,bucket,table_id) for table_id in ]
     pool = eventlet.greenpool.GreenPool(size=32)
     for key, policy in pool.imap(deploy_table_pooled, sorted(tables)):
         print "S3: wrote ",key," to ", ENVIRONMENT, " using policy ", policy
