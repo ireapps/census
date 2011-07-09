@@ -3,7 +3,13 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-
 {% include "_query_builder.html" %}
-
+<p><span id="bulkdata-button" class="button">Download Bulk Data</span></p>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#bulkdata-button").click(function(){
+            window.location.href="{% url bulkdata %}"
+        })
+    })
+</script>
 {% endblock %}

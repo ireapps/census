@@ -41,7 +41,7 @@
             <% } %>
         </span>
     <% } else { %>
-        Find data for
+        Browse data for
         <span id="summarylevel-select">
             <span class="link" data-val="<%= SUMLEV_TRACT %>"><%= query.mappings.summarylevelDisplays[SUMLEV_TRACT] %></span>,
             <span class="link" data-val="<%= SUMLEV_PLACE %>"><%= query.mappings.summarylevelDisplays[SUMLEV_PLACE] %></span>,
@@ -123,7 +123,7 @@
                 <%= query.get(SUMLEV_COUNTY+'Display') %>,
             <% } %>
             <%= query.get(SUMLEV_STATE +'Display') %>
-            as <span class="button csv-json">CSV</span> <span class="button csv-json">JSON</span>
+            as <span class="button csv-json">CSV</span>
         </div>
     <% } %>
 

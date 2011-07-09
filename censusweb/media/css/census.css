@@ -355,3 +355,6 @@ p#bulk-download-url-format-explainer {margin-top: 15px;}
 dl#bulk-download-url-format-explainer-list {margin-top: 5px; margin-left: 10px;}
 dl#bulk-download-url-format-explainer-list dt { font-weight: bold;}
 dl#bulk-download-url-format-explainer-list dd { margin-left: 5px; }
+#gzip-note { margin: 15px 0 0 0; }
+#gzip-code-example { margin: 0 20px 20px;}
+#census-data-links { margin: 0 20px 20px;}
