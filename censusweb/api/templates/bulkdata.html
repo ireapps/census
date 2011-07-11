@@ -7,11 +7,16 @@
 <p>You can download all data for a given "summary level" in a state as a CSV file. These files contain comparison values for the 2000 census which take into account changes in the table layout, and for census tracts, which have been adjusted for changes in census tract geography.</p>
 <p>Because of the volume of data, each SF1 table is a separate download. Use this form to select a state, summary level, and table.
 </p>
+<p>You can also use this form to download the corresponding shapefiles which would be used to display this data on a map. The shapefiles will be downloaded directly from <a href="http://www.census.gov/geo/www/tiger/tgrshp2010/tgrshp2010.html" target="census">the Census TIGER website</a>. For shapefiles, the "table" menu is not relevant: simply select a state and summary level. Values in the <code>GEOID</code> column in downloaded CSV files should matched against the <code>GEOID10</code> column in the shapefile data.
+</p>
 <form id="bulk-download-builder">
-    <label for="state-download" class="bulk-download">State</label><select id="state-download"></select>
-    <label for="sumlev-download" class="bulk-download">Summary Level</label><select id="sumlev-download"></select>
-    <label for="table-download" class="bulk-download">Table</label><select id="table-download"></select>
-    <button type="button" id="start-download">Download</button>
+    <label for="state-download" class="bulk-download">State</label><select id="state-download"></select><br>
+    <label for="sumlev-download" class="bulk-download">Summary Level</label><select id="sumlev-download"></select><br>
+    <label for="table-download" class="bulk-download">Table</label><select id="table-download"></select><br>
+    <div id="bulk-download-buttons">
+        <span class='button' id="start-download">Download CSV</span>
+        <span class="button" id="shapefile-download">Download Shapefile</span>
+    </div>
 </form>
 <p id="bulk-download-url-format-explainer">
     Instead of the form, you can build your own download URLs using this simple pattern: <div id="bulk-download-url-format"><span>{{ settings.API_URL }}/<strong>SS</strong>/all_<strong>LLL</strong>_in_<strong>SS</strong>.<strong>TT</strong>.csv</span></div> with the following substitutions:</p>

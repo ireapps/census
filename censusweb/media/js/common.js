@@ -32,6 +32,15 @@ function build_bulk_data_url(state,sumlev,table,format) {
     return API_URL + "/" + state + "/all_" + sumlev + "_in_"+state+table+"." + format;
 }
 
+function build_shapefile_url(state,sumlev) {
+    for (var i = 0; i < SUMLEVS.length; i++) {
+        if (SUMLEVS[i][0] == sumlev) {
+            return SUMLEVS[i][2]({'state_fips': state});
+        }
+    }
+    throw "Invalid summary level";
+}
+
 function apiRequest(path, callback, handler) {
     $.ajax(API_URL + path, {
         dataType: "jsonp",
@@ -102,9 +111,10 @@ STATES = {
 }
 
 SUMLEVS = [
-    ['040','State'],
-    ['050','County'],
-    ['060','County Subdivision'],
-    ['140','Census Tract'],
-    ['160','Place'],
+    // tuples: (code, name, shapefile_template)
+    ['040','State', _.template("http://www2.census.gov/geo/tiger/TIGER2010/STATE/2010/tl_2010_<%=state_fips%>_state10.zip")],
+    ['050','County', _.template("http://www2.census.gov/geo/tiger/TIGER2010/COUNTY/2010/tl_2010_<%=state_fips%>_county10.zip")],
+    ['060','County Subdivision', _.template("http://www2.census.gov/geo/tiger/TIGER2010/COUSUB/2010/tl_2010_<%=state_fips%>_cousub10.zip")],
+    ['140','Census Tract', _.template("http://www2.census.gov/geo/tiger/TIGER2010/TRACT/2010/tl_2010_<%=state_fips%>_tract10.zip")],
+    ['160','Place', _.template("http://www2.census.gov/geo/tiger/TIGER2010/PLACE/2010/tl_2010_<%=state_fips%>_place10.zip")]
 ]

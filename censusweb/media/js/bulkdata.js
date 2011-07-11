@@ -37,6 +37,9 @@ $(function(){
         window.location.href = build_bulk_data_url($("#state-download").val(),$("#sumlev-download").val(),$("#table-download").val(),"csv");
         return false;
     };
+    download_shapefile_based_on_form_values = function() {
+        window.location.href = build_shapefile_url($("#state-download").val(),$("#sumlev-download").val());
+    }
 
     parse_params = function() {
         var params = new Array();
@@ -59,6 +62,7 @@ $(function(){
         init_sumlev_menu(params['sumlev']);
         init_table_menu(params['table']);
         $("#start-download").click(download_based_on_form_values);
+        $("#shapefile-download").click(download_shapefile_based_on_form_values);
     };
     
     init_bulk_data();

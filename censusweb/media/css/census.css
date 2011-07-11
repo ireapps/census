@@ -343,18 +343,18 @@ nav {
     column-gap: 20px;
 }
 
-#bulk-download-builder { margin-top: 10px;}
-#bulk-download-builder label { text-align: right; float: left; clear: both; width: 150px; margin-right: 5px;}
+#bulk-download-builder { margin-top: 20px;}
+#bulk-download-builder label { text-align: right; float: left; clear: both; width: 150px; margin-right: 5px; margin-bottom: 10px;}
 #bulk-download-builder select { float: left;}
 #bulk-download-builder select#table-download { width: 400px; }
-#bulk-download-builder button#start-download { clear: both; display: block;}
+#bulk-download-buttons { clear: both; margin: 40px 60px;}
 
 #bulk-download-url-format { margin: 5px 5px;}
 #bulk-download-url-format span { background-color: #eeeeee; border: 1px solid #aaaaaa; font-family: monospace; padding: 3px 3px; clear: both;}
 p#bulk-download-url-format-explainer {margin-top: 15px;}
 dl#bulk-download-url-format-explainer-list {margin-top: 5px; margin-left: 10px;}
 dl#bulk-download-url-format-explainer-list dt { font-weight: bold;}
-dl#bulk-download-url-format-explainer-list dd { margin-left: 5px; }
+dl#bulk-download-url-format-explainer-list dd { margin-left: 10px; }
 #gzip-note { margin: 15px 0 0 0; }
 #gzip-code-example { margin: 0 20px 20px;}
 #census-data-links { margin: 0 20px 20px;}
