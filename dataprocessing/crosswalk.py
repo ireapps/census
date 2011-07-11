@@ -18,7 +18,7 @@ KEY_MAPPINGS = {}
 CROSSWALK_FIELDS_BY_TABLE = {}
 
 # Maps 2010 field names to their 2000 equivalents
-with open('field_mappings_2000_2010.csv', 'rU') as f:
+a="""with open('field_mappings_2000_2010.csv', 'rU') as f:
     reader = csv.DictReader(f)
 
     for row in reader:
@@ -40,7 +40,7 @@ with open('field_mappings_2000_2010.csv', 'rU') as f:
         if row['field_2000'] not in KEY_MAPPINGS:
             KEY_MAPPINGS[row['field_2000']] = []
 
-        KEY_MAPPINGS[row['field_2000']].append(row['field_2010'])
+        KEY_MAPPINGS[row['field_2000']].append(row['field_2010'])"""
 
 # Load crosswalk lookup table
 with open('sf_crosswalk_key.csv') as f:
@@ -70,32 +70,18 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
                 continue
 
             for k, v in geography_2000s[0]['data']['2000'][table].items():
-                try:
-                    keys_2010 = KEY_MAPPINGS[k]
-                except KeyError:
-                    # Skip 2000 fields that don't exist in 2010
-                    continue
+                if table not in data:
+                    data[table] = {}
 
-                # Skip 2000 fields that don't have an equivalent in 2010
-                if not keys_2010:
-                    continue
+                parts = []
 
-                # Copy value to all 2010 fields which are comparable to this field in 2000
-                for key_2010 in keys_2010:
-                    table_2010 = utils.parse_table_from_key(key_2010)
+                for g in geography_2000s:
+                    value = float(g['data']['2000'][table][k])
+                    pct = geography['xwalk'][g['geoid']][crosswalk_field]
 
-                    if table_2010 not in data:
-                        data[table_2010] = {}
+                    parts.append(value * pct)
 
-                    parts = []
-
-                    for g in geography_2000s:
-                        value = float(g['data']['2000'][table][k])
-                        pct = geography['xwalk'][g['geoid']][crosswalk_field]
-
-                        parts.append(value * pct)
-
-                    data[table_2010][key_2010] = int(sum(parts))
+                data[table][k] = int(sum(parts))
 
     # OTHER SUMLEVS - can be directly compared by geoid
     else:
@@ -108,26 +94,12 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
 
         for table in geography_2000['data']['2000']:
             for k, v in geography_2000['data']['2000'][table].items():
-                try:
-                    keys_2010 = KEY_MAPPINGS[k]
-                except KeyError:
-                    # Skip 2000 fields that don't exist in 2010
-                    continue
+                if table not in data:
+                    data[table] = {}
 
-                # Skip 2000 fields that don't have an equivalent in 2010
-                if not keys_2010:
-                    continue
+                parts = []
 
-                # Copy value to all 2010 fields which are comparable to this field in 2000
-                for key_2010 in keys_2010:
-                    table_2010 = utils.parse_table_from_key(key_2010)
-
-                    if table_2010 not in data:
-                        data[table_2010] = {}
-
-                    parts = []
-
-                    data[table_2010][key_2010] = geography_2000['data']['2000'][table][k] 
+                data[table][k] = geography_2000['data']['2000'][table][k] 
 
     geography['data']['2000'] = data
 

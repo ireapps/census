@@ -55,7 +55,7 @@ def deploy_table(state_fips,sumlev, bucket, table_id, metadata):
 
 def fetch_tables_and_labels():
     lc = utils.get_label_collection()
-    return lc.find_one({'dataset': 'SF1'},fields=['tables'])['tables']
+    return lc.find_one({'dataset': 'PL'},fields=['tables'])['tables']
     
 # BEGIN MAIN OPERATION
 if len(sys.argv) < 3:
