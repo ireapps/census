@@ -16,9 +16,35 @@
 <h2>What's with this JSONP?</h2>
 <p><em>(A full explanation of the <a href="http://en.wikipedia.org/wiki/Same_origin_policy">"same origin" security policy</a> used by most web browsers is outside the scope of this document. Consult the <a href="http://en.wikipedia.org/wiki/JSONP">Wikipedia entry on JSONP</a> for more information.)</em></p>
 <p>
-    Because census data does not change once it is released, we have chosen to architect this "API" as a series of static files rather than generating responses dynamically upon request. This means that we can not selectively return either JSON or JSONP depending on whether the requesting client is a web browser, and needs JSONP to work around the "same origin policy" or whether it is trusted code running in some other environment which could handle pure JSON. The primary use case for the JSON data is browsers requesting data for just a few GeoIDs at a time, so we have optimized for that case.
+    When javascript in a web browser wants to retrieve JSON-formatted data from a site other than the one which served the original page, JSONP must be used. Commonly, web data APIs allow users to specify whether they want data in JSON or JSONP.</p>
+    <p>Because census data does not change once it is released, we have chosen to architect this "API" as a series of static files rather than generating responses dynamically upon request. This means that we can not selectively return either JSON or JSONP: we have to choose one. Because the primary use case for the JSON data is web browsers, and because it's trivial to strip the JSONP padding in most programming languages, we've created the static files as JSONP.
 </p>
 <h2>What does that mean for me if I'm trying to use the data in a web browser?</h2>
+<p>
+    Begin by selecting a modern JavaScript toolkit which has built-in handling for JSONP. One of those, <a href="http://jquery.org/">jQuery</a>, is used to build this site. Then, know that when using JSONP, a callback function name must be specified. Usually with jQuery, developers are advised to not explicitly set the JSONP callback, or to set it to "?", which is a special value which lets jQuery know that it should randomly select a callback, and should coordinate with the remote server to use that callback. However, with our static-file API, the remote server cannot dynamically change the callback to a unique value. Instead, each file you will retrieve has a well-defined callback which you must give to jQuery as part of setting up the data connection.
+</p>
+Here's a basic example using jQuery. It is assumed that the jQuery library has already been loaded.
+<code>
+    <pre>
+        function alert_handler(data) {
+            alert("The 2010 population of "+ data['metadata']['NAME'] + " was " + data['data']['2010']['P1']['P001001'] + ".");
+        }
+        function fetch_data(geoid, success_handler) {
+            callback = 'geoid_' + geoid;
+            url = 'http://censusdata.ire.org/' + geoid.substr(0,2) + '/' + geoid + '.jsonp';
+            console.log('calling: ' + url);
+            $.ajax(url, {
+                dataType: "jsonp",
+                jsonpCallback: callback,
+                success: success_handler
+            });
+        }
+        fetch_data('1571550',alert_handler);
+    </pre>
+</code>
+<p>
+If the code above is included in a page, then when the data is loaded, a simple alert pop-up will appear indicating the total population for the Urban Honolulu CDP (Census Designated Place)
+</p>
 <h2>What does JSONP mean for me if I'm trying to use the data in a non-JavaScript programming language?</h2>
 <p>First, consider whether the JSON API is right for you in the first place. In most cases, we guess that you might actually prefer our <a href="{% url bulkdata %}">bulk data in CSV format</a>.</p>
 <p>Next, note that for web-efficiency, data on the server is gzip-encoded. Most browsers decode this automatically, but most other languages do not.</p>
