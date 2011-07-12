@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>JSON Data API</h2>
+<p>All data used by this application is retrieved via JSON from a server which you can use for your own applications. If you know the GeoID for a census geography of interest, it is easy to retrieve the data.</p>
+<h2>What's a GeoID?</h2>
+<p>
+    For every distinct geography in a census summary level, it is possible to construct a unique identifier. These identifiers can be found in <a href="http://www.census.gov/geo/www/tiger/tgrshp2010/tgrshp2010.html">TIGER shapefiles</a> and can also be looked up for a given latitude/longitude using our experimental <a href="{% url boundary-documentation %}">Boundary Location API.</a>.
+</p>
+<h2>What do I do with the GeoID I have?</h2>
+    <p id="bulk-download-url-format-explainer">
+        For any GeoID, it is very simple to create a URL with which you can retrieve a bundle of census data: <div id="bulk-download-url-format"><span>{{ settings.API_URL }}/<strong>SS</strong>/<strong>GEOID</strong>.jsonp</span></div> with the following substitutions:</p>
+        <dl id="bulk-download-url-format-explainer-list">
+            <dt>SS</dt><dd>The two-digit State FIPS code</dd>
+            <dt>GEOID</dt><dd>The two-to-seven-digit GEOID.</dd>
+        </dl>
+<h2>What's with this JSONP?</h2>
+<p><em>(A full explanation of the <a href="http://en.wikipedia.org/wiki/Same_origin_policy">"same origin" security policy</a> used by most web browsers is outside the scope of this document. Consult the <a href="http://en.wikipedia.org/wiki/JSONP">Wikipedia entry on JSONP</a> for more information.)</em></p>
+<p>
+    Because census data does not change once it is released, we have chosen to architect this "API" as a series of static files rather than generating responses dynamically upon request. This means that we can not selectively return either JSON or JSONP depending on whether the requesting client is a web browser, and needs JSONP to work around the "same origin policy" or whether it is trusted code running in some other environment which could handle pure JSON. The primary use case for the JSON data is browsers requesting data for just a few GeoIDs at a time, so we have optimized for that case.
+</p>
+<h2>What does that mean for me if I'm trying to use the data in a web browser?</h2>
+<h2>What does JSONP mean for me if I'm trying to use the data in a non-JavaScript programming language?</h2>
+<p>First, consider whether the JSON API is right for you in the first place. In most cases, we guess that you might actually prefer our <a href="{% url bulkdata %}">bulk data in CSV format</a>.</p>
+<p>Next, note that for web-efficiency, data on the server is gzip-encoded. Most browsers decode this automatically, but most other languages do not.</p>
+<p>If you're sure you want to use our JSON data, it should be pretty simple to strip the javascript function call from the string which is returned from the URL call. Here's a basic example in Python:</p>
+<code>
+    <pre>
+        import json, gzip
+        from StringIO import StringIO
+        from urllib2 import urlopen
+        def fetch_sf1_data(geoid):
+            url = '{{ settings.API_URL }}/%s/%s.jsonp' % (geoid[:2],geoid)
+            gzdata = StringIO(urlopen(url).read())
+            gzfile = gzip.GzipFile(fileobj=gzdata,mode='rb')
+            data_str = gzfile.read()
+            paren_idx = data_str.find('(')
+            data_str = data_str[paren_idx+1:-1]
+            return json.loads(data_str)
+
+        sf1 = fetch_sf1_data('1571550')
+        print "The 2010 population of %s was %s." % (sf1['metadata']['NAME'],sf1['data']['2010']['P1']['P001001'])
+    </pre>
+</code>
+
+<h2>What about metadata?</h2>
+<p>
+    In addition to the data, there are two other data sources available.
+</p>
+<h3><code>{{ settings.API_URL }}/SF1_labels.jsonp</code></h3>
+<p>
+    A structure which can be used to look up human readable labels for the table and field codes which are in the geodata. The JSONP callback for this data is <code>labels_SF1</code>
+</p>
+<h3><code>{{ settings.API_URL }}/states.jsonp</code></h3>
+<p>A list of the states for which SF1 data is currently available. The list is the name of each state. You must convert the name to a FIPS code through some other means. The JSONP callback for this data is <code>states</code>.
+</p>
+{% endblock content %}

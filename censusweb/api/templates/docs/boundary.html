@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Boundary Location API</h2>
+
+<p>As an experimental service, we are providing an API which can identify the Census geographies which contain a given point (latitude/longitude). We have not done substantial performance benchmarking with this service, and reserve the right to impose access restrictions or disable the service completely if Boundary Location API requests adversely impact the performance of other aspects of the Census.IRE.org application.</p>
+<p>As with other areas of this application, a limited subset of Census geographies are supported, specifically: state, county, county subdivision, place, and census tract.</p>
+<p>With the boundary and GeoID data returned from this service, one can subsequently retrieve all Census SF-1 data for the given shape using <a href="{% url json-doc %}">our JSON data API</a>.</p>
+<h2>Point queries</h2>
+
+<p>The fundamental query exposed by the Boundary Service is a point-in-polygon search by latitude and longitude.  Here is an example:</p>
+
+<p><code>http://{{ settings.GEO_API_ROOT }}/1.0/boundary/?contains=38.948337,-92.328032&amp;sets=tracts,counties</code></p>
+
+<p>This will return the census tract and county which contain the IRE central office.</p>
+
+<p><strong>Note:</strong> In addition to the <code>contains</code> parameter we also pass the <code>sets</code> parameter to constrain the query. Where possible, please use this parameter to limit your queries to only the data you need so your queries will be performant. Valid values for <code>sets</code> are one or more of the following:</p>
+<ul>
+    <li>tracts</li>
+    <li>county-subdivisions</li>
+    <li>counties</li>
+    <li>states</li>
+    <li>places</li>
+</ul>
+<h2>Near queries</h2>
+
+<p>The near query finds all Boundaries that intersect a circle of a specified radius using a given point as its center:</p>
+
+<p><code>http://{{ settings.GEO_API_ROOT }}/1.0/boundary/?near=38.948337,-92.328032,1mi&amp;sets=tracts</code></p>
+
+<p>This returns all wards within one mile of the IRE central office. The radius parameter may be specified in any units <a href="http://docs.djangoproject.com/en/dev/ref/contrib/gis/measure/#supported-units">supported by GeoDjango</a>.</p>
+
+<p><strong>Note:</strong> This query will execute more slowly than the point query.</p>
+
+<h2>JSONP</h2>
+
+<p>For use in client-side applications the Boundary Service API may be accessed via JSONP. Simply append the <code>format</code> and <code>callback</code> parameters to the query string:</p>
+
+<p><code>http://{{ settings.GEO_API_ROOT }}/1.0/boundary/?contains=38.948337,-92.328032&amp;sets=tracts&amp;format=jsonp&amp;callback=func</code></p>
+
+<h2>Hosting your own service</h2>
+<p>
+    If performance is critical, or should we find it necessary to limit access to this API, it should be relatively straightforward to set up your own boundary service. The code is open-source, and can be downloaded from <code><a href="https://github.com/newsapps/django-boundaryservice">https://github.com/newsapps/django-boundaryservice</a></code> . The "definitions" file we use, which is required by the Boundary Service code, can be <a href="https://github.com/ireapps/census/blob/master/censusweb/data/shapefiles/definitions.py">downloaded</a> from the <a href="https://github.com/ireapps/census/">IRE Census Github repository</a>.
+</p>
+{% endblock content %}

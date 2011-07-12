@@ -21,6 +21,7 @@ ADMIN_MEDIA_PREFIX = 'http://censusmedia.ire.org/censusweb/admin_media/'
 
 # Predefined domain
 MY_SITE_DOMAIN = 'census.ire.org'
+GEO_API_ROOT = "%s/geo" % MY_SITE_DOMAIN
 
 # Email
 EMAIL_HOST = 'mail'

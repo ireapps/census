@@ -21,6 +21,7 @@ ADMIN_MEDIA_PREFIX = 'http://media-beta.tribapps.com/censusweb/admin_media/'
 
 # Predefined domain
 MY_SITE_DOMAIN = 'censusweb.beta.tribapps.com'
+GEO_API_ROOT = "%s/geo" % MY_SITE_DOMAIN
 
 # Email
 EMAIL_HOST = 'mail'

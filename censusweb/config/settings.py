@@ -109,6 +109,7 @@ INSTALLED_APPS = (
 
 # Predefined domain
 MY_SITE_DOMAIN = 'localhost:8000'
+GEO_API_ROOT = "%s/geo" % MY_SITE_DOMAIN
 
 # Email
 # run "python -m smtpd -n -c DebuggingServer localhost:1025" to see outgoing
