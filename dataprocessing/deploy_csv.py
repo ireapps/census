@@ -109,12 +109,12 @@ if __name__ == '__main__':
     tables = fetch_tables_and_labels()
 
     # non-eventlety
-#    for table_id in sorted(tables):
-#        deploy_table(STATE_FIPS, SUMLEV, table_id)
+    for table_id in sorted(tables):
+        deploy_table(STATE_FIPS, SUMLEV, table_id)
         
     # eventlety
-    pile = eventlet.GreenPile(16)
-    for table_id in sorted(tables):
-        pile.spawn(deploy_table, STATE_FIPS, SUMLEV, table_id)
+#    pile = eventlet.GreenPile(16)
+#    for table_id in sorted(tables):
+#        pile.spawn(deploy_table, STATE_FIPS, SUMLEV, table_id)
     # Wait for all greenlets to finish
-    list(pile)
+#    list(pile)
