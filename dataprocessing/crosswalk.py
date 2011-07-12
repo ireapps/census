@@ -102,7 +102,7 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
         geography_2000 = collection_2000.find_one({ 'geoid': geography['geoid'] }, fields=['data'])
 
         if not geography_2000:
-            print 'Couldn\'t find matching 2000 geography for %s (%s)'.encode('utf-8') % (geography['metadata']['NAME'], geography['geoid'])
+            print 'Couldn\'t find matching 2000 geography for %s (%s)' % (geography['metadata']['NAME'].encode('utf-8'), geography['geoid'])
 
             continue
 
