@@ -1,4 +1,5 @@
 /* Dan Keating, Washington Post, 2011
+updated 2011-07-13
 
 This script creates files for:
     * the regular people tables P
@@ -7,16 +8,16 @@ This script creates files for:
     * the PCT tables repeated by race-hispanic PCTRH
     * the county-level PCO
     * the housing tables (including HCT)  H.
-                        
+
 I created a variable named stdfip10 with concatened values for some
 regularly used summary levels (such as combining state and county).  I
-labeled the variables, but not the tables. 
+labeled the variables, but not the tables.
 
 All it needs is to be told the path were the raw data files are and the
 libname for permanent storage.
 
 After reading in California, I set the lrecl for the 47 tables to c.10% longer than the longest line from California, rather than my
-original default of 30000. It seems that Census kept all lines <2000, so you can use that as a default if you prefer. 
+original default of 30000. It seems that Census kept all lines <2000, so you can use that as a default if you prefer.
 */
 ;
 options nocenter nosource nonumber nodate label;
@@ -32,97 +33,114 @@ libname sf1 'c:\census\2010sf1\sasdata';
 filename ingeo "&path.&state.geo2010.sf1" ;
 
 data work.&state.geo;
+length stdfip10 $15;
 infile ingeo lrecl = 446 missover pad;
 INPUT
-@1 FILEID $6.	/* File Identification */
-@7 STUSAB $2.	/* State/US-Abbreviation (USPS) */
-@9 SUMLEV $3.	/* Summary Level */
-@12 GEOCOMP $2.	/* Geographic Component */
-@14 CHARITER $3.	/* Characteristic Iteration */
-@17 CIFSN $2.	/* Characteristic Iteration File Sequence Number */
-@19 LOGRECNO 7.	/* Logical Record Number */
-@26 REGION $1.	/* Region */
-@27 DIVISION $1.	/* Division */
-@28 STATE $2.	/* State (FIPS) */
-@30 COUNTY $3.	/* County */
-@33 COUNTYCC $2.	/* FIPS County Class Code */
-@35 COUNTYSC $2.	/* County Size Code */
-@37 COUSUB $5.	/* County Subdivision (FIPS) */
-@42 COUSUBCC $2.	/* FIPS County Subdivision Class Code */
-@44 COUSUBSC $2.	/* County Subdivision Size Code */
-@46 PLACE $5.	/* Place (FIPS) */
-@51 PLACECC $2.	/* FIPS Place Class Code */
-@53 PLACESC $2.	/* Place Size Code */
-@55 TRACT $6.	/* Census Tract */
-@61 BLKGRP $1.	/* Block Group */
-@62 BLOCK $4.	/* Block */
-@66 IUC $2.	/* Internal Use Code */
-@68 CONCIT $5.	/* Consolidated City (FIPS) */
-@73 CONCITCC $2.	/* FIPS Consolidated City Class Code */
-@75 CONCITSC $2.	/* Consolidated City Size Code */
-@77 AIANHH $4.	/* American Indian Area/Alaska Native Area/Hawaiian Home Land (Census) */
-@81 AIANHHFP $5.	/* American Indian Area/Alaska Native Area/Hawaiian Home Land (FIPS) */
-@86 AIANHHCC $2.	/* FIPS American Indian Area/Alaska Native Area/Hawaiian Home Land Class Code */
-@88 AIHHTLI $1.	/* American Indian Trust Land/Hawaiian Home Land Indicator */
-@89 AITSCE $3.	/* American Indian Tribal Subdivision (Census) */
-@92 AITS $5.	/* American Indian Tribal Subdivision (FIPS) */
-@97 AITSCC $2.	/* FIPS American Indian Tribal Subdivision Class Code */
-@99 RESERVE2 $7.	/* Reserved */
-@106 ANRC $5.	/* Alaska Native Regional Corporation (FIPS) */
-@111 ANRCCC $2.	/* FIPS Alaska Native Regional Corporation Class Code */
-@113 CBSA $5.	/* Metropolitan Statistical Area/Micropolitan Statistical Area */
-@118 CBSASC $2.	/* Metropolitan Statistical Area/Micropolitan Statistical Area Size Code */
-@120 METDIV $5.	/* Metropolitan Division */
-@125 CSA $3.	/* Combined Statistical Area */
-@128 NECTA $5.	/* New England City and Town Area */
-@133 NECTASC $2.	/* New England City and Town Area Size Code */
-@135 NECTADIV $5.	/* New England City and Town Area Division */
-@140 CNECTA $3.	/* Combined New England City and Town Area */
-@143 CBSAPCI $1.	/* Metropolitan Statistical Area/Micropolitan Statistical Area Principal City */
-@144 NECTAPCI $1.	/* New England City and Town Area Principal City Indicator */
-@145 UA $5.	/* Urban Area */
-@150 UASC $2.	/* Urban Area Size Code */
-@152 UATYPE $1.	/* Urban Area Type */
-@153 UR $1.	/* Urban/Rural */
-@154 CD $2.	/* Congressional District */
-@156 SLDU $3.	/* State Legislative District (Upper Chamber) */
-@159 SLDL $3.	/* State Legislative District (Lower Chamber) */
-@162 VTD $6.	/* Voting District */
-@168 VTDI $1.	/* Voting District Indicator */
-@169 ZCTA3 $3.	/* ZIP Code Tabulation Area (3 digit) */
-@172 ZCTA5 $5.	/* ZIP Code Tabulation Area (5 digit) */
-@177 SUBMCD $5.	/* Subbarrio (FIPS) */
-@182 SUBMCDCC $2.	/* FIPS Subbarrio Class Code */
-@184 SDELM $5.	/* School District (Elementary) */
-@189 SDSEC $5.	/* School District (Secondary) */
-@194 SDUNI $5.	/* School District (Unified) */
-@199 AREALAND 14.	/* Area (Land) */
-@213 AREAWATR 14.	/* Area (Water) */
-@227 NAME $90.	/* Area Name-Legal/Statistical Area Description (LSAD) Term-Part Indicator */
-@317 FUNCSTAT $1.	/* Functional Status Code */
-@318 GCUNI $1.	/* Geographic Change User Note Indicator */
-@319 POP100 9.	/* Population Count (100%) */
-@328 HU100 9.	/* Housing Unit Count (100%) */
-@337 INTPTLAT $11.	/* Internal Point (Latitude) */
-@348 INTPTLON $12.	/* Internal Point (Longitude) */
-@360 LSADC $2.	/* Legal/Statistical Area Description Code */
-@362 PARTFLAG $1.	/* Part Flag */
-@363 TAZ $6.	/* Traffic Analysis Zone */
-@369 UGA $5.	/* Urban Growth Area */
-@374 STATENS $8.	/* State (ANSI) */
-@382 COUNTYNS $8.	/* County (ANSI) */
-@390 COUSUBNS $8.	/* County Subdivision (ANSI) */
-@398 PLACENS $8.	/* Place (ANSI) */
-@406 CONCITNS $8.	/* Consolidated City (ANSI) */
-@414 AIANHHNS $8.	/* American Indian Area/Alaska Native Area/Hawaiian Home Land (ANSI) */
-@422 AITSNS $8.	/* American Indian Tribal Subdivision (ANSI) */
-@430 ANRCNS $8.	/* Alaska Native Regional Corporation (ANSI) */
-@438 SUBMCDNS $8.	/* Subbarrio (ANSI) */
+@1 FILEID $6.   /* File Identification */
+@7 STUSAB $2.   /* State/US-Abbreviation (USPS) */
+@9 SUMLEV $3.   /* Summary Level */
+@12 GEOCOMP $2. /* Geographic Component */
+@14 CHARITER $3.    /* Characteristic Iteration */
+@17 CIFSN $2.   /* Characteristic Iteration File Sequence Number */
+@19 LOGRECNO 7. /* Logical Record Number */
+@26 REGION $1.  /* Region */
+@27 DIVISION $1.    /* Division */
+@28 STATE $2.   /* State (FIPS) */
+@30 COUNTY $3.  /* County */
+@33 COUNTYCC $2.    /* FIPS County Class Code */
+@35 COUNTYSC $2.    /* County Size Code */
+@37 COUSUB $5.  /* County Subdivision (FIPS) */
+@42 COUSUBCC $2.    /* FIPS County Subdivision Class Code */
+@44 COUSUBSC $2.    /* County Subdivision Size Code */
+@46 PLACE $5.   /* Place (FIPS) */
+@51 PLACECC $2. /* FIPS Place Class Code */
+@53 PLACESC $2. /* Place Size Code */
+@55 TRACT $6.   /* Census Tract */
+@61 BLKGRP $1.  /* Block Group */
+@62 BLOCK $4.   /* Block */
+@66 IUC $2. /* Internal Use Code */
+@68 CONCIT $5.  /* Consolidated City (FIPS) */
+@73 CONCITCC $2.    /* FIPS Consolidated City Class Code */
+@75 CONCITSC $2.    /* Consolidated City Size Code */
+@77 AIANHH $4.  /* American Indian Area/Alaska Native Area/Hawaiian Home Land (Census) */
+@81 AIANHHFP $5.    /* American Indian Area/Alaska Native Area/Hawaiian Home Land (FIPS) */
+@86 AIANHHCC $2.    /* FIPS American Indian Area/Alaska Native Area/Hawaiian Home Land Class Code */
+@88 AIHHTLI $1. /* American Indian Trust Land/Hawaiian Home Land Indicator */
+@89 AITSCE $3.  /* American Indian Tribal Subdivision (Census) */
+@92 AITS $5.    /* American Indian Tribal Subdivision (FIPS) */
+@97 AITSCC $2.  /* FIPS American Indian Tribal Subdivision Class Code */
+@99 RESERVE2 $7.    /* Reserved */
+@106 ANRC $5.   /* Alaska Native Regional Corporation (FIPS) */
+@111 ANRCCC $2. /* FIPS Alaska Native Regional Corporation Class Code */
+@113 CBSA $5.   /* Metropolitan Statistical Area/Micropolitan Statistical Area */
+@118 CBSASC $2. /* Metropolitan Statistical Area/Micropolitan Statistical Area Size Code */
+@120 METDIV $5. /* Metropolitan Division */
+@125 CSA $3.    /* Combined Statistical Area */
+@128 NECTA $5.  /* New England City and Town Area */
+@133 NECTASC $2.    /* New England City and Town Area Size Code */
+@135 NECTADIV $5.   /* New England City and Town Area Division */
+@140 CNECTA $3. /* Combined New England City and Town Area */
+@143 CBSAPCI $1.    /* Metropolitan Statistical Area/Micropolitan Statistical Area Principal City */
+@144 NECTAPCI $1.   /* New England City and Town Area Principal City Indicator */
+@145 UA $5. /* Urban Area */
+@150 UASC $2.   /* Urban Area Size Code */
+@152 UATYPE $1. /* Urban Area Type */
+@153 UR $1. /* Urban/Rural */
+@154 CD $2. /* Congressional District */
+@156 SLDU $3.   /* State Legislative District (Upper Chamber) */
+@159 SLDL $3.   /* State Legislative District (Lower Chamber) */
+@162 VTD $6.    /* Voting District */
+@168 VTDI $1.   /* Voting District Indicator */
+@169 ZCTA3 $3.  /* ZIP Code Tabulation Area (3 digit) */
+@172 ZCTA5 $5.  /* ZIP Code Tabulation Area (5 digit) */
+@177 SUBMCD $5. /* Subbarrio (FIPS) */
+@182 SUBMCDCC $2.   /* FIPS Subbarrio Class Code */
+@184 SDELM $5.  /* School District (Elementary) */
+@189 SDSEC $5.  /* School District (Secondary) */
+@194 SDUNI $5.  /* School District (Unified) */
+@199 AREALAND 14.   /* Area (Land) */
+@213 AREAWATR 14.   /* Area (Water) */
+@227 NAME $90.  /* Area Name-Legal/Statistical Area Description (LSAD) Term-Part Indicator */
+@317 FUNCSTAT $1.   /* Functional Status Code */
+@318 GCUNI $1.  /* Geographic Change User Note Indicator */
+@319 POP100 9.  /* Population Count (100%) */
+@328 HU100 9.   /* Housing Unit Count (100%) */
+@337 INTPTLAT $11.  /* Internal Point (Latitude) */
+@348 INTPTLON $12.  /* Internal Point (Longitude) */
+@360 LSADC $2.  /* Legal/Statistical Area Description Code */
+@362 PARTFLAG $1.   /* Part Flag */
+@363 TAZ $6.    /* Traffic Analysis Zone */
+@369 UGA $5.    /* Urban Growth Area */
+@374 STATENS $8.    /* State (ANSI) */
+@382 COUNTYNS $8.   /* County (ANSI) */
+@390 COUSUBNS $8.   /* County Subdivision (ANSI) */
+@398 PLACENS $8.    /* Place (ANSI) */
+@406 CONCITNS $8.   /* Consolidated City (ANSI) */
+@414 AIANHHNS $8.   /* American Indian Area/Alaska Native Area/Hawaiian Home Land (ANSI) */
+@422 AITSNS $8. /* American Indian Tribal Subdivision (ANSI) */
+@430 ANRCNS $8. /* Alaska Native Regional Corporation (ANSI) */
+@438 SUBMCDNS $8.   /* Subbarrio (ANSI) */
 ;
+if sumlev eq '010' then stdfip10 = '00';
+if sumlev eq '020' then stdfip10 = region;* 1 char;
+if sumlev eq '030' then stdfip10 = division;* 1 char;
+if sumlev eq '310' then stdfip10 = cbsa;*msa - 5 char, same as county;
+if sumlev eq '314' then stdfip10 = cats(cbsa,metdiv);* msa metropolitan division 10 char, same as cousub;
+if sumlev eq '330' then stdfip10 = csa;*combined statistical area 3 char;
+
+if sumlev eq '040' then stdfip10 = state;
+if sumlev eq '050' then stdfip10 = cats(state,county);
+if sumlev eq '060' then stdfip10 = cats(state,county,cousub);
+if sumlev eq '160' then stdfip10 = cats(state,place);
+if sumlev eq '500' then stdfip10 = cats(state,cd);
+if sumlev eq '140' then stdfip10 = cats(state,county,tract);
+if sumlev eq '150' then stdfip10 = cats(state,county,tract,BLKGRP);
+if sumlev eq '750' then stdfip10 = strip(state) || strip(county) || strip(tract) || strip(BLOCK);
+if sumlev eq '871' then stdfip10 = cats(state,zcta5);
 run;
 
-data &state.sf00001  ; infile "&path.&state.000012010.sf1" DSD dlm="," truncover pad lrecl=50; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. P1e1 :9. ; run;
-data &state.sf00002  ; infile "&path.&state.000022010.sf1" DSD dlm="," truncover pad lrecl=80; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P2e1-P2e6) (:9.) ; run;
+data &state.sf00001  ; infile "&path.&state.000012010.sf1" DSD dlm="," truncover pad lrecl=200; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. P1e1 :9. ; run;
+data &state.sf00002  ; infile "&path.&state.000022010.sf1" DSD dlm="," truncover pad lrecl=200; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P2e1-P2e6) (:9.) ; run;
 data &state.sf00003  ; infile "&path.&state.000032010.sf1" DSD dlm="," truncover pad lrecl=1500; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P3e1-P3e8) (:9.) (P4e1-P4e3) (:9.) (P5e1-P5e17) (:9.) (P6e1-P6e7) (:9.) (P7e1-P7e15) (:9.) (P8e1-P8e71) (:9.) (P9e1-P9e73) (:9.) ; run;
 data &state.sf00004  ; infile "&path.&state.000042010.sf1" DSD dlm="," truncover pad lrecl=1800; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P10e1-P10e71) (:9.) (P11e1-P11e73) (:9.) (P12e1-P12e49) (:9.) (P13e1-P13e3) (:9.) (P14e1-P14e43) (:9.) ; run;
 data &state.sf00005  ; infile "&path.&state.000052010.sf1" DSD dlm="," truncover pad lrecl=2100; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P15e1-P15e17) (:9.) (P16e1-P16e3) (:9.) (P17e1-P17e3) (:9.) (P18e1-P18e9) (:9.) (P19e1-P19e19) (:9.) (P20e1-P20e34) (:9.) (P21e1-P21e31) (:9.) (P22e1-P22e21) (:9.) (P23e1-P23e15) (:9.) (P24e1-P24e11) (:9.) (P25e1-P25e11) (:9.) (P26e1-P26e11) (:9.) (P27e1-P27e3) (:9.) (P28e1-P28e16) (:9.) (P29e1-P29e28) (:9.) (P30e1-P30e13) (:9.) ; run;
@@ -134,8 +152,8 @@ data &state.sf00010  ; infile "&path.&state.000102010.sf1" DSD dlm="," truncover
 data &state.sf00011  ; infile "&path.&state.000112010.sf1" DSD dlm="," truncover pad lrecl=1800; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P31Ae1-P31Ae16) (:9.) (P31Be1-P31Be16) (:9.) (P31Ce1-P31Ce16) (:9.) (P31De1-P31De16) (:9.) (P31Ee1-P31Ee16) (:9.) (P31Fe1-P31Fe16) (:9.) (P31Ge1-P31Ge16) (:9.) (P31He1-P31He16) (:9.) (P31Ie1-P31Ie16) (:9.) (P34Ae1-P34Ae22) (:9.) (P34Be1-P34Be22) (:9.) (P34Ce1-P34Ce22) (:9.) (P34De1-P34De22) (:9.) (P34Ee1-P34Ee22) (:9.) ; run;
 data &state.sf00012  ; infile "&path.&state.000122010.sf1" DSD dlm="," truncover pad lrecl=1800; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P34Fe1-P34Fe22) (:9.) (P34Ge1-P34Ge22) (:9.) (P34He1-P34He22) (:9.) (P34Ie1-P34Ie22) (:9.) P35Ae1 :9. P35Be1 :9. P35Ce1 :9. P35De1 :9. P35Ee1 :9. P35Fe1 :9. P35Ge1 :9. P35He1 :9. P35Ie1 :9. (P36Ae1-P36Ae3) (:9.) (P36Be1-P36Be3) (:9.) (P36Ce1-P36Ce3) (:9.) (P36De1-P36De3) (:9.) (P36Ee1-P36Ee3) (:9.) (P36Fe1-P36Fe3) (:9.) (P36Ge1-P36Ge3) (:9.) (P36He1-P36He3) (:9.) (P36Ie1-P36Ie3) (:9.) (P37Ae1-P37Ae3) (:9.) (P37Be1-P37Be3) (:9.) (P37Ce1-P37Ce3) (:9.) (P37De1-P37De3) (:9.) (P37Ee1-P37Ee3) (:9.) (P37Fe1-P37Fe3) (:9.) (P37Ge1-P37Ge3) (:9.) (P37He1-P37He3) (:9.) (P37Ie1-P37Ie3) (:9.) (P38Ae1-P38Ae20) (:9.) (P38Be1-P38Be20) (:9.) (P38Ce1-P38Ce20) (:9.) (P38De1-P38De20) (:9.) (P38Ee1-P38Ee20) (:9.) ; run;
 data &state.sf00013  ; infile "&path.&state.000132010.sf1" DSD dlm="," truncover pad lrecl=1700; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P38Fe1-P38Fe20) (:9.) (P38Ge1-P38Ge20) (:9.) (P38He1-P38He20) (:9.) (P38Ie1-P38Ie20) (:9.) (P39Ae1-P39Ae20) (:9.) (P39Be1-P39Be20) (:9.) (P39Ce1-P39Ce20) (:9.) (P39De1-P39De20) (:9.) (P39Ee1-P39Ee20) (:9.) (P39Fe1-P39Fe20) (:9.) (P39Ge1-P39Ge20) (:9.) (P39He1-P39He20) (:9.) ; run;
-data &state.sf00014  ; infile "&path.&state.000142010.sf1" DSD dlm="," truncover pad lrecl=300; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P39Ie1-P39Ie20) (:9.) ; run;
-data &state.sf00015  ; infile "&path.&state.000152010.sf1" DSD dlm="," truncover pad lrecl=500; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT1e1-PCT1e54) (:9.) (PCT2e1-PCT2e54) (:9.) (PCT3e1-PCT3e54) (:9.) (PCT4e1-PCT4e9) (:9.) (PCT5e1-PCT5e22) (:9.) (PCT6e1-PCT6e22) (:9.) (PCT7e1-PCT7e22) (:9.) (PCT8e1-PCT8e14) (:9.) ; run;
+data &state.sf00014  ; infile "&path.&state.000142010.sf1" DSD dlm="," truncover pad lrecl=2000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (P39Ie1-P39Ie20) (:9.) ; run;
+data &state.sf00015  ; infile "&path.&state.000152010.sf1" DSD dlm="," truncover pad lrecl=2000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT1e1-PCT1e54) (:9.) (PCT2e1-PCT2e54) (:9.) (PCT3e1-PCT3e54) (:9.) (PCT4e1-PCT4e9) (:9.) (PCT5e1-PCT5e22) (:9.) (PCT6e1-PCT6e22) (:9.) (PCT7e1-PCT7e22) (:9.) (PCT8e1-PCT8e14) (:9.) ; run;
 data &state.sf00016  ; infile "&path.&state.000162010.sf1" DSD dlm="," truncover pad lrecl=1600; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT9e1-PCT9e14) (:9.) (PCT10e1-PCT10e14) (:9.) (PCT11e1-PCT11e31) (:9.) ; run;
 data &state.sf00017  ; infile "&path.&state.000172010.sf1" DSD dlm="," truncover pad lrecl=1600; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT12e1-PCT12e209) (:9.) ; run;
 data &state.sf00018  ; infile "&path.&state.000182010.sf1" DSD dlm="," truncover pad lrecl=1600; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT13e1-PCT13e49) (:9.) (PCT14e1-PCT14e3) (:9.) (PCT15e1-PCT15e34) (:9.) (PCT16e1-PCT16e26) (:9.) (PCT17e1-PCT17e18) (:9.) (PCT18e1-PCT18e15) (:9.) (PCT19e1-PCT19e11) (:9.) (PCT20e1-PCT20e32) (:9.) ; run;
@@ -159,19 +177,18 @@ data &state.sf00035  ; infile "&path.&state.000352010.sf1" DSD dlm="," truncover
 data &state.sf00036  ; infile "&path.&state.000362010.sf1" DSD dlm="," truncover pad lrecl=1800; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT13Fe1-PCT13Fe49) (:9.) (PCT13Ge1-PCT13Ge49) (:9.) (PCT13He1-PCT13He49) (:9.) (PCT13Ie1-PCT13Ie49) (:9.) (PCT14Ae1-PCT14Ae3) (:9.) (PCT14Be1-PCT14Be3) (:9.) (PCT14Ce1-PCT14Ce3) (:9.) (PCT14De1-PCT14De3) (:9.) (PCT14Ee1-PCT14Ee3) (:9.) (PCT14Fe1-PCT14Fe3) (:9.) (PCT14Ge1-PCT14Ge3) (:9.) (PCT14He1-PCT14He3) (:9.) (PCT14Ie1-PCT14Ie3) (:9.) (PCT19Ae1-PCT19Ae11) (:9.) (PCT19Be1-PCT19Be11) (:9.) ; run;
 data &state.sf00037  ; infile "&path.&state.000372010.sf1" DSD dlm="," truncover pad lrecl=1300; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT19Ce1-PCT19Ce11) (:9.) (PCT19De1-PCT19De11) (:9.) (PCT19Ee1-PCT19Ee11) (:9.) (PCT19Fe1-PCT19Fe11) (:9.) (PCT19Ge1-PCT19Ge11) (:9.) (PCT19He1-PCT19He11) (:9.) (PCT19Ie1-PCT19Ie11) (:9.) (PCT20Ae1-PCT20Ae32) (:9.) (PCT20Be1-PCT20Be32) (:9.) (PCT20Ce1-PCT20Ce32) (:9.) (PCT20De1-PCT20De32) (:9.) (PCT20Ee1-PCT20Ee32) (:9.) ; run;
 data &state.sf00038  ; infile "&path.&state.000382010.sf1" DSD dlm="," truncover pad lrecl=1500; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT20Fe1-PCT20Fe32) (:9.) (PCT20Ge1-PCT20Ge32) (:9.) (PCT20He1-PCT20He32) (:9.) (PCT20Ie1-PCT20Ie32) (:9.) (PCT22Ae1-PCT22Ae21) (:9.) (PCT22Be1-PCT22Be21) (:9.) (PCT22Ce1-PCT22Ce21) (:9.) (PCT22De1-PCT22De21) (:9.) (PCT22Ee1-PCT22Ee21) (:9.) (PCT22Fe1-PCT22Fe21) (:9.) ; run;
-data &state.sf00039  ; infile "&path.&state.000392010.sf1" DSD dlm="," truncover pad lrecl=500; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT22Ge1-PCT22Ge21) (:9.) (PCT22He1-PCT22He21) (:9.) (PCT22Ie1-PCT22Ie21) (:9.) ; run;
+data &state.sf00039  ; infile "&path.&state.000392010.sf1" DSD dlm="," truncover pad lrecl=1000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCT22Ge1-PCT22Ge21) (:9.) (PCT22He1-PCT22He21) (:9.) (PCT22Ie1-PCT22Ie21) (:9.) ; run;
 data &state.sf00040  ; infile "&path.&state.000402010.sf1" DSD dlm="," truncover pad lrecl=1300; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCO1e1-PCO1e39) (:9.) (PCO2e1-PCO2e39) (:9.) (PCO3e1-PCO3e39) (:9.) (PCO4e1-PCO4e39) (:9.) (PCO5e1-PCO5e39) (:9.) (PCO6e1-PCO6e39) (:9.) ; run;
-data &state.sf00041  ; infile "&path.&state.000412010.sf1" DSD dlm="," truncover pad lrecl=900; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCO7e1-PCO7e39) (:9.) (PCO8e1-PCO8e39) (:9.) (PCO9e1-PCO9e39) (:9.) (PCO10e1-PCO10e39) (:9.) ; run;
-data &state.sf00042  ; infile "&path.&state.000422010.sf1" DSD dlm="," truncover pad lrecl=100; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. H1e1 :9. ; run;
-data &state.sf00043  ; infile "&path.&state.000432010.sf1" DSD dlm="," truncover pad lrecl=100; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (H2e1-H2e6) (:9.) ; run;
+data &state.sf00041  ; infile "&path.&state.000412010.sf1" DSD dlm="," truncover pad lrecl=1000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (PCO7e1-PCO7e39) (:9.) (PCO8e1-PCO8e39) (:9.) (PCO9e1-PCO9e39) (:9.) (PCO10e1-PCO10e39) (:9.) ; run;
+data &state.sf00042  ; infile "&path.&state.000422010.sf1" DSD dlm="," truncover pad lrecl=1000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. H1e1 :9. ; run;
+data &state.sf00043  ; infile "&path.&state.000432010.sf1" DSD dlm="," truncover pad lrecl=1000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (H2e1-H2e6) (:9.) ; run;
 data &state.sf00044  ; infile "&path.&state.000442010.sf1" DSD dlm="," truncover pad lrecl=2000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (H3e1-H3e3) (:9.) (H4e1-H4e4) (:9.) (H5e1-H5e8) (:9.) (H6e1-H6e8) (:9.) (H7e1-H7e17) (:9.) (H8e1-H8e7) (:9.) (H9e1-H9e15) (:9.) H10e1 :9. (H11e1-H11e4) (:9.) (H12e1-H12e3) (:9.) (H13e1-H13e8) (:9.) (H14e1-H14e17) (:9.) (H15e1-H15e7) (:9.) (H16e1-H16e17) (:9.) (H17e1-H17e21) (:9.) (H18e1-H18e69) (:9.) (H19e1-H19e7) (:9.) (H20e1-H20e3) (:9.) (H21e1-H21e3) (:9.) (H22e1-H22e3) (:9.) (H11Ae1-H11Ae4) (:9.) (H11Be1-H11Be4) (:9.) (H11Ce1-H11Ce4) (:9.) (H11De1-H11De4) (:9.) (H11Ee1-H11Ee4) (:9.) (H11Fe1-H11Fe4) (:9.) ; run;
 data &state.sf00045  ; infile "&path.&state.000452010.sf1" DSD dlm="," truncover pad lrecl=1800; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (H11Ge1-H11Ge4) (:9.) (H11He1-H11He4) (:9.) (H11Ie1-H11Ie4) (:9.) (H12Ae1-H12Ae3) (:9.) (H12Be1-H12Be3) (:9.) (H12Ce1-H12Ce3) (:9.) (H12De1-H12De3) (:9.) (H12Ee1-H12Ee3) (:9.) (H12Fe1-H12Fe3) (:9.) (H12Ge1-H12Ge3) (:9.) (H12He1-H12He3) (:9.) (H12Ie1-H12Ie3) (:9.) (H16Ae1-H16Ae17) (:9.) (H16Be1-H16Be17) (:9.) (H16Ce1-H16Ce17) (:9.) (H16De1-H16De17) (:9.) (H16Ee1-H16Ee17) (:9.) (H16Fe1-H16Fe17) (:9.) (H16Ge1-H16Ge17) (:9.) (H16He1-H16He17) (:9.) (H16Ie1-H16Ie17) (:9.) (H17Ae1-H17Ae21) (:9.) (H17Be1-H17Be21) (:9.) (H17Ce1-H17Ce21) (:9.) ; run;
 data &state.sf00046  ; infile "&path.&state.000462010.sf1" DSD dlm="," truncover pad lrecl=1000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (H17De1-H17De21) (:9.) (H17Ee1-H17Ee21) (:9.) (H17Fe1-H17Fe21) (:9.) (H17Ge1-H17Ge21) (:9.) (H17He1-H17He21) (:9.) (H17Ie1-H17Ie21) (:9.) ; run;
-data &state.sf00047  ; infile "&path.&state.000472010.sf1" DSD dlm="," truncover pad lrecl=900; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (HCT1e1-HCT1e35) (:9.) (HCT2e1-HCT2e13) (:9.) (HCT3e1-HCT3e13) (:9.) (HCT4e1-HCT4e13) (:9.) ; run;
+data &state.sf00047  ; infile "&path.&state.000472010.sf1" DSD dlm="," truncover pad lrecl=1000; input fileid :$6. stusab :$2. chariter :$3. cifsn :$2. logrecno :7. (HCT1e1-HCT1e35) (:9.) (HCT2e1-HCT2e13) (:9.) (HCT3e1-HCT3e13) (:9.) (HCT4e1-HCT4e13) (:9.) ; run;
 
 ;* combine into several files;
 data sf1.sf1&state.2010P (compress=yes);
-length stdfip10 $15;
 merge
 &state.geo
 &state.sf00001
@@ -183,22 +200,7 @@ merge
 &state.sf00007
 ;
 by logrecno;
-if sumlev eq '010' then stdfip10 = '00';
-if sumlev eq '020' then stdfip10 = region;* 1 char;
-if sumlev eq '030' then stdfip10 = division;* 1 char;
-if sumlev eq '310' then stdfip10 = cbsa;*msa - 5 char, same as county;
-if sumlev eq '314' then stdfip10 = cats(cbsa,metdiv);* msa metropolitan division 10 char, same as cousub;
-if sumlev eq '330' then stdfip10 = csa;*combined statistical area 3 char;
 
-if sumlev eq '040' then stdfip10 = state;
-if sumlev eq '050' then stdfip10 = cats(state,county);
-if sumlev eq '060' then stdfip10 = cats(state,county,cousub);
-if sumlev eq '160' then stdfip10 = cats(state,place);
-if sumlev eq '500' then stdfip10 = cats(state,cd);
-if sumlev eq '080' then stdfip10 = cats(state,county,tract);
-if sumlev eq '091' then stdfip10 = cats(state,county,tract,BLKGRP);
-if sumlev eq '101' then stdfip10 = strip(state) || strip(county) || strip(tract) || strip(BLOCK);
-if sumlev eq '871' then stdfip10 = cats(state,zcta5);
 ;
 label
 P2e1="Total:"
@@ -1151,7 +1153,6 @@ run;
 
 
 data sf1.sf1&state.2010PRH (compress=yes);
-length stdfip10 $15;
 merge
 &state.geo
 &state.sf00007
@@ -1164,23 +1165,7 @@ merge
 &state.sf00014
 ;
 by logrecno;
-if sumlev eq '010' then stdfip10 = '00';
-if sumlev eq '020' then stdfip10 = region;* 1 char;
-if sumlev eq '030' then stdfip10 = division;* 1 char;
-if sumlev eq '310' then stdfip10 = cbsa;*msa - 5 char, same as county;
-if sumlev eq '314' then stdfip10 = cats(cbsa,metdiv);* msa metropolitan division 10 char, same as cousub;
-if sumlev eq '330' then stdfip10 = csa;*combined statistical area 3 char;
 
-if sumlev eq '040' then stdfip10 = state;
-if sumlev eq '050' then stdfip10 = cats(state,county);
-if sumlev eq '060' then stdfip10 = cats(state,county,cousub);
-if sumlev eq '160' then stdfip10 = cats(state,place);
-if sumlev eq '500' then stdfip10 = cats(state,cd);
-if sumlev eq '080' then stdfip10 = cats(state,county,tract);
-if sumlev eq '091' then stdfip10 = cats(state,county,tract,BLKGRP);
-if sumlev eq '101' then stdfip10 = strip(state) || strip(county) || strip(tract) || strip(BLOCK);
-if sumlev eq '871' then stdfip10 = cats(state,zcta5);
-;
 label
 
 P12Ae1="Total:"
@@ -2952,7 +2937,6 @@ drop P50e: P51e: ;
 run;
 
 data sf1.sf1&state.2010PCT (compress=yes);
-length stdfip10 $15;
 merge
 &state.geo
 &state.sf00015 (in=a)
@@ -2963,22 +2947,6 @@ merge
 ;
 by logrecno;
 if a;
-if sumlev eq '010' then stdfip10 = '00';
-if sumlev eq '020' then stdfip10 = region;* 1 char;
-if sumlev eq '030' then stdfip10 = division;* 1 char;
-if sumlev eq '310' then stdfip10 = cbsa;*msa - 5 char, same as county;
-if sumlev eq '314' then stdfip10 = cats(cbsa,metdiv);* msa metropolitan division 10 char, same as cousub;
-if sumlev eq '330' then stdfip10 = csa;*combined statistical area 3 char;
-
-if sumlev eq '040' then stdfip10 = state;
-if sumlev eq '050' then stdfip10 = cats(state,county);
-if sumlev eq '060' then stdfip10 = cats(state,county,cousub);
-if sumlev eq '160' then stdfip10 = cats(state,place);
-if sumlev eq '500' then stdfip10 = cats(state,cd);
-if sumlev eq '080' then stdfip10 = cats(state,county,tract);
-if sumlev eq '091' then stdfip10 = cats(state,county,tract,BLKGRP);
-if sumlev eq '101' then stdfip10 = strip(state) || strip(county) || strip(tract) || strip(BLOCK);
-if sumlev eq '871' then stdfip10 = cats(state,zcta5);
 ;
 label
 PCT1e1="Total tribes tallied (300, A01-M38, M41-R98, S01-Z99):            "
@@ -3019,7 +2987,7 @@ PCT1e35="Shoshone  (J81-J92)"
 PCT1e36="Sioux (K16-K53)       "
 PCT1e37="South American Indian (W67-X24)"
 PCT1e38="Spanish American Indian (X25-Z99)"
-PCT1e39="Tohono O'Odham (K78-K86)"
+PCT1e39="Tohono O’Odham (K78-K86)"
 PCT1e40="Ute (L06-L14)"
 PCT1e41="Yakama (L79-L84)"
 PCT1e42="Yaqui (L91-L99)"
@@ -3073,7 +3041,7 @@ PCT2e35="Shoshone  (J81-J92) & (300, A01-Z99)"
 PCT2e36="Sioux (K16-K53) & (300, A01-Z99)   "
 PCT2e37="South American Indian (W67-X24) & (300, A01-Z99)"
 PCT2e38="Spanish American Indian (X25-Z99) & (300, A01-Z99)"
-PCT2e39="Tohono O'Odham (K78-K86) & (300, A01-Z99)"
+PCT2e39="Tohono O’Odham (K78-K86) & (300, A01-Z99)"
 PCT2e40="Ute (L06-L14) & (300, A01-Z99)"
 PCT2e41="Yakama (L79-L84) & (300, A01-Z99)"
 PCT2e42="Yaqui (L91-L99) & (300, A01-Z99)"
@@ -3127,7 +3095,7 @@ PCT3e35="Shoshone  (J81-J92) & (100-299) or (300, A01-Z99) or (400-999) "
 PCT3e36="Sioux (K16-K53) & (100-299) or (300, A01-Z99) or (400-999)  "
 PCT3e37="South American Indian (W67-X24) & (100-299) or (300, A01-Z99) or (400-999)"
 PCT3e38="Spanish American Indian (X25-Z99) & (100-299) or (300, A01-Z99) or (400-999)"
-PCT3e39="Tohono O'Odham (K78-K86) & (100-299) or (300, A01-Z99) or (400-999)  "
+PCT3e39="Tohono O’Odham (K78-K86) & (100-299) or (300, A01-Z99) or (400-999)  "
 PCT3e40="Ute (L06-L14) & (100-299) or (300, A01-Z99) or (400-999) "
 PCT3e41="Yakama (L79-L84) & (100-299) or (300, A01-Z99) or (400-999) "
 PCT3e42="Yaqui (L91-L99) & (100-299) or (300, A01-Z99) or (400-999) "
@@ -3908,7 +3876,6 @@ PCT22e21="Other noninstitutional facilities (701-702, 704, 706, 801-802, 900-901
 run;
 
 data sf1.sf1&state.2010PCTRH (compress=yes);
-length stdfip10 $15;
 merge
 &state.geo
 &state.sf00020 (in=a)
@@ -3934,23 +3901,6 @@ merge
 ;
 by logrecno;
 if a;
-if sumlev eq '010' then stdfip10 = '00';
-if sumlev eq '020' then stdfip10 = region;* 1 char;
-if sumlev eq '030' then stdfip10 = division;* 1 char;
-if sumlev eq '310' then stdfip10 = cbsa;*msa - 5 char, same as county;
-if sumlev eq '314' then stdfip10 = cats(cbsa,metdiv);* msa metropolitan division 10 char, same as cousub;
-if sumlev eq '330' then stdfip10 = csa;*combined statistical area 3 char;
-
-if sumlev eq '040' then stdfip10 = state;
-if sumlev eq '050' then stdfip10 = cats(state,county);
-if sumlev eq '060' then stdfip10 = cats(state,county,cousub);
-if sumlev eq '160' then stdfip10 = cats(state,place);
-if sumlev eq '500' then stdfip10 = cats(state,cd);
-if sumlev eq '080' then stdfip10 = cats(state,county,tract);
-if sumlev eq '091' then stdfip10 = cats(state,county,tract,BLKGRP);
-if sumlev eq '101' then stdfip10 = strip(state) || strip(county) || strip(tract) || strip(BLOCK);
-if sumlev eq '871' then stdfip10 = cats(state,zcta5);
-;
 label
 PCT12Ae1="Total:"
 PCT12Ae2="Male: "
@@ -8136,7 +8086,6 @@ run;
 
 
 data sf1.sf1&state.2010PCO (compress=yes);
-length stdfip10 $15;
 merge
 &state.geo
 &state.sf00040 (in=a)
@@ -8144,22 +8093,6 @@ merge
 ;
 by logrecno;
 if a;
-if sumlev eq '010' then stdfip10 = '00';
-if sumlev eq '020' then stdfip10 = region;* 1 char;
-if sumlev eq '030' then stdfip10 = division;* 1 char;
-if sumlev eq '310' then stdfip10 = cbsa;*msa - 5 char, same as county;
-if sumlev eq '314' then stdfip10 = cats(cbsa,metdiv);* msa metropolitan division 10 char, same as cousub;
-if sumlev eq '330' then stdfip10 = csa;*combined statistical area 3 char;
-
-if sumlev eq '040' then stdfip10 = state;
-if sumlev eq '050' then stdfip10 = cats(state,county);
-if sumlev eq '060' then stdfip10 = cats(state,county,cousub);
-if sumlev eq '160' then stdfip10 = cats(state,place);
-if sumlev eq '500' then stdfip10 = cats(state,cd);
-if sumlev eq '080' then stdfip10 = cats(state,county,tract);
-if sumlev eq '091' then stdfip10 = cats(state,county,tract,BLKGRP);
-if sumlev eq '101' then stdfip10 = strip(state) || strip(county) || strip(tract) || strip(BLOCK);
-if sumlev eq '871' then stdfip10 = cats(state,zcta5);
 ;
 label
 PCO1e1="Total:"
@@ -8556,7 +8489,6 @@ PCO10e39="85 years and over"
 run;
 
 data sf1.sf1&state.2010H (compress=yes);
-length stdfip10 $15;
 merge
 &state.geo
 &state.sf00042
@@ -8567,23 +8499,6 @@ merge
 &state.sf00047
 ;
 by logrecno;
-if sumlev eq '010' then stdfip10 = '00';
-if sumlev eq '020' then stdfip10 = region;* 1 char;
-if sumlev eq '030' then stdfip10 = division;* 1 char;
-if sumlev eq '310' then stdfip10 = cbsa;*msa - 5 char, same as county;
-if sumlev eq '314' then stdfip10 = cats(cbsa,metdiv);* msa metropolitan division 10 char, same as cousub;
-if sumlev eq '330' then stdfip10 = csa;*combined statistical area 3 char;
-
-if sumlev eq '040' then stdfip10 = state;
-if sumlev eq '050' then stdfip10 = cats(state,county);
-if sumlev eq '060' then stdfip10 = cats(state,county,cousub);
-if sumlev eq '160' then stdfip10 = cats(state,place);
-if sumlev eq '500' then stdfip10 = cats(state,cd);
-if sumlev eq '080' then stdfip10 = cats(state,county,tract);
-if sumlev eq '091' then stdfip10 = cats(state,county,tract,BLKGRP);
-if sumlev eq '101' then stdfip10 = strip(state) || strip(county) || strip(tract) || strip(BLOCK);
-if sumlev eq '871' then stdfip10 = cats(state,zcta5);
-;
 label
 H1e1="Total"
 H2e1="Total:"
@@ -9327,7 +9242,7 @@ run;
 ;* read in states as named;
 ;* more;
 %readsf1(al);
-
-
-
-
+%readsf1(de);
+%readsf1(ca);
+%readsf1(pa);
+%readsf1(ny);
