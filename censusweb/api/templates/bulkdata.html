@@ -34,6 +34,9 @@
         <code>wget -O - {{ settings.API_URL }}/09/all_060_in_09.PCT7.csv | gzcat &gt; all_060_in_09.PCT7.csv</code>
     </li>
 </ul>
+<p>
+    The first several columns in each of these data files are selected values from the "geographic headers" files. For details, consult chapter 6 ("Data Dictionary") of the <a href="http://2010.census.gov/news/press-kits/summary-file-1.html">SF1 Technical Documentation</a>. The remaining columns (the specific data for each table) are named according to the table name and field number. Comparative values from the 2000 census have the same column header followed by ".2000", e.g. the total population for a geography, from table P1, field 1, has a header <strong>P001001</strong> and the 2000 comparable value is <strong>P001001.2000</strong>. Note that for convenience, each file repeats the total population count (<strong>POP100</strong>, <strong>POP100.2000</strong>) and housing unit count (<strong>HU100</strong>,<strong>HU100.2000</strong>) for the covered geography.  The exact codes for these column headers are logically equivalent to those in the SF1 technical documentation, but sometimes vary by the number of padding characters. A convenient way to "decode" the column headers is the <code>sf1_labels</code> metadata file on the <a href="https://github.com/ireapps/census/tree/master/tools/metadata">IRE Census GitHub website</a>.
+</p>
 For complete Census Bureau Data, see:
 <ul id="census-data-links">
     <li><a href="http://www2.census.gov/census_2010/04-Summary_File_1/">Census 2010 Summary File 1</a> (raw data)</li>
