@@ -27,8 +27,8 @@
 Here's a basic example using jQuery. It is assumed that the jQuery library has already been loaded.
 <code>
     <pre>
-        function alert_handler(data) {
-            alert("The 2010 population of "+ data['metadata']['NAME'] + " was " + data['data']['2010']['P1']['P001001'] + ".");
+        function alert_handler(sf1) {
+            alert("The 2010 population of "+ sf1['metadata']['NAME'] + " was " + sf1['data']['2010']['P1']['P001001'] + ".");
         }
         function fetch_data(geoid, success_handler) {
             callback = 'geoid_' + geoid;
