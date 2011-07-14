@@ -48,7 +48,7 @@ If the code above is included in a page, then when the data is loaded, a simple 
 </p>
 <h2>What does JSONP mean for me if I'm trying to use the data in a non-JavaScript programming language?</h2>
 <p>First, consider whether the JSON API is right for you in the first place. In most cases, we guess that you might actually prefer our <a href="{% url bulkdata %}">bulk data in CSV format</a>.</p>
-<p>Next, note that for web-efficiency, data on the server is gzip-encoded. Most browsers decode this automatically, but most other languages do not.</p>
+<p>Next, note that for web-efficiency, data on the server is gzip-encoded. Most browsers decode this automatically, but many http client libraries do not.</p>
 <p>If you're sure you want to use our JSON data, it should be pretty simple to strip the javascript function call from the string which is returned from the URL call. Here's a basic example in Python:</p>
 <code>
     <pre>
