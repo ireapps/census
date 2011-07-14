@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
+{% block title %}Experimental Census Boundary API{% endblock title %}
+
 {% block content %}
 <h2>Boundary Location API</h2>
 
 <p>As an experimental service, we are providing an API which can identify the Census geographies which contain a given point (latitude/longitude). We have not done substantial performance benchmarking with this service, and reserve the right to impose access restrictions or disable the service completely if Boundary Location API requests adversely impact the performance of other aspects of the Census.IRE.org application.</p>
-<p>As with other areas of this application, a limited subset of Census geographies are supported, specifically: state, county, county subdivision, place, and census tract.</p>
+<p>As with other areas of this application, a limited subset of Census geographies are supported, specifically: state, county, county subdivision, place, and census tract. <strong>NOTE: Loading all census shapes of these types is going slowly; at the current rate, the data load is expected to be complete by Saturday, July 16th.</strong></p>
 <p>With the boundary and GeoID data returned from this service, one can subsequently retrieve all Census SF-1 data for the given shape using <a href="{% url json-doc %}">our JSON data API</a>.</p>
 <h2>Point queries</h2>
 
