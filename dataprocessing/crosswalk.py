@@ -54,9 +54,11 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
     
     data = {}
 
-    # TRACTS - require true crosswalk
-    if geography['sumlev'] == config.SUMLEV_TRACT:
+    # TRACTS & BLOCKS - require true crosswalk
+    if geography['sumlev'] in [config.SUMLEV_TRACT, config.SUMLEV_BLOCK]:
         geography_2000s = list(utils.find_geographies_for_xwalk(collection_2000, geography, fields=['data', 'geoid']))
+
+        print geography['geoid']
 
         # Tract is new
         if not geography_2000s:
