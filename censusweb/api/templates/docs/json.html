@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}Using the Census Data as JSON{% endblock title %}
 {% block content %}
 <h2>JSON Data API</h2>
 <p>All data used by this application is retrieved via JSON from a server which you can use for your own applications. If you know the GeoID for a census geography of interest, it is easy to retrieve the data.</p>
@@ -11,7 +12,7 @@
         For any GeoID, it is very simple to create a URL with which you can retrieve a bundle of census data: <div id="bulk-download-url-format"><span>{{ settings.API_URL }}/<strong>SS</strong>/<strong>GEOID</strong>.jsonp</span></div> with the following substitutions:</p>
         <dl id="bulk-download-url-format-explainer-list">
             <dt>SS</dt><dd>The two-digit State FIPS code</dd>
-            <dt>GEOID</dt><dd>The two-to-seven-digit GEOID.</dd>
+            <dt>GEOID</dt><dd>The two-to-eleven-digit GEOID.</dd>
         </dl>
 <h2>What's with this JSONP?</h2>
 <p><em>(A full explanation of the <a href="http://en.wikipedia.org/wiki/Same_origin_policy">"same origin" security policy</a> used by most web browsers is outside the scope of this document. Consult the <a href="http://en.wikipedia.org/wiki/JSONP">Wikipedia entry on JSONP</a> for more information.)</em></p>
@@ -26,8 +27,8 @@
 Here's a basic example using jQuery. It is assumed that the jQuery library has already been loaded.
 <code>
     <pre>
-        function alert_handler(data) {
-            alert("The 2010 population of "+ data['metadata']['NAME'] + " was " + data['data']['2010']['P1']['P001001'] + ".");
+        function alert_handler(sf1) {
+            alert("The 2010 population of "+ sf1['metadata']['NAME'] + " was " + sf1['data']['2010']['P1']['P001001'] + ".");
         }
         function fetch_data(geoid, success_handler) {
             callback = 'geoid_' + geoid;
@@ -47,7 +48,7 @@ If the code above is included in a page, then when the data is loaded, a simple 
 </p>
 <h2>What does JSONP mean for me if I'm trying to use the data in a non-JavaScript programming language?</h2>
 <p>First, consider whether the JSON API is right for you in the first place. In most cases, we guess that you might actually prefer our <a href="{% url bulkdata %}">bulk data in CSV format</a>.</p>
-<p>Next, note that for web-efficiency, data on the server is gzip-encoded. Most browsers decode this automatically, but most other languages do not.</p>
+<p>Next, note that for web-efficiency, data on the server is gzip-encoded. Most browsers decode this automatically, but many http client libraries do not.</p>
 <p>If you're sure you want to use our JSON data, it should be pretty simple to strip the javascript function call from the string which is returned from the URL call. Here's a basic example in Python:</p>
 <code>
     <pre>

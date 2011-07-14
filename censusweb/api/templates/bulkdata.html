@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load helpertags %}
 {% load humanize %}
+{% block title %}Download Bulk Census Data as CSV{% endblock title %}
 {% block content %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/bulkdata.js"></script>
 <h1>Download Bulk Census Data</h1>
 <p>You can download all data for a given "summary level" in a state as a CSV file. These files contain comparison values for the 2000 census which take into account changes in the table layout, and for census tracts, which have been adjusted for changes in census tract geography. These CSV files are UTF-8 encoded.</p>
 <p>Because of the volume of data, each SF1 table is a separate download. Use this form to select a state, summary level, and table.
 </p>
-<p>You can also use this form to download the corresponding shapefiles which would be used to display this data on a map. The shapefiles will be downloaded directly from <a href="http://www.census.gov/geo/www/tiger/tgrshp2010/tgrshp2010.html" target="census">the Census TIGER website</a>. For shapefiles, the "table" menu is not relevant: simply select a state and summary level. Values in the <code>GEOID</code> column in downloaded CSV files should matched against the <code>GEOID10</code> column in the shapefile data.
+<p>You can also use this form to download the corresponding shapefiles which would be used to display this data on a map. The shapefiles will be downloaded directly from <a href="http://www.census.gov/geo/www/tiger/tgrshp2010/tgrshp2010.html" target="census">the Census TIGER website</a>. For shapefiles, the "table" menu is not relevant: simply select a state and summary level. Values in the <code>GEOID</code> column in downloaded CSV files should match against the <code>GEOID10</code> column in the shapefile data.
 </p>
 <form id="bulk-download-builder">
     <label for="state-download" class="bulk-download">State</label><select id="state-download"></select><br>
