@@ -366,6 +366,16 @@ class TestBlocks(unittest.TestCase):
     def setUp(self):
         self.geographies = utils.get_geography_collection()
 
+    def test_block_sum(self):
+        """
+        Verify that the total population of all blocks adds up to the expected amount.
+        """
+        blocks = self.geographies.find({ 'sumlev': config.SUMLEV_BLOCK })
+
+        pop_2010 = sum([int(block['data']['2010']['P1']['P001001']) for block in blocks])
+
+        self.assertEqual(pop_2010, 1360301) 
+
     def test_block_split(self):
         """
         Verify that a split block is crosswalked correctly.
