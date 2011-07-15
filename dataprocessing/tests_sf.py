@@ -362,6 +362,59 @@ class TestTracts(unittest.TestCase):
         self.assertEqual(float(merged_tract['data']['delta']['H1']['H001001']), merged_house_delta)
         self.assertAlmostEqual(float(merged_tract['data']['pct_change']['H1']['H001001']), merged_house_pct_change)
 
+class TestBlocks(unittest.TestCase):
+    def setUp(self):
+        self.geographies = utils.get_geography_collection()
+
+    def test_block_split(self):
+        """
+        Verify that a split block is crosswalked correctly.
+        """
+        block1 = self.geographies.find({ 'geoid': '150010210051016' }) 
+        self.assertEqual(block1.count(), 1)
+        block1 = block1[0]
+
+        split_block_pop = 448 
+        block1_land_pct = float(184458) / 587158  # AREALAND_INT / AREALAND_2000
+        block1_pop_2000 = int(block1_land_pct * split_block_pop)
+        block1_pop_2010 = 22 
+        block1_pop_delta = block1_pop_2010 - block1_pop_2000
+        block1_pop_pct_change = float(block1_pop_delta) / block1_pop_2000
+
+        self.assertAlmostEqual(block1['xwalk']['150010210011337']['POPPCT00'], block1_land_pct, places=4)
+        self.assertAlmostEqual(block1['xwalk']['150010210011337']['HUPCT00'], block1_land_pct, places=4)
+        self.assertAlmostEqual(block1['data']['2000']['P1']['P001001'], block1_pop_2000)
+        self.assertAlmostEqual(float(block1['data']['2010']['P1']['P001001']), block1_pop_2010)
+        self.assertAlmostEqual(float(block1['data']['delta']['P1']['P001001']), block1_pop_delta)
+        self.assertAlmostEqual(float(block1['data']['pct_change']['P1']['P001001']), block1_pop_pct_change)
+
+    def test_block_merged(self):
+        """
+        Verify that a merged block is crosswalked correctly.
+        150010210011329 + 150010210011331 -> 150010210051009
+        """
+        # Compute crosswalked values
+        block1_pop_2000 = 12  # 150010210011329
+        block2_pop_2000 = 27  # 150010210011331
+        merged_pop_2000 = block1_pop_2000 + block2_pop_2000
+        merged_pop_2010 = 78 
+        merged_pop_delta = merged_pop_2010 - merged_pop_2000
+        merged_pop_pct_change = float(merged_pop_delta) / merged_pop_2000
+
+        # Verify that the merged block is correct
+        merged_block = self.geographies.find({ 'geoid': '150010210051009' })
+        self.assertEqual(merged_block.count(), 1)        
+        merged_block = merged_block[0]
+
+        self.assertEqual(len(merged_block['xwalk']), 2)
+        self.assertEqual(merged_block['xwalk']['150010210011329']['POPPCT00'], 1.0)
+        self.assertEqual(merged_block['xwalk']['150010210011331']['POPPCT00'], 1.0)
+
+        self.assertEqual(float(merged_block['data']['2000']['P1']['P001001']), merged_pop_2000)
+        self.assertEqual(float(merged_block['data']['2010']['P1']['P001001']), merged_pop_2010)
+        self.assertEqual(float(merged_block['data']['delta']['P1']['P001001']), merged_pop_delta)
+        self.assertAlmostEqual(float(merged_block['data']['pct_change']['P1']['P001001']), merged_pop_pct_change)
+
 class TestFieldCrosswalk(unittest.TestCase):
     def setUp(self):
         self.geographies = utils.get_geography_collection()
