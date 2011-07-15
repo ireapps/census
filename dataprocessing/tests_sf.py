@@ -38,13 +38,13 @@ class TestSimpleGeographies(unittest.TestCase):
         """
         Data import test against known values that Hawaii should have.
         """
-        states = self.geographies.find({ 'geoid': '15' })
+        states = self.geographies.find({ 'geoid': config.SUMLEV_STATE })
 
         self.assertEqual(states.count(), 1)
 
         state = states[0]
 
-        self.assertEqual(state['sumlev'], '040')
+        self.assertEqual(state['sumlev'], config.SUMLEV_STATE)
         self.assertEqual(state['metadata']['NAME'], 'Hawaii')
         self.assertEqual(state['metadata']['STATE'], '15')
 
@@ -53,7 +53,7 @@ class TestSimpleGeographies(unittest.TestCase):
         self._test_totalpop(state, pop_2000, pop_2010)
 
     def test_county_count(self):
-        counties = self.geographies.find({ 'sumlev': '050' })
+        counties = self.geographies.find({ 'sumlev': config.SUMLEV_COUNTY })
 
         self.assertEqual(counties.count(), 5)
 
@@ -67,7 +67,7 @@ class TestSimpleGeographies(unittest.TestCase):
 
         county = counties[0]
 
-        self.assertEqual(county['sumlev'], '050')
+        self.assertEqual(county['sumlev'], config.SUMLEV_COUNTY)
         self.assertEqual(county['metadata']['NAME'], 'Maui County')
         self.assertEqual(county['metadata']['STATE'], '15')
         self.assertEqual(county['metadata']['COUNTY'], '009')
@@ -77,7 +77,7 @@ class TestSimpleGeographies(unittest.TestCase):
         self._test_totalpop(county, pop_2000, pop_2010)
 
     def test_county_subdivision_count(self):
-        county_subdivisions = self.geographies.find({ 'sumlev': '060' })
+        county_subdivisions = self.geographies.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISION })
 
         self.assertEqual(county_subdivisions.count(), 44)
 
@@ -91,7 +91,7 @@ class TestSimpleGeographies(unittest.TestCase):
 
         county = counties[0]
 
-        self.assertEqual(county['sumlev'], '060')
+        self.assertEqual(county['sumlev'], config.SUMLEV_COUNTY_SUBDIVISION)
         self.assertEqual(county['metadata']['NAME'], 'Hilo CCD')
         self.assertEqual(county['metadata']['STATE'], '15')
         self.assertEqual(county['metadata']['COUNTY'], '001')
@@ -101,7 +101,7 @@ class TestSimpleGeographies(unittest.TestCase):
         self._test_totalpop(county, pop_2000, pop_2010)
 
     def test_place_count(self):
-        places = self.geographies.find({ 'sumlev': '160' })
+        places = self.geographies.find({ 'sumlev': config.SUMLEV_PLACE })
 
         self.assertEqual(places.count(), 151)
 
@@ -115,7 +115,7 @@ class TestSimpleGeographies(unittest.TestCase):
 
         place = places[0]
 
-        self.assertEqual(place['sumlev'], '160')
+        self.assertEqual(place['sumlev'], config.SUMLEV_PLACE)
         self.assertEqual(place['metadata']['NAME'], 'Pearl City CDP')
         self.assertEqual(place['metadata']['STATE'], '15')
         self.assertEqual(place['metadata']['PLACE'], '62600')
@@ -125,7 +125,7 @@ class TestSimpleGeographies(unittest.TestCase):
         self._test_totalpop(place, pop_2000, pop_2010)
 
     def test_tract_count(self):
-        tracts = self.geographies.find({ 'sumlev': '140' })
+        tracts = self.geographies.find({ 'sumlev': config.SUMLEV_TRACT })
 
         self.assertEqual(tracts.count(), 351)
 
@@ -139,7 +139,7 @@ class TestSimpleGeographies(unittest.TestCase):
 
         tract = tracts[0]
 
-        self.assertEqual(tract['sumlev'], '140')
+        self.assertEqual(tract['sumlev'], config.SUMLEV_TRACT)
         self.assertEqual(tract['metadata']['NAME'], 'Census Tract 405')
         self.assertEqual(tract['metadata']['STATE'], '15')
         self.assertEqual(tract['metadata']['COUNTY'], '007')
@@ -147,6 +147,40 @@ class TestSimpleGeographies(unittest.TestCase):
         pop_2000 = 5162 
         pop_2010 = 5943 
         self._test_totalpop(tract, pop_2000, pop_2010)
+
+    def test_block_count(self):
+        if config.SUMLEV_BLOCK not in config.SUMLEVS:
+            pass
+        
+        blocks = self.geographies.find({ 'sumlev': config.SUMLEV_BLOCK })
+
+        self.assertEqual(blocks.count(), 25016)
+
+    def test_simple_block(self):
+        """
+        Data import test against known values for Block 3029 in Tract 210.05, HI.
+        
+        Note: The test block had the same geography but a different name in 2000.
+        It was geoid 150010210011277 in that census.
+        """
+        if config.SUMLEV_BLOCK not in config.SUMLEVS:
+            pass
+
+        blocks = self.geographies.find({ 'geoid': '150010210053029' })
+
+        self.assertEqual(blocks.count(), 1)
+
+        block = blocks[0]
+
+        self.assertEqual(block['sumlev'], config.SUMLEV_BLOCK)
+        self.assertEqual(block['metadata']['NAME'], 'Block 3029')
+        self.assertEqual(block['metadata']['STATE'], '15')
+        self.assertEqual(block['metadata']['COUNTY'], '001')
+        self.assertEqual(block['metadata']['TRACT'], '021005')
+
+        pop_2000 = 33 
+        pop_2010 = 93 
+        self._test_totalpop(block, pop_2000, pop_2010)
 
 class TestTracts(unittest.TestCase):
     def setUp(self):
