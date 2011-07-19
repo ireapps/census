@@ -1,14 +1,13 @@
 #!/bin/bash
-# 50
-./batch_sf.sh Vermont production
-# 36
-./batch_sf.sh "New York" production
-# 29
-./batch_sf.sh Montana production
-# 40
-./batch_sf.sh Oklahoma production
-# 04
-./batch_sf.sh Arizona production
-# 27
-./batch_sf.sh Minnesota production
-
+# 33 NH 44M
+./batch_sf.sh "New Hampshire" production
+# 23 ME 56M
+./batch_sf.sh "Maine" production
+# 21 KY 151M
+./batch_sf.sh "Kentucky" production
+# 51 VA 259M
+./batch_sf.sh "Virginia" production
+# 13 GA 285M
+./batch_sf.sh "Georgia" production
+# 72 PR 119M
+./batch_sf.sh "Puerto Rico" production
