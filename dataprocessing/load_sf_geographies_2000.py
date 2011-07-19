@@ -41,6 +41,9 @@ with open(FILENAME) as f:
         if row_dict['GEOCOMP'] != config.GEOCOMP_COMPLETE:
             continue
 
+        if not config.filter_geographies(row_dict):
+            continue
+
         geography['sumlev'] = row_dict.pop('SUMLEV')
         geography['geoid'] = utils.GEOID_COMPUTERS[geography['sumlev']](row_dict)
 
