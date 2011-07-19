@@ -72,6 +72,10 @@ echo 'Processing crosswalk'
 echo 'Computing deltas'
 ./compute_deltas_sf.py || exit $?
 
+echo 'Dumping mongo data for ${STATE_NAME}'
+mkdir -p /mnt/data/mongodumps/${STATE_FIPS}
+mongodump -d census -o /mnt/data/mongodumps/${STATE_FIPS}
+
 echo 'Deploying to S3'
 ./deploy_data.py $ENVIRONMENT || exit $?
 ./deploy_lookups.py $ENVIRONMENT || exit $?
@@ -82,7 +86,5 @@ echo 'Deploying to S3'
 ./deploy_csv.py $STATE_FIPS 140 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 160 $ENVIRONMENT || exit $?
 
-mkdir -p /mnt/data/mongodumps/${STATE_FIPS}
-mongodump -d census -o /mnt/data/mongodumps/${STATE_FIPS}
 echo Complete $STATE_NAME at `date`
 
