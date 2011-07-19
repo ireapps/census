@@ -42,6 +42,7 @@ STATE_FIPS = {
     'Oklahoma': '40',
     'Oregon': '41',
     'Pennsylvania': '42',
+    'Puerto Rico': '72',
     'Rhode Island': '44',
     'South Carolina': '45',
     'South Dakota': '46',
