@@ -22,14 +22,14 @@ echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
 echo 'Fetching data'
-./fetch_sf_data_2000.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
-./fetch_sf_data_2010.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
+#./fetch_sf_data_2000.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR" "$STATE_FIPS"
+#./fetch_sf_data_2010.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
 
 echo 'Loading 2000 geographies'
 ./load_sf_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv || exit $?
 
 echo 'Loading 2000 data'
-for i in {1..39}
+for i in {1..1}
 do
     ./load_sf_data_2000.py data/sf_data_2000_${STATE_NAME_LOWER}_$i.csv 
 done
@@ -52,10 +52,11 @@ if [ "$FAKE" = "FAKE" ]; then
     ./load_crosswalk.py $STATE_FIPS $FAKE || exit $?
 else
     ./load_crosswalk.py $STATE_FIPS data/us2010trf.csv || exit $?
+    ./load_crosswalk_blocks.py $STATE_FIPS data/TAB2000_TAB2010_ST_${STATE_FIPS}_v2.txt || exit $?
 fi
 
 echo 'Loading 2010 data'
-for i in {1..47}
+for i in {1..1}
 do
     if [ "$FAKE" = "FAKE" ]; then
         # Load 2000 data as 2010 for testing
