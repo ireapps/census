@@ -15,6 +15,20 @@ SUMLEV_BLOCK = '101'
 # Summary levels to load
 SUMLEVS = [SUMLEV_NATION, SUMLEV_STATE, SUMLEV_COUNTY, SUMLEV_COUNTY_SUBDIVISION, SUMLEV_PLACE, SUMLEV_TRACT]
 
+def filter_geographies(row_dict):
+    """
+    This callback gets fired for every geography that is loaded.
+
+    The argument is a dictionary of columns from the geography
+    headers file.
+
+    If it returns true the geography will be loaded, otherwise
+    it will be skipped.
+
+    This is useful for limiting data to a county/city/whatever.
+    """
+    return True 
+
 # Mongo
 CENSUS_DB = 'census'
 LABELS_DB = 'census_labels'
