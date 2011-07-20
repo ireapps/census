@@ -13,6 +13,7 @@ STATE_NAME_ABBR=`python get_state_abbr.py "${STATE_NAME}"` || exit $?
 STATE_FIPS=`python get_state_fips.py "${STATE_NAME}"` || exit $?
 ENVIRONMENT="${@:2:1}"
 FAKE="${@:3:1}"
+MONGO_DUMP_DIR="/mnt/data/mongodumps"
 
 echo Begin $STATE_NAME at `date`
 echo 'Dropping previous data.'
@@ -73,8 +74,8 @@ echo 'Computing deltas'
 ./compute_deltas_sf.py || exit $?
 
 echo 'Dumping mongo data for ${STATE_NAME}'
-mkdir -p /mnt/data/mongodumps/${STATE_FIPS}
-mongodump -d census -o /mnt/data/mongodumps/${STATE_FIPS}
+mkdir -p $MONGO_DUMP_DIR/${STATE_FIPS}
+mongodump -d census -o $MONGO_DUMP_DIR/${STATE_FIPS}
 
 echo 'Deploying to S3'
 ./deploy_data.py $ENVIRONMENT || exit $?
