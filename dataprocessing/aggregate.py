@@ -18,6 +18,10 @@ How to use aggregate census data to arbitrary geographies:
 
 * Download the 2000 (NOT 2010) block-level shapefile for your state (or county), unzip it, and copy the enclosed .dbf file somewhere convenient. You can delete the rest.
 
+* If it isn't already, convert the shapefile you will be aggregating by into 4269 projection. Example:
+
+    ogr2ogr -f "ESRI Shapefile" wards4269 -t_srs EPSG:4269 wards
+
 * Run this aggregation script, providing the following parameters: the .dbf you just extracted, the shapefile you want to aggregate by, a name for the new summary level. Optionally you may also provide the name of an column in the .dbf to use as a unique id. Example:
 
     ./aggregate.py tl_2010_15003_tabblock00.dbf wards/wards.shp ward WARD_ID 
