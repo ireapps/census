@@ -143,6 +143,10 @@ aside label {
     margin-top: 30px;
 }
 
+.query-builder {
+    margin-bottom: 15px;
+}
+
 nav {
     margin:20px 0;
     display: block;
