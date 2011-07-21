@@ -22,9 +22,14 @@ How to use aggregate census data to arbitrary geographies:
 
     ogr2ogr -f "ESRI Shapefile" wards4269 -t_srs EPSG:4269 wards
 
-* Run this aggregation script, providing the following parameters: the .dbf you just extracted, the shapefile you want to aggregate by, a name for the new summary level. Optionally you may also provide the name of an column in the .dbf to use as a unique id. Example:
+* Create a CSV file manually mapping block geoids to aggregate geometry unique ids for any blocks which you know will not geocode correctly. This is most commonly used to compensate for inaccurate shapefile boundaries. You may create an empty file if you don't know what to do with this. You could also conceivably use this to map /every/ block, in which case this script would not execute any geo-queries during aggregation. Example:
 
-    ./aggregate.py tl_2010_15003_tabblock00.dbf wards/wards.shp ward WARD_ID 
+    150030084111000,46
+    150030084111001,47
+
+* Run this aggregation script, providing the following parameters: the .dbf you just extracted, the shapefile you want to aggregate by, a name for the new summary level, a csv of blocks that should be manually aggregated, and the name of a column in the shapefile to use as a unique ID. 
+
+    ./aggregate.py tl_2010_15003_tabblock00.dbf wards/wards.shp ward manual_mapping.csv WARD_ID 
 
 * Rerun the crosswalk and compute_deltas scripts, limiting them to only the summary level you just created. Example:
 
@@ -34,6 +39,7 @@ How to use aggregate census data to arbitrary geographies:
 * You now have arbitrarily aggregated geographies in your Mongo database.
 """
 
+import csv
 import sys
 
 import dbf
@@ -42,17 +48,21 @@ from osgeo import ogr
 import config
 import utils
 
-if len(sys.argv) < 2:
-    sys.exit('You must provide a DBF file for the 2000 blocks that will be aggregated, a shapefile to aggregate by, and a name for the new summary level. You may optionally provide the name of a field within the shapefile to use as the unique ID.')
+if len(sys.argv) < 4:
+    sys.exit('You must provide a DBF file for the 2000 blocks that will be aggregated, a shapefile to aggregate by, a name for the new summary level, a CSV file mapping abberant blocks to aggregate ids, and the name of a field within the shapefile to use as the ID.')
 
 BLOCKS_DBF = sys.argv[1]
 SHAPEFILE = sys.argv[2]
 NEW_SUMLEV = sys.argv[3]
 
-if len(sys.argv) == 5:
-    ID_FIELD = sys.argv[4]
-else:
-    ID_FIELD = None
+MANUAL_MAPPING = {}
+
+rows = csv.reader(open(sys.argv[4], 'rU'))
+
+for row in rows:
+    MANUAL_MAPPING[row[0]] = row[1]
+
+ID_FIELD = sys.argv[5]
 
 shapes = ogr.Open(SHAPEFILE)
 shapes_layer = shapes[0]
@@ -124,7 +134,10 @@ def aggregate_geographies(collection, dataset, points=None):
             lat = float(geography['metadata']['INTPTLAT'])
             lon = float(geography['metadata']['INTPTLON'])
 
-        feature_id = find_geometry_containing_point(lat, lon)
+        if geography['geoid'] in MANUAL_MAPPING:
+            feature_id = MANUAL_MAPPING[geography['geoid']]
+        else:
+            feature_id = find_geometry_containing_point(lat, lon)
 
         count_tested += 1
 
