@@ -3,8 +3,9 @@
 """
 Script for generating custom summary levels:
 
-Note: You must have already run batch_sf.sh with SUMLEV_BLOCK set to be loaded
-in config.py before using this script.
+Note: You must have already run batch_sf.sh before using this script. If you want
+to aggregate blocks (the normal case), you'll need to have added SUMLEV_BLOCK to
+SUMLEVS in config.py before running the batch.
 
 Aggregate geoids (usually of blocks) to a custom summary level, such as wards,
 community areas, or neighborhoods. Takes a CSV mapping existing census geoids to
@@ -41,72 +42,80 @@ import sys
 
 import utils
 
-if len(sys.argv) < 4:
-    sys.exit('You must provide the filename of a CSV mapping census geoids to new unique feature ids and name for the new summary level and a year.')
-
-FILENAME = sys.argv[1]
-NEW_SUMLEV = sys.argv[2]
-YEAR = sys.argv[3]
-
-if YEAR == '2010':
-    collection = utils.get_geography_collection()
-elif YEAR == '2000':
-    collection = utils.get_geography2000_collection()
-else:
-    sys.exit('Invalid year: "%s"' % YEAR)
-    
-# Destroy any previous aggregations for this summary level
-collection.remove({ 'sumlev': NEW_SUMLEV }, safe=True)
-
 def make_custom_geoid(sumlev, feature_id):
     """
     Generate a unique geoid for the given feature.
     """
     return '%s_%s' % (sumlev, feature_id)
 
-count_allocated = 0
-count_new_features = 0
+def create_custom_sumlev(collection, filename, new_sumlev, year):
+    """
+    Create a custom summary level by aggregating blocks
+    according to a pre-generated mapping.
+    """
+    # Destroy any previous aggregations for this summary level
+    collection.remove({ 'sumlev': new_sumlev }, safe=True)
 
-mapping = csv.reader(open(FILENAME, 'rU'))
+    count_allocated = 0
+    count_new_features = 0
 
-for row in mapping:
-    geoid, feature_id = row
+    mapping = csv.reader(open(filename, 'rU'))
 
-    new_geoid = make_custom_geoid(NEW_SUMLEV, feature_id)
+    for row in mapping:
+        geoid, feature_id = row
 
-    old_geography = collection.find_one({ 'geoid': geoid })
-    new_geography = collection.find_one({ 'geoid': new_geoid })
+        new_geoid = make_custom_geoid(new_sumlev, feature_id)
 
-    # Create an aggregating geography if it doesn't exist
-    if not new_geography:
-        new_geography = {
-            'sumlev': NEW_SUMLEV,
-            'geoid': new_geoid,
-            'metadata': {
-                'NAME': str(feature_id),
-            },
-            'data': {
-                YEAR: {},
+        old_geography = collection.find_one({ 'geoid': geoid })
+        new_geography = collection.find_one({ 'geoid': new_geoid })
+
+        # Create an aggregating geography if it doesn't exist
+        if not new_geography:
+            new_geography = {
+                'sumlev': new_sumlev,
+                'geoid': new_geoid,
+                'metadata': {
+                    'NAME': str(feature_id),
+                },
+                'data': {
+                    year: {},
+                }
             }
-        }
 
-        count_new_features += 1
-        
-    # Update new geography with values from constituent block
-    for table in old_geography['data'][YEAR]:
-        if table not in new_geography['data'][YEAR]:
-            new_geography['data'][YEAR][table] = {}
+            count_new_features += 1
+            
+        # Update new geography with values from constituent block
+        for table in old_geography['data'][year]:
+            if table not in new_geography['data'][year]:
+                new_geography['data'][year][table] = {}
 
-        for field, value in old_geography['data'][YEAR][table].items():
-            if field not in new_geography['data'][YEAR][table]:
-                new_geography['data'][YEAR][table][field] = 0
+            for field, value in old_geography['data'][year][table].items():
+                if field not in new_geography['data'][year][table]:
+                    new_geography['data'][year][table][field] = 0
 
-            new_geography['data'][YEAR][table][field] = float(new_geography['data'][YEAR][table][field]) + float(value)
+                new_geography['data'][year][table][field] = float(new_geography['data'][year][table][field]) + float(value)
 
-    collection.save(new_geography, safe=True) 
+        collection.save(new_geography, safe=True) 
 
-    count_allocated += 1
+        count_allocated += 1
 
-print 'Allocated: %i' % count_allocated
-print 'New Features: %i' % count_new_features
+    print 'Allocated: %i' % count_allocated
+    print 'New Features: %i' % count_new_features
+
+if __name__ == "__main__":
+    if len(sys.argv) < 4:
+        sys.exit('You must provide the filename of a CSV mapping census geoids to new unique feature ids and name for the new summary level and a year.')
+
+    filename = sys.argv[1]
+    new_sumlev = sys.argv[2]
+    year = sys.argv[3]
+
+    if year == '2010':
+        collection = utils.get_geography_collection()
+    elif year == '2000':
+        collection = utils.get_geography2000_collection()
+    else:
+        sys.exit('Invalid year: "%s"' % year)
+
+    create_custom_sumlev(collection, filename, new_sumlev, year)
 
