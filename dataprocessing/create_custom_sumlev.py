@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
 """
-Aggregate geoids (usually of blocks) to a new summary level, such as for wards,
-community areas, or whatever. Takes a CSV mapping existing census geoids to
+Script for generating custom summary levels:
+
+Note: You must have already run batch_sf.sh with SUMLEV_BLOCK set to be loaded
+in config.py before using this script.
+
+Aggregate geoids (usually of blocks) to a custom summary level, such as wards,
+community areas, or neighborhoods. Takes a CSV mapping existing census geoids to
 new features ID as an input. Example:
 
     150030084051004,1
@@ -23,6 +28,12 @@ Example usage:
 
     python create_custom_sumlev.py mapping_2000.csv sumlev_name 2000
     python create_custom_sumlev.py mapping_2010.csv sumlev_name 2010
+
+Once this script has been run you can rerun the crosswalk and delta computation
+scripts for only the new summary level:
+
+    python crosswalk.py test
+    python compute_deltas_sf.py test
 """
 
 import csv
