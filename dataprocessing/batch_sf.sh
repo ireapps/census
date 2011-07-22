@@ -13,6 +13,7 @@ STATE_NAME_ABBR=`python get_state_abbr.py "${STATE_NAME}"` || exit $?
 STATE_FIPS=`python get_state_fips.py "${STATE_NAME}"` || exit $?
 ENVIRONMENT="${@:2:1}"
 FAKE="${@:3:1}"
+MONGO_DUMP_DIR="/mnt/data/mongodumps"
 
 echo Begin $STATE_NAME at `date`
 echo 'Dropping previous data.'
@@ -22,7 +23,7 @@ echo 'Ensuring mongo indexes.'
 ./ensure_indexes.sh
 
 echo 'Fetching data'
-./fetch_sf_data_2000.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
+./fetch_sf_data_2000.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR" "$STATE_FIPS"
 ./fetch_sf_data_2010.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR"
 
 echo 'Loading 2000 geographies'
@@ -52,6 +53,7 @@ if [ "$FAKE" = "FAKE" ]; then
     ./load_crosswalk.py $STATE_FIPS $FAKE || exit $?
 else
     ./load_crosswalk.py $STATE_FIPS data/us2010trf.csv || exit $?
+    ./load_crosswalk_blocks.py $STATE_FIPS data/TAB2000_TAB2010_ST_${STATE_FIPS}_v2.txt || exit $?
 fi
 
 echo 'Loading 2010 data'
@@ -71,6 +73,10 @@ echo 'Processing crosswalk'
 echo 'Computing deltas'
 ./compute_deltas_sf.py || exit $?
 
+echo 'Dumping mongo data for ${STATE_NAME}'
+mkdir -p $MONGO_DUMP_DIR/${STATE_FIPS}
+mongodump -d census -o $MONGO_DUMP_DIR/${STATE_FIPS}
+
 echo 'Deploying to S3'
 ./deploy_data.py $ENVIRONMENT || exit $?
 ./deploy_lookups.py $ENVIRONMENT || exit $?
@@ -80,5 +86,6 @@ echo 'Deploying to S3'
 ./deploy_csv.py $STATE_FIPS 060 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 140 $ENVIRONMENT || exit $?
 ./deploy_csv.py $STATE_FIPS 160 $ENVIRONMENT || exit $?
+
 echo Complete $STATE_NAME at `date`
 

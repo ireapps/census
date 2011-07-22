@@ -8,6 +8,11 @@ from pymongo import objectid
 import config
 import utils
 
+QUERY = {}
+
+if len(sys.argv) > 1:
+    QUERY = { 'sumlev': sys.argv[1] }
+
 collection = utils.get_geography_collection()
 collection_2000 = utils.get_geography2000_collection()
 
@@ -49,13 +54,13 @@ with open('sf_crosswalk_key.csv') as f:
     for row in reader:
         CROSSWALK_FIELDS_BY_TABLE[row[0]] = row[1]
 
-for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
+for geography in collection.find(QUERY, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
     row_count += 1
     
     data = {}
 
-    # TRACTS - require true crosswalk
-    if geography['sumlev'] == config.SUMLEV_TRACT:
+    # TRACTS & BLOCKS - require true crosswalk
+    if geography['sumlev'] in [config.SUMLEV_TRACT, config.SUMLEV_BLOCK]:
         geography_2000s = list(utils.find_geographies_for_xwalk(collection_2000, geography, fields=['data', 'geoid']))
 
         # Tract is new
@@ -88,7 +93,7 @@ for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', '
         geography_2000 = collection_2000.find_one({ 'geoid': geography['geoid'] }, fields=['data'])
 
         if not geography_2000:
-            print 'Couldn\'t find matching 2000 geography for %s (%s)' % (geography['metadata']['NAME'], geography['geoid'])
+            print 'Couldn\'t find matching 2000 geography for %s' % (geography['geoid'])
 
             continue
 

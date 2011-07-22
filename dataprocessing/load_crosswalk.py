@@ -5,7 +5,6 @@ import sys
 from csvkit.unicsv import UnicodeCSVReader
 from pymongo import objectid
 
-import config
 import utils
 
 if len(sys.argv) < 2:

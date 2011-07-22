@@ -224,10 +224,11 @@ $(function(){
             var sumlev = query.attributes.summarylevel
             var containerlev = query.currentLevel
             var container = query.attributes[query.currentLevel]
-            window.location = '/internal/download_data_for_region/' +
-                sumlev + '-' +
-                containerlev + '-'+
-                container + dataType;
+            if (dataType == '.csv') {
+                window.location = '/data/bulkdata.html' +
+                '?state=' + container +
+                '&sumlev=' + sumlev;
+            }
         },
 
         showHelp: function(e) {

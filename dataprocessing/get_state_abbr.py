@@ -42,6 +42,7 @@ STATE_ABBRS = {
     'Oklahoma': 'ok',
     'Oregon': 'or',
     'Pennsylvania': 'pa',
+    'Puerto Rico': 'pr',
     'Rhode Island': 'ri',
     'South Carolina': 'sc',
     'South Dakota': 'sd',

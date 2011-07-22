@@ -3,7 +3,23 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-
 {% include "_query_builder.html" %}
 
+<p><span id="bulkdata-button" class="button">Download Bulk Data</span></p>
+
+<div id="about">
+    <h2>About</h2>
+    <p>Investigative Reporters and Editors is pleased to announce the next phase in our ongoing Census project, designed to provide journalists with a simpler way to access 2010 Census data so they can spend less time importing and managing the data and more time exploring and reporting the data. The project is the result of work by journalists from the The Chicago Tribune, The New York Times, USA Today, CNN, the Spokesman-Review (Spokane, Wash.) and the University of Nebraska-Lincoln, funded through generous support from the Donald W. Reynolds Journalism Institute at the Missouri School of Journalism.</p>
+
+    <p>Thanks to the following journalists for their time and expertise: Brian Boyer, Joe Germuska and Chris Groskopf of The Chicago Tribune; Jeremy Ashkenas and Aron Pilhofer of The New York Times; Paul Overberg of USA Today; Curt Merrill of CNN; Matt Waite of the University of Nebraska-Lincoln; and Mike Tigas of the Spokesman-Review.</p>
+    <a href="http://www.ire.org"><img class="ire" src="{{ MEDIA_URL }}images/ire.jpg" alt="IRE" /></a>
+    <a href="http://www.rjionline.org/"><img class="rji" src="{{ MEDIA_URL }}images/rji.jpg" alt="RJI" /></a>
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#bulkdata-button").click(function(){
+            window.location.href="{% url bulkdata %}"
+        })
+    })
+</script>
 {% endblock %}

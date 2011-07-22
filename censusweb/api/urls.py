@@ -1,7 +1,5 @@
 from django.conf.urls.defaults import *
-from django.views.generic.simple import direct_to_template
 from api import views
-
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -20,6 +18,8 @@ urlpatterns = patterns('',
     url(r'^data/(?P<geoids>[,\d]+)\.(?P<format>kml|kmz)$', views.data_as_kml, name="data_as_kml"),
     url(r'^data/(?P<geoids>[,\d]+)\.html$', views.generic_view, { "template": "data.html" }, name="data"),
     url(r'^data/bulkdata.html$', views.generic_view, { "template": "bulkdata.html" }, name="bulkdata"),
+    url(r'^docs/json.html$', views.generic_view, { "template": "docs/json.html" }, name="json-doc"),
+    url(r'^docs/boundary.html$', views.generic_view, { "template": "docs/boundary.html" }, name="boundary-documentation"),
     url(r'^util/create_table/(?P<aggregate>(all_files|all_tables))\.sql$', views.generate_sql, name="generate_sql"), # order matters. keep this first to catch only numbers before tables
     url(r'^util/create_table/(?P<file_ids>[,\d{1,2}]+)\.sql$', views.generate_sql, name="generate_sql"), # order matters. keep this first to catch only numbers before tables
     url(r'^util/create_table/(?P<table_ids>[,\w]+)\.sql$', views.generate_sql, name="generate_sql"),

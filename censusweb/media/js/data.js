@@ -120,7 +120,8 @@ $(function(){
             'table': labelset["key"] + ". " + labelset['name'],
             'universe': labelset['universe'],
             'columns': [],
-            'rows': []
+            'rows': [],
+            'geog_names': []
         };
 
         var labels = _.sortBy(labelset["labels"], function(label) {
@@ -153,7 +154,7 @@ $(function(){
         _.each(geographies, function(geography) {
             var column_meta = {};
             column_name = geography["metadata"]["NAME"];
-
+            report['geog_names'].push(column_name);
             if ($.inArray(geography["sumlev"], [SUMLEV_COUNTY, SUMLEV_COUNTY_SUBDIVISION, SUMLEV_PLACE, SUMLEV_TRACT]) >= 0) {
                 state_fips = geography["metadata"]["STATE"];
                 state_name = _.detect(window.query.mappings.states, function(state) {
@@ -234,6 +235,10 @@ $(function(){
         var html = report_template(report);
 
         $('#report-wrapper-' + report["key"]).append(html);
+        var base = 'census.ire.org'
+        var names = report['geog_names'].join(', ');
+        var title = [names,base].join(' - ');
+        $('title').html(title);
     }
 
     // Add event hooks

@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 {% load helpertags %}
 {% load humanize %}
+{% block title %}Download Bulk Census Data as CSV{% endblock title %}
 {% block content %}
 <script type="text/javascript" src="{{ MEDIA_URL }}js/bulkdata.js"></script>
 <h1>Download Bulk Census Data</h1>
-<p>You can download all data for a given "summary level" in a state as a CSV file. These files contain comparison values for the 2000 census which take into account changes in the table layout, and for census tracts, which have been adjusted for changes in census tract geography.</p>
+<p>You can download all data for a given "summary level" in a state as a CSV file. These files contain comparison values for the 2000 census which take into account changes in the table layout, and for census tracts, which have been adjusted for changes in census tract geography. These CSV files are UTF-8 encoded.</p>
 <p>Because of the volume of data, each SF1 table is a separate download. Use this form to select a state, summary level, and table.
 </p>
+<p>You can also use this form to download the corresponding shapefiles which would be used to display this data on a map. The shapefiles will be downloaded directly from <a href="http://www.census.gov/geo/www/tiger/tgrshp2010/tgrshp2010.html" target="census">the Census TIGER website</a>. For shapefiles, the "table" menu is not relevant: simply select a state and summary level. Values in the <code>GEOID</code> column in downloaded CSV files should match against the <code>GEOID10</code> column in the shapefile data.
+</p>
 <form id="bulk-download-builder">
-    <label for="state-download" class="bulk-download">State</label><select id="state-download"></select>
-    <label for="sumlev-download" class="bulk-download">Summary Level</label><select id="sumlev-download"></select>
-    <label for="table-download" class="bulk-download">Table</label><select id="table-download"></select>
-    <button type="button" id="start-download">Download</button>
+    <label for="state-download" class="bulk-download">State</label><select id="state-download"></select><br>
+    <label for="sumlev-download" class="bulk-download">Summary Level</label><select id="sumlev-download"></select><br>
+    <label for="table-download" class="bulk-download">Table</label><select id="table-download"></select><br>
+    <div id="bulk-download-buttons">
+        <span class='button' id="start-download">Download CSV</span>
+        <span class="button" id="shapefile-download">Download Shapefile</span>
+    </div>
 </form>
 <p id="bulk-download-url-format-explainer">
     Instead of the form, you can build your own download URLs using this simple pattern: <div id="bulk-download-url-format"><span>{{ settings.API_URL }}/<strong>SS</strong>/all_<strong>LLL</strong>_in_<strong>SS</strong>.<strong>TT</strong>.csv</span></div> with the following substitutions:</p>
@@ -20,11 +26,24 @@
         <dt>LLL</dt><dd>The three-digit summary level code.</dd>
         <dt>TT</dt><dd>The variable length table code, e.g. <strong>P1</strong> or <strong>H12G</strong></dd>
     </dl>
+<p id="gzip-note"><strong>NOTE:</strong> This data is <em>gzip-compressed</em>. Your browser should handle this automatically, but if you are using command-line tools like <code>curl</code> or <code>wget</code> to download the data, you will need to decompress it, <em>even though there is no .gz extension.</em>. For example:</p>
+<ul id="gzip-code-example">
+    <li>
+        <code>curl {{ settings.API_URL }}/09/all_060_in_09.PCT7.csv | gzcat &gt; all_060_in_09.PCT7.csv</code>
+    </li>
+    <li>
+        <code>wget -O - {{ settings.API_URL }}/09/all_060_in_09.PCT7.csv | gzcat &gt; all_060_in_09.PCT7.csv</code>
+    </li>
+</ul>
+<p>
+    The first several columns in each of these data files are selected values from the "geographic headers" files. For details, consult chapter 6 ("Data Dictionary") of the <a href="http://2010.census.gov/news/press-kits/summary-file-1.html">SF1 Technical Documentation</a>. The remaining columns (the specific data for each table) are named according to the table name and field number. Comparative values from the 2000 census have the same column header followed by ".2000", e.g. the total population for a geography, from table P1, field 1, has a header <strong>P001001</strong> and the 2000 comparable value is <strong>P001001.2000</strong>. Note that for convenience, each file repeats the total population count (<strong>POP100</strong>, <strong>POP100.2000</strong>) and housing unit count (<strong>HU100</strong>,<strong>HU100.2000</strong>) for the covered geography.  The exact codes for these column headers are logically equivalent to those in the SF1 technical documentation, but sometimes vary by the number of padding characters. A convenient way to "decode" the column headers is the <code>sf1_labels</code> metadata file on the <a href="https://github.com/ireapps/census/tree/master/tools/metadata">IRE Census GitHub website</a>.
+</p>
 For complete Census Bureau Data, see:
-<ul>
+<ul id="census-data-links">
     <li><a href="http://www2.census.gov/census_2010/04-Summary_File_1/">Census 2010 Summary File 1</a> (raw data)</li>
     <li><a href="http://www2.census.gov/census_2000/datasets/Summary_File_1/">Census 2000 Summary File 1</a> (raw data)</li>
     <li><a href="http://www.census.gov/geo/www/2010census/tract_rel/tract_rel.html">2010 Census Tract Relationship Files</a></li>
     <li><a href="http://2010.census.gov/news/xls/sf1_crosswalk.xls">Comparing Summary File 1 with Census 2000: Topical cross-walk of table numbers</a></li>
-</ul>    
+    <li><a href="http://www.census.gov/geo/www/tiger/tgrshp2010/tgrshp2010.html">Census TIGER Geodata Homepage</a></li>
+</ul>
 {% endblock content %}

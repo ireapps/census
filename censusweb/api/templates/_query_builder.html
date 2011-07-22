@@ -1,31 +1,34 @@
 {% load helpertags %}
 
-<nav>
-    <div id="filter-help" class="code hidden">
-        Start typing to filter&hellip;
-    </div>
-    <div id="filter-display" class="code hidden"></div>
-</nav>
+<div class="query-builder">
+    <nav>
+        <div id="filter-help" class="code hidden">
+            Start typing to filter&hellip;
+        </div>
+        <div id="filter-display" class="code hidden"></div>
+    </nav>
 
-<div id="search"></div>
+    <div id="search"></div>
 
-<dl id="help" class="hidden">
-    <!-- <dt>What is this?</dt>
-    <dd>
-    </dd> -->
-    <dt>Census tracts</dt>
-    <dd>
-        {% help_text "TRACTS" %}
-    <dd>
-    <dt>Places</dt>
-    <dd>
-        {% help_text "PLACES" %}
-    <dd>
-    <dt>Counties (parishes in LA)</dt>
-    <dd>
-        {% help_text "COUNTIES" %}
-    <dd>
-</dl>
+    <dl id="help" class="hidden">
+        <dt>Census tracts</dt>
+        <dd>
+            {% help_text "TRACTS" %}
+        <dd>
+        <dt>Places</dt>
+        <dd>
+            {% help_text "PLACES" %}
+        <dd>
+        <dt>Counties (parishes in LA)</dt>
+        <dd>
+            {% help_text "COUNTIES" %}
+        <dd>
+        <dt>County Subdivisions</dt>
+        <dd>
+            {% help_text "COUSUBS" %}
+        <dd>
+    </dl>
+</div>
 
 <script src="{% build_media_url '/js/query.js' %}"></script>
 
@@ -41,7 +44,7 @@
             <% } %>
         </span>
     <% } else { %>
-        Find data for
+        Browse data for
         <span id="summarylevel-select">
             <span class="link" data-val="<%= SUMLEV_TRACT %>"><%= query.mappings.summarylevelDisplays[SUMLEV_TRACT] %></span>,
             <span class="link" data-val="<%= SUMLEV_PLACE %>"><%= query.mappings.summarylevelDisplays[SUMLEV_PLACE] %></span>,
@@ -123,7 +126,7 @@
                 <%= query.get(SUMLEV_COUNTY+'Display') %>,
             <% } %>
             <%= query.get(SUMLEV_STATE +'Display') %>
-            as <span class="button csv-json">CSV</span> <span class="button csv-json">JSON</span>
+            as <span class="button csv-json">CSV</span>
         </div>
     <% } %>
 
