@@ -18,11 +18,11 @@ class TestSimpleGeographies(unittest.TestCase):
         known_delta = known_2010 - known_2000
         known_pct = float(known_delta) / float(known_2000)
 
-        self.assertEqual(float(obj['data']['2000']["P1"]['P0010001']), known_2000)
-        self.assertEqual(float(obj['data']['2010']["P1"]['P0010001']), known_2010)
-        self.assertEqual(float(obj['data']['delta']["P1"]['P0010001']), known_delta)
+        self.assertEqual(float(obj['data']['2000']["P1"]['P001001']), known_2000)
+        self.assertEqual(float(obj['data']['2010']["P1"]['P001001']), known_2010)
+        self.assertEqual(float(obj['data']['delta']["P1"]['P001001']), known_delta)
         self.assertAlmostEqual(
-            float(obj['data']['pct_change']["P1"]['P0010001']),
+            float(obj['data']['pct_change']["P1"]['P001001']),
             known_pct
         )
 
@@ -131,10 +131,10 @@ class TestTracts(unittest.TestCase):
         tract1_pop_pct_change = float(tract1_pop_delta) / tract1_pop_2000
 
         self.assertAlmostEqual(tract1['xwalk']['10003013902']['POPPCT00'], tract1_pop_pct, places=4)
-        self.assertAlmostEqual(tract1['data']['2000']['P1']['P0010001'], tract1_pop_2000)
-        self.assertAlmostEqual(tract1['data']['2010']['P1']['P0010001'], tract1_pop_2010)
-        self.assertAlmostEqual(float(tract1['data']['delta']['P1']['P0010001']), tract1_pop_delta)
-        self.assertAlmostEqual(float(tract1['data']['pct_change']['P1']['P0010001']), tract1_pop_pct_change)
+        self.assertAlmostEqual(tract1['data']['2000']['P1']['P001001'], tract1_pop_2000)
+        self.assertAlmostEqual(tract1['data']['2010']['P1']['P001001'], tract1_pop_2010)
+        self.assertAlmostEqual(float(tract1['data']['delta']['P1']['P001001']), tract1_pop_delta)
+        self.assertAlmostEqual(float(tract1['data']['pct_change']['P1']['P001001']), tract1_pop_pct_change)
         
         # Validate second new part from the split tract
         # Tract 139.04
@@ -149,10 +149,10 @@ class TestTracts(unittest.TestCase):
         tract2_pop_pct_change = float(tract2_pop_delta) / tract2_pop_2000 
         
         self.assertAlmostEqual(tract2['xwalk']['10003013902']['POPPCT00'], tract2_pop_pct, places=4)
-        self.assertAlmostEqual(tract2['data']['2000']['P1']['P0010001'], tract2_pop_2000)
-        self.assertAlmostEqual(tract2['data']['2010']['P1']['P0010001'], tract2_pop_2010)
-        self.assertAlmostEqual(float(tract2['data']['delta']['P1']['P0010001']), tract2_pop_delta)
-        self.assertAlmostEqual(float(tract2['data']['pct_change']['P1']['P0010001']), tract2_pop_pct_change)
+        self.assertAlmostEqual(tract2['data']['2000']['P1']['P001001'], tract2_pop_2000)
+        self.assertAlmostEqual(tract2['data']['2010']['P1']['P001001'], tract2_pop_2010)
+        self.assertAlmostEqual(float(tract2['data']['delta']['P1']['P001001']), tract2_pop_delta)
+        self.assertAlmostEqual(float(tract2['data']['pct_change']['P1']['P001001']), tract2_pop_pct_change)
 
         # Verify that no other tracts got crosswalk allocations from the split tract
         allocated = self.geographies.find({ 'xwalk.10003013902': { '$exists': True } })
@@ -177,10 +177,10 @@ class TestTracts(unittest.TestCase):
         tract1_house_pct_change = float(tract1_house_delta) / tract1_house_2000
 
         self.assertAlmostEqual(tract1['xwalk']['10003013902']['HUPCT00'], tract1_house_pct, places=4)
-        self.assertAlmostEqual(tract1['data']['2000']['H1']['H0010001'], tract1_house_2000)
-        self.assertAlmostEqual(tract1['data']['2010']['H1']['H0010001'], tract1_house_2010)
-        self.assertAlmostEqual(float(tract1['data']['delta']['H1']['H0010001']), tract1_house_delta)
-        self.assertAlmostEqual(float(tract1['data']['pct_change']['H1']['H0010001']), tract1_house_pct_change)
+        self.assertAlmostEqual(tract1['data']['2000']['H1']['H001001'], tract1_house_2000)
+        self.assertAlmostEqual(tract1['data']['2010']['H1']['H001001'], tract1_house_2010)
+        self.assertAlmostEqual(float(tract1['data']['delta']['H1']['H001001']), tract1_house_delta)
+        self.assertAlmostEqual(float(tract1['data']['pct_change']['H1']['H001001']), tract1_house_pct_change)
 
         # Validate second new part from the split tract
         # Tract 139.04
@@ -195,10 +195,10 @@ class TestTracts(unittest.TestCase):
         tract2_house_pct_change = float(tract2_house_delta) / tract2_house_2000 
         
         self.assertAlmostEqual(tract2['xwalk']['10003013902']['HUPCT00'], tract2_house_pct, places=4)
-        self.assertAlmostEqual(tract2['data']['2000']['H1']['H0010001'], tract2_house_2000)
-        self.assertAlmostEqual(tract2['data']['2010']['H1']['H0010001'], tract2_house_2010)
-        self.assertAlmostEqual(float(tract2['data']['delta']['H1']['PH0010001']), tract2_house_delta)
-        self.assertAlmostEqual(float(tract2['data']['pct_change']['H1']['H0010001']), tract2_house_pct_change)
+        self.assertAlmostEqual(tract2['data']['2000']['H1']['H001001'], tract2_house_2000)
+        self.assertAlmostEqual(tract2['data']['2010']['H1']['H001001'], tract2_house_2010)
+        self.assertAlmostEqual(float(tract2['data']['delta']['H1']['PH001001']), tract2_house_delta)
+        self.assertAlmostEqual(float(tract2['data']['pct_change']['H1']['H001001']), tract2_house_pct_change)
 
     def test_tract_merged(self):
         """
@@ -230,10 +230,10 @@ class TestTracts(unittest.TestCase):
         self.assertEqual(merged_tract['xwalk']['10001040600']['POPPCT00'], 1.0)
         self.assertEqual(merged_tract['xwalk']['10001040800']['POPPCT00'], 1.0)
 
-        self.assertEqual(merged_tract['data']['2000']['P1']['P0010001'], merged_pop_2000)
-        self.assertEqual(merged_tract['data']['2010']['P1']['P0010001'], merged_pop_2010)
-        self.assertEqual(float(merged_tract['data']['delta']['P1']['P0010001']), merged_pop_delta)
-        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['P1']['P0010001']), merged_pop_pct_change)
+        self.assertEqual(merged_tract['data']['2000']['P1']['P001001'], merged_pop_2000)
+        self.assertEqual(merged_tract['data']['2010']['P1']['P001001'], merged_pop_2010)
+        self.assertEqual(float(merged_tract['data']['delta']['P1']['P001001']), merged_pop_delta)
+        self.assertAlmostEqual(float(merged_tract['data']['pct_change']['P1']['P001001']), merged_pop_pct_change)
         
         self.assertEqual(merged_tract['xwalk']['10001040600']['HUPCT00'], 1.0)
         self.assertEqual(merged_tract['xwalk']['10001040800']['HUPCT00'], 1.0)

@@ -41,7 +41,9 @@ with open(FILENAME) as f:
         tables = {}
 
         for k, v in row_dict.items():
+            # Normalize key names to match SF data so all scripts work correctly
             t = k[0] + k[3]
+            k = k[:4] + k[-3:]
 
             if t not in tables:
                 tables[t] = {}
