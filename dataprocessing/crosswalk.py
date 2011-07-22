@@ -8,6 +8,11 @@ from pymongo import objectid
 import config
 import utils
 
+QUERY = {}
+
+if len(sys.argv) > 1:
+    QUERY = { 'sumlev': sys.argv[1] }
+
 collection = utils.get_geography_collection()
 collection_2000 = utils.get_geography2000_collection()
 
@@ -49,7 +54,7 @@ with open('sf_crosswalk_key.csv') as f:
     for row in reader:
         CROSSWALK_FIELDS_BY_TABLE[row[0]] = row[1]
 
-for geography in collection.find({}, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
+for geography in collection.find(QUERY, fields=['data', 'geoid', 'metadata.NAME', 'sumlev', 'xwalk']):
     row_count += 1
     
     data = {}

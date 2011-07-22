@@ -1,16 +1,22 @@
 #!/usr/bin/env python
 
+import sys
+
 from pymongo import objectid
 
-import config
 import utils
+
+QUERY = {}
+
+if len(sys.argv) > 1:
+    QUERY = { 'sumlev': sys.argv[1] }
 
 collection = utils.get_geography_collection()
 
 row_count = 0
 computations = 0
 
-for geography in collection.find({}, fields=['data']):
+for geography in collection.find(QUERY, fields=['data']):
     row_count += 1
 
     if 'delta' not in geography['data']:

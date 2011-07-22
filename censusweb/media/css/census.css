@@ -21,6 +21,13 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
     font-size: 30px;
 }
+h2 {
+    font-size: 20px; 
+    margin-bottom: 5px;
+}
+p {
+    margin-bottom: 10px;
+}
 .link, #help-link {
     cursor: pointer;
     color: #aa0000;
@@ -54,6 +61,22 @@ h1 {
 }
 
 /*-------------------------------- Layout ------------------------------------*/
+
+#about {
+    line-height: 1.5em;
+    font-size: 16px;
+    width: 650px;
+    margin-top: 30px;
+}
+
+#about img {
+    margin-top: 10px;
+    float: left;
+}
+
+#about img.ire {
+    margin-right: 25px;
+}
 
 #ajax-loader {
     position:absolute;
@@ -141,6 +164,10 @@ aside label {
 
 #logo {
     margin-top: 30px;
+}
+
+.query-builder {
+    margin-bottom: 15px;
 }
 
 nav {
