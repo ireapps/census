@@ -15,7 +15,11 @@ For the geoheader files, which are fixed width, you may find useful the csvkit l
 NOTE: Take care with character encoding. Some place names (such as those with Spanish words) contain non-ASCII characters. The Census Bureau encodes the files using "latin-1" encoding.
 The in2csv example above handles this correctly. in2csv always writes output files in UTF-8, so adjust your database load scripts accordingly.
 
-Thanks to Ron Campbell of the Orange County Register for contributing the basis of **geo_2010.sql**
+Thanks to Ron Campbell of the Orange County Register for contributing the basis of **geo_2010.sql** Thanks to Mike Stucka of the Telegraph of Macon for suggestions to clarify the SQL and make it more compatible.
+
+Note that the column IDs do not exactly match the values printed in the SF1 technical documentation. The zero-padding pattern used in those docs is less consistent than it was in 2000, and we had built up too many tools based on the 2000 pattern before recognizing this. For what it's worth, table and field numbers in our labels are always padded with zeros to three positions. The Census sometimes pads fields with four zeroes, perhaps to maintain length parity with tables that repeat for racial/ethnic subgroups. 
+
+The column names in our SQL files align with the metadata files described below.
 
 SAS
 ===
