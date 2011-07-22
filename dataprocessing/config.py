@@ -13,7 +13,7 @@ SUMLEV_PLACE = '160'
 SUMLEV_BLOCK = '101'
 
 # Summary levels to load
-SUMLEVS = [SUMLEV_TRACT]
+SUMLEVS = [SUMLEV_STATE, SUMLEV_COUNTY, SUMLEV_COUNTY_SUBDIVISION, SUMLEV_PLACE, SUMLEV_TRACT]
 
 def filter_geographies(row_dict):
     """

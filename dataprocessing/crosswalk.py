@@ -8,10 +8,16 @@ from pymongo import objectid
 import config
 import utils
 
+if len(sys.argv) < 2:
+    sys.exit('You must provide the name of a field crosswalk table and a field crosswalk key to this script.')
+
+CROSSWALK_TABLE = sys.argv[1]
+CROSSWALK_KEY = sys.argv[2]
+
 QUERY = {}
 
-if len(sys.argv) > 1:
-    QUERY = { 'sumlev': sys.argv[1] }
+if len(sys.argv) > 3:
+    QUERY = { 'sumlev': sys.argv[3] }
 
 collection = utils.get_geography_collection()
 collection_2000 = utils.get_geography2000_collection()
@@ -23,7 +29,7 @@ KEY_MAPPINGS = {}
 CROSSWALK_FIELDS_BY_TABLE = {}
 
 # Maps 2010 field names to their 2000 equivalents
-a="""with open('field_mappings_2000_2010.csv', 'rU') as f:
+with open(CROSSWALK_TABLE, 'rU') as f:
     reader = csv.DictReader(f)
 
     for row in reader:
@@ -45,10 +51,10 @@ a="""with open('field_mappings_2000_2010.csv', 'rU') as f:
         if row['field_2000'] not in KEY_MAPPINGS:
             KEY_MAPPINGS[row['field_2000']] = []
 
-        KEY_MAPPINGS[row['field_2000']].append(row['field_2010'])"""
+        KEY_MAPPINGS[row['field_2000']].append(row['field_2010'])
 
 # Load crosswalk lookup table
-with open('sf_crosswalk_key.csv') as f:
+with open(CROSSWALK_KEY, 'rU') as f:
     reader = csv.reader(f)
 
     for row in reader:

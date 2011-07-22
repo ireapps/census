@@ -13,30 +13,42 @@ STATE_NAME_ABBR=`python get_state_abbr.py "${STATE_NAME}"` || exit $?
 STATE_FIPS=`python get_state_fips.py "${STATE_NAME}"` || exit $?
 ENVIRONMENT="${@:2:1}"
 
-./__drop_database.sh
+echo 'Dropping previous data.'
+./__drop_database.sh || exit $?
 
-./ensure_indexes.sh
+echo 'Ensuring mongo indexes.'
+./ensure_indexes.sh || exit $?
 
-#./fetch_pl_data.sh
+echo 'Fetching data'
+./fetch_pl_data.sh "$STATE_NAME_SPACE_FIXED" "$STATE_NAME_LOWER" "$STATE_NAME_ABBR" "$STATE_FIPS" || exit $?
 
-./load_pl_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv
-./load_pl_data_2000.py data/pl_data_2000_${STATE_NAME_LOWER}_1.csv
-./load_pl_data_2000.py data/pl_data_2000_${STATE_NAME_LOWER}_2.csv
+echo 'Loading 2000 geographies'
+./load_pl_geographies_2000.py data/${STATE_NAME_ABBR}geo2000.csv || exit $?
 
-./load_pl_geographies_2010.py data/${STATE_NAME_ABBR}geo2010.csv
+echo 'Loading 2000 data'
+./load_pl_data_2000.py data/pl_data_2000_${STATE_NAME_LOWER}_1.csv || exit $?
+./load_pl_data_2000.py data/pl_data_2000_${STATE_NAME_LOWER}_2.csv || exit $?
 
-./load_crosswalk.py $STATE_FIPS data/us2010trf.csv
-./load_pl_data_2010.py data/pl_data_2010_${STATE_NAME_LOWER}_1.csv
-./load_pl_data_2010.py data/pl_data_2010_${STATE_NAME_LOWER}_2.csv
+echo 'Loading 2010 geographies'
+./load_pl_geographies_2010.py data/${STATE_NAME_ABBR}geo2010.csv || exit $?
 
-./load_pl_labels_2010.py data/pl_2010_data_labels.csv
+echo 'Loading crosswalk'
+./load_crosswalk.py $STATE_FIPS data/us2010trf.csv || exit $?
+./load_pl_data_2010.py data/pl_data_2010_${STATE_NAME_LOWER}_1.csv || exit $?
+./load_pl_data_2010.py data/pl_data_2010_${STATE_NAME_LOWER}_2.csv || exit $?
 
-./crosswalk.py $STATE_FIPS
-./compute_deltas_pl.py $STATE_FIPS
+echo 'Loading labels'
+./load_pl_labels_2010.py data/pl_2010_data_labels.csv || exit $?
 
-#./deploy_data.py $ENVIRONMENT 
-#./deploy_lookups.py $ENVIRONMENT
-#./update_state_list.py $ENVIRONMENT $STATE_NAME CLEAR
-#./make_state_public.py $ENVIRONMENT $STATE_NAME
+echo 'Processing crosswalk'
+./crosswalk.py pl_field_mappings_2000_2010.csv pl_crosswalk_key.csv || exit $?
 
-#./test_pl.py
+echo 'Computing deltas'
+./compute_deltas.py || exit $?
+
+#echo 'Deploying to S3'
+#./deploy_data.py $ENVIRONMENT  || exit $?
+#./deploy_lookups.py $ENVIRONMENT || exit $?
+#./update_state_list.py $ENVIRONMENT $STATE_NAME CLEAR || exit $?
+#./make_state_public.py $ENVIRONMENT $STATE_NAME || exit $?
+

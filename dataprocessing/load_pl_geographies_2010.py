@@ -37,7 +37,7 @@ with open(FILENAME) as f:
         if row_dict['SUMLEV'] not in config.SUMLEVS:
             continue
 
-        if row_dict['COUNTY'] != '031':
+        if not config.filter_geographies(row_dict):
             continue
 
         geography['sumlev'] = row_dict.pop('SUMLEV')

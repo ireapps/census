@@ -68,10 +68,10 @@ do
 done
 
 echo 'Processing crosswalk'
-./crosswalk.py || exit $?
+./crosswalk.py sf_field_mappings_2000_2010.csv sf_crosswalk_key.csv || exit $?
 
 echo 'Computing deltas'
-./compute_deltas_sf.py || exit $?
+./compute_deltas.py || exit $?
 
 echo 'Dumping mongo data for ${STATE_NAME}'
 mkdir -p $MONGO_DUMP_DIR/${STATE_FIPS}

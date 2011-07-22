@@ -1,49 +1,52 @@
 #!/bin/bash
 
-# NO NATIONAL DATA!!!
+STATE_NAME=$1
+STATE_NAME_LOWER=$2
+STATE_NAME_ABBR=$3
+STATE_FIPS=$4
 
 rm -r data/*
 cd data
 
-# 2000 - ILLINOIS - PL1 and PL2
-wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/Illinois/il00001.upl.zip
-unzip il00001.upl.zip
+# 2000 - PL1 and PL2
+wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/${STATE_NAME}/${STATE_NAME_ABBR}00001.upl.zip
+unzip ${STATE_NAME_ABBR}00001.upl.zip
 
-wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/Illinois/il00002.upl.zip
-unzip il00002.upl.zip
+wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/${STATE_NAME}/${STATE_NAME_ABBR}00002.upl.zip
+unzip ${STATE_NAME_ABBR}00002.upl.zip
 
-wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/Illinois/ilgeo.upl.zip
-unzip ilgeo.upl.zip
+wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/${STATE_NAME}/${STATE_NAME_ABBR}geo.upl.zip
+unzip ${STATE_NAME_ABBR}geo.upl.zip
 
 wget http://www2.census.gov/census_2000/datasets/redistricting_file--pl_94-171/0File_Structure/Access2000/PL2000_Access2000.mdb
 mdb-export PL2000_Access2000.mdb PL_Part1 > pl_data_2000_headers_1.csv
 mdb-export PL2000_Access2000.mdb PL_Part2 > pl_data_2000_headers_2.csv
 mdb-export PL2000_Access2000.mdb tables > pl_2000_data_labels.csv
 
-cat pl_data_2000_headers_1.csv > pl_data_2000_illinois_1.csv
-cat il00001.upl >> pl_data_2000_illinois_1.csv
+cat pl_data_2000_headers_1.csv > pl_data_2000_${STATE_NAME_LOWER}_1.csv
+cat ${STATE_NAME_ABBR}00001.upl >> pl_data_2000_${STATE_NAME_LOWER}_1.csv
 
-cat pl_data_2000_headers_2.csv > pl_data_2000_illinois_2.csv
-cat il00002.upl >> pl_data_2000_illinois_2.csv
+cat pl_data_2000_headers_2.csv > pl_data_2000_${STATE_NAME_LOWER}_2.csv
+cat ${STATE_NAME_ABBR}00002.upl >> pl_data_2000_${STATE_NAME_LOWER}_2.csv
 
-in2csv -f fixed -s ../census2000_geo_schema.csv ilgeo.upl > ilgeo2000.csv
+in2csv -f fixed -s ../census2000_geo_schema.csv  ${STATE_NAME_ABBR}geo.upl >  ${STATE_NAME_ABBR}geo2000.csv
 
-# 2010 - ILLINOIS - PL1 and PL2
-wget http://www2.census.gov/census_2010/redistricting_file--pl_94-171/Illinois/il2010.pl.zip
-unzip il2010.pl.zip
+# 2010 - PL1 and PL2
+wget http://www2.census.gov/census_2010/redistricting_file--pl_94-171/${STATE_NAME}/${STATE_NAME_ABBR}2010.pl.zip
+unzip ${STATE_NAME_ABBR}2010.pl.zip
 
 wget http://www2.census.gov/census_2010/redistricting_file--pl_94-171/PL2010_Access2003.mdb
 mdb-export PL2010_Access2003.mdb PL_Part1 >> pl_data_2010_headers_1.csv
 mdb-export PL2010_Access2003.mdb PL_Part2 >> pl_data_2010_headers_2.csv
 mdb-export PL2010_Access2003.mdb Table > pl_2010_data_labels.csv
 
-cat pl_data_2010_headers_1.csv > pl_data_2010_illinois_1.csv
-cat il000012010.pl >> pl_data_2010_illinois_1.csv
+cat pl_data_2010_headers_1.csv > pl_data_2010_${STATE_NAME_LOWER}_1.csv
+cat  ${STATE_NAME_ABBR}000012010.pl >> pl_data_2010_${STATE_NAME_LOWER}_1.csv
 
-cat pl_data_2010_headers_2.csv > pl_data_2010_illinois_2.csv
-cat il000022010.pl >> pl_data_2010_illinois_2.csv
+cat pl_data_2010_headers_2.csv > pl_data_2010_${STATE_NAME_LOWER}_2.csv
+cat  ${STATE_NAME_ABBR}000022010.pl >> pl_data_2010_${STATE_NAME_LOWER}_2.csv
 
-in2csv -f fixed -s ../census2010_geo_schema.csv ilgeo2010.pl > ilgeo2010.csv
+in2csv -f fixed -s ../census2010_geo_schema.csv ${STATE_NAME_ABBR}geo2010.pl >  ${STATE_NAME_ABBR}geo2010.csv
 
 # Crosswalk
 

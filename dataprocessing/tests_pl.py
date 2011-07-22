@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 from django.utils import unittest
+from pymongo import Connection
 
 import config
 import utils
 
 class TestSimpleGeographies(unittest.TestCase):
     def setUp(self):
-        collection = utils.get_geography2000_collection()
+        self.geographies = utils.get_geography_collection()
 
     def _test_totalpop(self, obj, known_2000, known_2010):
         """
@@ -106,9 +107,7 @@ class TestSimpleGeographies(unittest.TestCase):
 
 class TestTracts(unittest.TestCase):
     def setUp(self):
-        connection = Connection()
-        db = connection[config.CENSUS_DB]
-        self.geographies = db[config.GEOGRAPHIES_COLLECTION]
+        self.geographies = utils.get_geography_collection()
 
     def test_tract_split(self):
         """
