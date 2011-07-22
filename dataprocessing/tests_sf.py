@@ -38,7 +38,7 @@ class TestSimpleGeographies(unittest.TestCase):
         """
         Data import test against known values that Hawaii should have.
         """
-        states = self.geographies.find({ 'geoid': config.SUMLEV_STATE })
+        states = self.geographies.find({ 'sumlev': config.SUMLEV_STATE })
 
         self.assertEqual(states.count(), 1)
 
@@ -150,7 +150,7 @@ class TestSimpleGeographies(unittest.TestCase):
 
     def test_block_count(self):
         if config.SUMLEV_BLOCK not in config.SUMLEVS:
-            pass
+            return
         
         blocks = self.geographies.find({ 'sumlev': config.SUMLEV_BLOCK })
 
@@ -164,7 +164,7 @@ class TestSimpleGeographies(unittest.TestCase):
         It was geoid 150010210011277 in that census.
         """
         if config.SUMLEV_BLOCK not in config.SUMLEVS:
-            pass
+            return 
 
         blocks = self.geographies.find({ 'geoid': '150010210053029' })
 
@@ -370,6 +370,9 @@ class TestBlocks(unittest.TestCase):
         """
         Verify that the total population of all blocks adds up to the expected amount.
         """
+        if config.SUMLEV_BLOCK not in config.SUMLEVS:
+            return
+
         blocks = self.geographies.find({ 'sumlev': config.SUMLEV_BLOCK })
 
         pop_2010 = sum([int(block['data']['2010']['P1']['P001001']) for block in blocks])
@@ -380,6 +383,9 @@ class TestBlocks(unittest.TestCase):
         """
         Verify that a split block is crosswalked correctly.
         """
+        if config.SUMLEV_BLOCK not in config.SUMLEVS:
+            return
+
         block1 = self.geographies.find({ 'geoid': '150010210051016' }) 
         self.assertEqual(block1.count(), 1)
         block1 = block1[0]
@@ -403,6 +409,9 @@ class TestBlocks(unittest.TestCase):
         Verify that a merged block is crosswalked correctly.
         150010210011329 + 150010210011331 -> 150010210051009
         """
+        if config.SUMLEV_BLOCK not in config.SUMLEVS:
+            return
+
         # Compute crosswalked values
         block1_pop_2000 = 12  # 150010210011329
         block2_pop_2000 = 27  # 150010210011331

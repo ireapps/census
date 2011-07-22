@@ -6,15 +6,14 @@ import sys
 
 from csvkit.unicsv import UnicodeCSVReader
 
-import config, utils
+import utils
 import logging
 
 TABLE_NAME_PATTERN = re.compile(r'^(?P<name>.+)\s+\[(?P<size>\d+)\].*$')
 
-
 KEY_MAPPINGS = {}
 
-with open('field_mappings_2000_2010.csv', 'rU') as f:
+with open('sf_field_mappings_2000_2010.csv', 'rU') as f:
     reader = csv.DictReader(f)
 
     for row in reader:

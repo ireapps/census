@@ -8,7 +8,7 @@ from pymongo import objectid
 import config
 import utils
 
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
     sys.exit('You must provide the name of a field crosswalk table and a field crosswalk key to this script.')
 
 CROSSWALK_TABLE = sys.argv[1]
@@ -105,12 +105,26 @@ for geography in collection.find(QUERY, fields=['data', 'geoid', 'metadata.NAME'
 
         for table in geography_2000['data']['2000']:
             for k, v in geography_2000['data']['2000'][table].items():
-                if table not in data:
-                    data[table] = {}
+                try:
+                    keys_2010 = KEY_MAPPINGS[k]
+                except KeyError:
+                    # Skip 2000 fields that don't exist in 2010
+                    continue
 
-                parts = []
+                # Skip 2000 fields that don't have an equivalent in 2010
+                if not keys_2010:
+                    continue
 
-                data[table][k] = geography_2000['data']['2000'][table][k] 
+                # Copy value to all 2010 fields which are comparable to this field in 2000
+                for key_2010 in keys_2010:
+                    table_2010 = utils.parse_table_from_key(key_2010)
+
+                    if table_2010 not in data:
+                        data[table_2010] = {}
+
+                    parts = []
+
+                    data[table_2010][key_2010] = geography_2000['data']['2000'][table][k]
 
     geography['data']['2000'] = data
 

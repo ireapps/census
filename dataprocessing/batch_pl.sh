@@ -29,16 +29,18 @@ echo 'Loading 2000 data'
 ./load_pl_data_2000.py data/pl_data_2000_${STATE_NAME_LOWER}_1.csv || exit $?
 ./load_pl_data_2000.py data/pl_data_2000_${STATE_NAME_LOWER}_2.csv || exit $?
 
+echo 'Loading labels'
+./load_pl_labels_2010.py data/pl_2010_data_labels.csv || exit $?
+
 echo 'Loading 2010 geographies'
 ./load_pl_geographies_2010.py data/${STATE_NAME_ABBR}geo2010.csv || exit $?
 
 echo 'Loading crosswalk'
 ./load_crosswalk.py $STATE_FIPS data/us2010trf.csv || exit $?
+
+echo 'Loading 2010 data'
 ./load_pl_data_2010.py data/pl_data_2010_${STATE_NAME_LOWER}_1.csv || exit $?
 ./load_pl_data_2010.py data/pl_data_2010_${STATE_NAME_LOWER}_2.csv || exit $?
-
-echo 'Loading labels'
-./load_pl_labels_2010.py data/pl_2010_data_labels.csv || exit $?
 
 echo 'Processing crosswalk'
 ./crosswalk.py pl_field_mappings_2000_2010.csv pl_crosswalk_key.csv || exit $?
