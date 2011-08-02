@@ -106,7 +106,7 @@ $(function(){
 
                         // Browser handles displaying reports
                         $("#ajax-loader").hide();
-                        startBrowser();
+                        window.startBrowser();
                     }
                 });
             });
