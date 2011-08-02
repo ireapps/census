@@ -253,7 +253,7 @@ $(function(){
     // Table mouseover row highlighting.
     $('.report td').live('mouseover mouseleave', function(e) {
         if (e.type == 'mouseover') {
-            status = ''
+            var status = '';
             $(this).addClass("selected");
             $(this).parent().addClass("highlight");
             status = $(this).parent().find('.label').text();
