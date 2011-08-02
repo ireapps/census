@@ -4,7 +4,7 @@ $(function(){
         Backbone.history.start()
         if ( !location.hash )
             location.hash=""
-    }
+    };
 
     ReportController = Backbone.Controller.extend({
         routes: {
