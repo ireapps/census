@@ -1,5 +1,6 @@
 <VirtualHost *:8080>
     ServerName censusweb.beta.tribapps.com
+    ServerAlias census.beta.tribapps.com
     ServerAlias www.censusweb.beta.tribapps.com
 
     SetEnv DEPLOYMENT_TARGET staging
@@ -26,8 +27,8 @@
     
     RewriteEngine on
     # canonical hostname
-    RewriteCond %{HTTP_HOST} !^censusweb.beta.tribapps.com [NC] 
-    RewriteRule ^/(.*)  http://censusweb.beta.tribapps.com/$1 [L,R]
+    RewriteCond %{HTTP_HOST} !^census.beta.tribapps.com [NC] 
+    RewriteRule ^/(.*)  http://census.beta.tribapps.com/$1 [L,R]
     
     RewriteCond %{REQUEST_URI} /maintenance.html$ 
     RewriteRule $ / [R=302,L]
