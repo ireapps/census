@@ -2,6 +2,7 @@
 # written originally to address mismapping of 2000 value for P004003 but should 
 # probably be usable for other similar cases. 
 
+MONGO_DUMP_DIR="/mnt/data/mongodumps"
 echo Begin patching at `date`
 
 #!/bin/bash
