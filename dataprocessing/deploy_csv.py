@@ -20,6 +20,8 @@ eventlet.monkey_patch()
 
 from csvkit.unicsv import UnicodeCSVWriter
 
+POLICIES = ['public-read', 'private'] # should we add others?
+
 def get_2000_top_level_counts(geography):
     try:
         pop2000 = geography['data']['2000']['P1']['P001001']
@@ -94,11 +96,17 @@ def fetch_table_label(table_id):
 # BEGIN MAIN OPERATION
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        sys.exit('You must specify exactly 3 arguments to this script.\n%% %s [2 digit state FIPS code] [3 digit summary level] [staging|production]' % sys.argv[0])
+        sys.exit('You must specify 3 or 4 arguments to this script.\n%% %s [2 digit state FIPS code] [3 digit summary level] [staging|production] [policy (opt string default \'private\')]' % sys.argv[0])
 
     STATE_FIPS = sys.argv[1]
     SUMLEV = sys.argv[2]
     ENVIRONMENT = sys.argv[3]
+    try:
+        policy = sys.argv[4]
+        if policy not in POLICIES:
+            policy = 'private'
+    except:
+        policy='private'
 
     if SUMLEV not in config.SUMLEVS:
         sys.exit("Second argument must be a valid summary level as defined in config.SUMLEVS")
@@ -111,11 +119,11 @@ if __name__ == '__main__':
 
     # non-eventlety
     # for table_id in sorted(tables):
-    #     deploy_table(STATE_FIPS, SUMLEV, table_id)
+    #     deploy_table(STATE_FIPS, SUMLEV, table_id,policy)
         
     # eventlety
    pile = eventlet.GreenPile(16)
    for table_id in sorted(tables):
-       pile.spawn(deploy_table, STATE_FIPS, SUMLEV, table_id)
+       pile.spawn(deploy_table, STATE_FIPS, SUMLEV, table_id,policy)
     # Wait for all greenlets to finish
    list(pile)

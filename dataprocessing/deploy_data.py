@@ -9,10 +9,21 @@ from boto.s3.key import Key
 import config
 import utils
 
+POLICIES = ['public-read', 'private'] # should we add others?
 if len(sys.argv) < 2:
-    sys.exit('You must specify "staging" or "production" as an argument to this script.')
+    sys.exit('You must specify "staging" or "production" as an argument to this script. You may optionally specify an S3 policy as the next arg')
 
 ENVIRONMENT = sys.argv[1]
+
+try:
+    policy = sys.argv[2]
+except:
+    policy='private'
+
+if policy not in POLICIES:
+    echo "invalid policy option; using 'private'"
+    policy = 'private'
+
 
 collection = utils.get_geography_collection()
 
@@ -32,7 +43,7 @@ for geography in collection.find():
     jsonp = 'geoid_%s(%s)' % (geography['geoid'], json.dumps(geography))
     compressed = utils.gzip_data(jsonp)
 
-    k.set_contents_from_string(compressed, headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy='private')
+    k.set_contents_from_string(compressed, headers={ 'Content-encoding': 'gzip', 'Content-Type': 'application/javascript' }, policy=policy)
 
     if row_count % 100 == 0:
         print ' Deployed %i...' % row_count
