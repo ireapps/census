@@ -4,7 +4,7 @@ $(function(){
         Backbone.history.start()
         if ( !location.hash )
             location.hash=""
-    }
+    };
 
     ReportController = Backbone.Controller.extend({
         routes: {
@@ -60,7 +60,7 @@ $(function(){
 
             $("#ajax-loader").hide();
         }
-    })
+    });
 
     Browser = Backbone.View.extend({
         tagName: "aside",
@@ -132,5 +132,5 @@ $(function(){
         defaultTables: function() {
             window.location.hash = window.DEFAULT_TABLES;
         }
-    })
-})
+    });
+});

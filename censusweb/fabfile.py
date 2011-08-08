@@ -45,11 +45,11 @@ def staging():
     Work on staging environment
     """
     env.settings = 'staging'
-    env.hosts = ['censusweb.beta.tribapps.com'] 
+    env.hosts = ['census.tribapps.com'] 
     env.user = 'ubuntu'
     env.s3_bucket = 'media-beta.tribapps.com'
-    env.site_domain = 'censusweb.beta.tribapps.com'
-    env.cache_server = 'censusweb.beta.tribapps.com'
+    env.site_domain = 'census.tribapps.com'
+    env.cache_server = 'census.tribapps.com'
     
 """
 Branches
