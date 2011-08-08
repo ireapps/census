@@ -106,7 +106,7 @@ $(function(){
 
                         // Browser handles displaying reports
                         $("#ajax-loader").hide();
-                        startBrowser();
+                        window.startBrowser();
                     }
                 });
             });
@@ -253,14 +253,18 @@ $(function(){
     // Table mouseover row highlighting.
     $('.report td').live('mouseover mouseleave', function(e) {
         if (e.type == 'mouseover') {
-            status = ''
+            var status = '';
             $(this).addClass("selected");
             $(this).parent().addClass("highlight");
             status = $(this).parent().find('.label').text();
             if ($(this).index() > 0) {
                 $("colgroup", $(this).parents("table")).eq($(this).index()).addClass("highlight"); //column
-                status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
-                status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
+                try {
+                    status += ', ' + $($(this).parents("table").find('.locationdef')[Math.ceil($(this).index()/4) - 1]).clone().find('*').remove().end().text().trim();
+                    status += ', ' + $($(this).parents("table").find('.subhead')[$(this).index() - 1]).text().trim();
+                } catch(e) {
+                    // IE doesn't seem to like this?
+                }
             }
             $('#status').show().text(status);
         } else {
