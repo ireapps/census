@@ -103,6 +103,18 @@ header {
     background-color:white;
 }
 
+.alert {
+    width: 700px;
+    border: 2px red dashed;
+    padding: 5px;
+    margin-bottom: 15px;
+    font-size:14px;
+}
+
+.alert strong {
+    font-weight: bold;
+}
+
 /*aside {
     float:left;
     padding:15px;
