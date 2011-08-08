@@ -21,7 +21,7 @@ except:
     policy='private'
 
 if policy not in POLICIES:
-    echo "invalid policy option; using 'private'"
+    print "invalid policy option; using 'private'"
     policy = 'private'
 
 
