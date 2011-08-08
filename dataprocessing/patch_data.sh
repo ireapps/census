@@ -3,6 +3,7 @@
 # probably be usable for other similar cases. 
 
 MONGO_DUMP_DIR="/mnt/data/mongodumps"
+ENVIRONMENT='production'
 echo Begin patching at `date`
 
 #!/bin/bash
