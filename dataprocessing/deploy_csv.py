@@ -122,7 +122,7 @@ if __name__ == '__main__':
     #     deploy_table(STATE_FIPS, SUMLEV, table_id,policy)
         
     # eventlety
-    pile = eventlet.GreenPile(32)
+    pile = eventlet.GreenPile(64)
     for table_id in sorted(tables):
         pile.spawn(deploy_table, STATE_FIPS, SUMLEV, table_id,policy)
     # Wait for all greenlets to finish
