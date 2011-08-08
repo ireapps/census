@@ -16,6 +16,7 @@ import utils
 import gzip
 
 import eventlet
+eventlet.monkey_patch()
 
 from csvkit.unicsv import UnicodeCSVWriter
 
