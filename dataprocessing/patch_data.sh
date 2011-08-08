@@ -17,7 +17,7 @@ for STATE_FIPS in $WORK
 do
     echo Begin $STATE_FIPS at `date`
 
-    mongorestore -d census --drop $MONGO_DUMP_DIR/${STATE_FIPS}
+    mongorestore -d census --drop ${MONGO_DUMP_DIR}/${STATE_FIPS}/census
 
     # if necessary, a script could be added here to make a patch; for the original case,
     # the fix was in a config file for crosswalk.py and no other processing needed to be done.
