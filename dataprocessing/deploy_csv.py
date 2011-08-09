@@ -31,11 +31,9 @@ def get_2000_top_level_counts(geography):
         return '',''
 METADATA_HEADERS = ['STATE','COUNTY', 'CBSA', 'CSA', 'NECTA', 'CNECTA', 'NAME', 'POP100', 'HU100']
 
-def deploy_table(state_fips, sumlev, table_id, public=False):
+def deploy_table(state_fips, sumlev, table_id, policy='private'):
 
-    if public:
-        policy = 'public-read'
-    else:
+    if policy not in POLICIES:
         policy = 'private'
     s = StringIO()
     gz = gzip.GzipFile(fileobj=s, mode='wb')
