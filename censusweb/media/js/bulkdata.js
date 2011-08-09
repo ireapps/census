@@ -40,9 +40,9 @@ $(function(){
         return false;
     };
     download_shapefile_based_on_form_values = function() {
-        window.location.href = [$("#state-download").val(),$("#sumlev-download").val()].join("-");
+        var track = [$("#state-download").val(),$("#sumlev-download").val()].join("-");
         _gaq.push(['_trackEvent', 'ShapefileDownload', track]);
-        build_shapefile_url($("#state-download").val(),$("#sumlev-download").val());
+        window.location.href = build_shapefile_url($("#state-download").val(),$("#sumlev-download").val());
     }
 
     parse_params = function() {
