@@ -5,8 +5,21 @@
 <h2>Boundary Location API</h2>
 
 <p>As an experimental service, we are providing an API which can identify the Census geographies which contain a given point (latitude/longitude). We have not done substantial performance benchmarking with this service, and reserve the right to impose access restrictions or disable the service completely if Boundary Location API requests adversely impact the performance of other aspects of the Census.IRE.org application.</p>
-<p>As with other areas of this application, a limited subset of Census geographies are supported, specifically: state, county, county subdivision, place, and census tract. <strong>NOTE: Loading all census shapes of these types is going slowly; at the current rate, the data load is expected to be complete by Saturday, July 16th.</strong></p>
+<p>As with other areas of this application, a limited subset of Census geographies are supported, specifically: state, county, county subdivision, place, and census tract.</p>
 <p>With the boundary and GeoID data returned from this service, one can subsequently retrieve all Census SF-1 data for the given shape using <a href="{% url json-doc %}">our JSON data API</a>.</p>
+
+<h2>Exact geographies</h2>
+<p>Given a GeoID, the GeoJSON for the corresponding geography can easily be retrieved. The GeoID must be qualified by the geography type.  The basic format for the URL is <code>http://{{ settings.GEO_API_ROOT }}/1.0/boundary-set/<i>geography-type</i>/<i>geoid</i></code></p> 
+<p>The available types are:</p>
+    <ul>
+        <li>tracts</li>
+        <li>county-subdivisions</li>
+        <li>counties</li>
+        <li>states</li>
+        <li>places</li>
+    </ul>
+<p>For example, to get the boundary of the state of Illinois, use <code>http://{{ settings.GEO_API_ROOT }}/1.0/boundary-set/states/17</code>, or for the city of Chicago, use <code>http://{{ settings.GEO_API_ROOT }}/1.0/boundary-set/places/1714000</code></p>
+
 <h2>Point queries</h2>
 
 <p>The fundamental query exposed by the Boundary Service is a point-in-polygon search by latitude and longitude.  Here is an example:</p>
