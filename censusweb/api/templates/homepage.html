@@ -6,6 +6,7 @@
 {% include "_query_builder.html" %}
 
 <p><span id="bulkdata-button" class="button">Download Bulk Data</span></p>
+<p><span id="jsondoc-button" class="button">Census Data in JSON</span></p>
 
 <div id="about">
     <h2>About</h2>
@@ -19,6 +20,9 @@
     $(document).ready(function(){
         $("#bulkdata-button").click(function(){
             window.location.href="{% url bulkdata %}"
+        })
+        $("#jsondoc-button").click(function(){
+            window.location.href="{% url json-doc %}"
         })
     })
 </script>
