@@ -35,9 +35,8 @@ do
 
     echo 'Deploying to S3'
     ./deploy_data.py $ENVIRONMENT public-read || exit $?
-# lookups and labels didn't change in this case...
-#    ./deploy_lookups.py $ENVIRONMENT || exit $?
-#    ./deploy_labels.py $ENVIRONMENT || exit $?
+    ./deploy_lookups.py $ENVIRONMENT || exit $?
+    ./deploy_labels.py $ENVIRONMENT || exit $?
     ./deploy_csv.py $STATE_FIPS 040 $ENVIRONMENT public-read || exit $?
     ./deploy_csv.py $STATE_FIPS 050 $ENVIRONMENT public-read || exit $?
     ./deploy_csv.py $STATE_FIPS 060 $ENVIRONMENT public-read || exit $?
