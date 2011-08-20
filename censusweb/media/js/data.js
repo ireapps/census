@@ -92,9 +92,7 @@ $(function(){
             geographies = new Array();
 
             _.each(geoids, function(geoid) {
-                var state = geoid.substring(0, 2);
-
-                apiRequest("/" + state + "/" + geoid + ".jsonp", "geoid_" + geoid, function(geography_data) {
+                do_with_sf1_data(geoid,function(geography_data) {
                     geographies.push(geography_data);
 
                     // If all geographies have been loaded, make reports

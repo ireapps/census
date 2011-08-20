@@ -56,6 +56,11 @@ function do_with_available_states(handler) {
 function do_with_labels(handler) {
     apiRequest("/" + window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, handler);
 }
+
+function do_with_sf1_data(geoid, callback) {
+    var state = geoid.substring(0, 2);
+    apiRequest("/" + state + "/" + geoid + ".jsonp", "geoid_" + geoid, callback);
+}
 STATES = {
     "Alabama": "01",
     "Alaska": "02",
