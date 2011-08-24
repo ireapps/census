@@ -58,12 +58,12 @@ push(state, 'tracts', tracts)
 counties = collection.find({ 'sumlev': config.SUMLEV_COUNTY }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY'], sort=[('metadata.NAME', 1)]) 
 
 for county in counties:
-    print 'Deploying county subdivisions lookup for %s' % county['metadata']['NAME']
+    print 'Deploying county subdivisions lookup for %s' % county['geoid']
     county_subdivisions = collection.find({ 'sumlev': config.SUMLEV_COUNTY_SUBDIVISION, 'metadata.COUNTY': county['metadata']['COUNTY'] }, fields=['geoid', 'metadata.NAME', 'metadata.COUNTY_SUBDIVISION'], sort=[('metadata.NAME', 1)]) 
     county_subdivisions = [(c['metadata']['NAME'], c['geoid']) for c in county_subdivisions]
     push(state, 'county_subdivisions_%s' % county['geoid'], county_subdivisions)
 
-    print 'Deploying tracts lookup for %s' % county['metadata']['NAME']
+    print 'Deploying tracts lookup for %s' % county['geoid']
     tracts = collection.find({ 'sumlev': config.SUMLEV_TRACT, 'metadata.COUNTY': county['metadata']['COUNTY'] }, fields=['geoid', 'metadata.NAME'], sort=[('metadata.NAME', 1)]) 
     tracts = [(c['metadata']['NAME'], c['geoid']) for c in tracts]
     push(state, 'tracts_%s' % county['geoid'], tracts)
