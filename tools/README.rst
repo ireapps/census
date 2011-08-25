@@ -30,3 +30,9 @@ Metadata
 These files provide machine-readable distillations of table and field codes and names. The label codes should match with column codes in the SQL script above.
 
 All files in this directory are UTF-8 encoded.
+
+JS (JavaScript)
+===============
+A first stab at encapsulating basic operations in JavaScript to make it easier for more people to use this. In need of 
+more examples and documentation, but should be somewhat straightforward for people accustomed to doing AJAX with jQuery.
+Depends upon jQuery for ajax boilerplate. Please feel free to help make this more awesome.

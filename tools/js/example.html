@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script type="text/javascript" src="ire_census.js"></script>
+    </head>
+    <body>
+        <input id="geoid-input" type="text" /> <button id="pop_lookup" type="button">Lookup population for GeoID.</button>
+
+        <script type="text/javascript" charset="utf-8">
+            function alert_handler(sf1) {
+                alert("The 2010 population of "+ sf1['metadata']['NAME'] + " was " + sf1['data']['2010']['P1']['P001001'] + ".");
+            }
+            $(document).ready(
+                $("#pop_lookup").click(function() {
+                    ire_census.do_with_sf1_data($("#geoid-input").val(),alert_handler);
+                })
+            );
+        </script>
+    </body>
+</html>
