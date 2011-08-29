@@ -46,6 +46,9 @@ Here's a basic example using jQuery. It is assumed that the jQuery library has a
 <p>
 If the code above is included in a page, then when the data is loaded, a simple alert pop-up will appear indicating the total population for the Urban Honolulu CDP (Census Designated Place)
 </p>
+<p>
+    The beginnings of a javascript library which encapsulates this and other basic data access can be found at <a href="https://github.com/ireapps/census/blob/master/tools/js/ire_census.js">the IRE Census GitHub repository.</a> The code there is fully usable, but has minimal documentation. Feel free to fork it and improve it!
+</p>
 <h2>What does JSONP mean for me if I'm trying to use the data in a non-JavaScript programming language?</h2>
 <p>First, consider whether the JSON API is right for you in the first place. In most cases, we guess that you might actually prefer our <a href="{% url bulkdata %}">bulk data in CSV format</a>.</p>
 <p>Next, note that for web-efficiency, data on the server is gzip-encoded. Most browsers decode this automatically, but many http client libraries do not.</p>

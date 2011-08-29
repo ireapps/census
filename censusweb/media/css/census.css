@@ -391,9 +391,9 @@ nav {
 #bulk-download-url-format { margin: 5px 5px;}
 #bulk-download-url-format span { background-color: #eeeeee; border: 1px solid #aaaaaa; font-family: monospace; padding: 3px 3px; clear: both;}
 p#bulk-download-url-format-explainer {margin-top: 15px;}
-dl#bulk-download-url-format-explainer-list {margin-top: 5px; margin-left: 10px;}
-dl#bulk-download-url-format-explainer-list dt { font-weight: bold;}
-dl#bulk-download-url-format-explainer-list dd { margin-left: 10px; }
+dl#bulk-download-url-format-explainer-list {margin-top: 5px; margin-left: 10px; margin-bottom: 10px;}
+dl#bulk-download-url-format-explainer-list dt { font-weight: bold; float: left; clear: left; margin-right: 10px;}
+dl#bulk-download-url-format-explainer-list dd { margin-left: 35px; }
 #gzip-note { margin: 15px 0 0 0; }
 #gzip-code-example { margin: 0 20px 20px;}
 #census-data-links { margin: 0 20px 20px;}
