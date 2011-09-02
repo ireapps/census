@@ -34,9 +34,9 @@ $(function(){
             this.mappings.summarylevelDisplays[SUMLEV_STATE] = 'States';
             this.mappings.summarylevelDisplays[SUMLEV_NATION] = 'USA';
 
-            do_with_available_states(function(states) {
+            ire_census.do_with_available_states(function(states) {
                 _.each(states, function(state) {
-                    query.mappings.states.push([state, STATES[state]]);
+                    query.mappings.states.push([state, ire_census.STATE_FIPS[state]]);
                 });
             })
         },

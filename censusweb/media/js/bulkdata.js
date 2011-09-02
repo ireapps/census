@@ -1,8 +1,8 @@
 $(function(){
     init_state_menu = function(init_val) {
-        do_with_available_states(function(states) {
+        ire_census.do_with_available_states(function(states) {
             _(states).each(function(s) { 
-                $("#state-download").append("<option value='"+ STATES[s] + "'>" + s + " ("+STATES[s]+")</option>");
+                $("#state-download").append("<option value='"+ ire_census.STATE_FIPS[s] + "'>" + s + " ("+ire_census.STATE_FIPS[s]+")</option>");
             });
             if(init_val) {
                 $("#state-download").val(init_val);
@@ -21,9 +21,9 @@ $(function(){
     }
 
     init_table_menu = function(init_val) {
-        do_with_labels(function(labels_data) {
+        ire_census.do_with_labels(function(labels_data) {
             tables = _.keys(labels_data["tables"])
-            tables = _.sortBy(window.tables, window.table_comparator);
+            tables = _.sortBy(window.tables, ire_census.table_comparator);
             _(tables).each(function(table_id) {
                 $("#table-download").append("<option value='"+ table_id + "'>"+table_id+". "+ labels_data["tables"][table_id]["name"] +"</option>");
             });
@@ -36,13 +36,13 @@ $(function(){
     download_based_on_form_values = function() {
         var track = [$("#state-download").val(),$("#sumlev-download").val(),$("#table-download").val()].join("-");
         _gaq.push(['_trackEvent', 'BulkDownload', track]);
-        window.location.href = build_bulk_data_url($("#state-download").val(),$("#sumlev-download").val(),$("#table-download").val(),"csv");
+        window.location.href = ire_census.build_bulk_data_url($("#state-download").val(),$("#sumlev-download").val(),$("#table-download").val(),"csv");
         return false;
     };
     download_shapefile_based_on_form_values = function() {
         var track = [$("#state-download").val(),$("#sumlev-download").val()].join("-");
         _gaq.push(['_trackEvent', 'ShapefileDownload', track]);
-        window.location.href = build_shapefile_url($("#state-download").val(),$("#sumlev-download").val());
+        window.location.href = ire_census.build_shapefile_url($("#state-download").val(),$("#sumlev-download").val());
     }
 
     parse_params = function() {

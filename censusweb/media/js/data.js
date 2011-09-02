@@ -77,12 +77,12 @@ $(function(){
     window.loadLabels = function() {
         $("#ajax-loader").show();
 
-        do_with_labels(function(labels_data) {
+        ire_census.do_with_labels(function(labels_data) {
             window.labels_data = labels_data;
             window.geoids = parseGeoids();
 
             window.tables = _.keys(labels_data["tables"])
-            window.tables = _.sortBy(window.tables, window.table_comparator);
+            window.tables = _.sortBy(window.tables, ire_census.table_comparator);
 
             _.each(window.tables, function(table) {
                 var elem = $('<div id="report-wrapper-' + table + '"></div>');
@@ -92,7 +92,7 @@ $(function(){
             geographies = new Array();
 
             _.each(geoids, function(geoid) {
-                do_with_sf1_data(geoid,function(geography_data) {
+                ire_census.do_with_sf1_data(geoid,function(geography_data) {
                     geographies.push(geography_data);
 
                     // If all geographies have been loaded, make reports

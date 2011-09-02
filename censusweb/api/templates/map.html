@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load helpertags %}
+{% load humanize %}
+{% block title %}Census Map {% endblock title %}
+{% block content %}
+<link rel="stylesheet" href="{{ MEDIA_URL }}leaflet/leaflet.css" type="text/css" charset="utf-8">
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}leaflet/leaflet.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/map.js"></script>
+<h1>A map goes here!</h1>
+<div id="map" style="height: 500px"></div>
+{% endblock %}
