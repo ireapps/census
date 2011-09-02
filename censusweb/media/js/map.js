@@ -1,5 +1,6 @@
 $(function(){
-    
+var geocoder = new google.maps.Geocoder();    
+window.boundary_layers = {}    
 function coords_to_paths(coords) {
     // Construct new polygons
     var paths = [];
@@ -42,6 +43,20 @@ window.parseGeoids = function() {
     return geoids;
 }
 
+function move_map_based_on_geocode(map,result) {
+    var viewport = result.geometry.viewport;
+    var top_left = new L.LatLng(viewport.getNorthEast().lat(), viewport.getSouthWest().lng());
+    var bottom_right = new L.LatLng(viewport.getSouthWest().lat(),viewport.getNorthEast().lng())
+    bounds = new L.LatLngBounds(top_left, bottom_right);
+    map.fitBounds(bounds);
+}
+function handle_geocode(result) {
+    window.geostash = result;
+    lat = result.geometry.location.lat();
+    lng = result.geometry.location.lng();
+    window.map.panTo(new L.LatLng(lat,lng));
+    move_map_based_on_geocode(window.map,result);
+}
 window.map = null;    
 function init_map(lat, lng) {
     if (window.map == null) {
@@ -66,7 +81,12 @@ function init_map(lat, lng) {
         for (var i = 0; i < geoids.length; i++) {
             add_boundary(geoids[i]);
         }
+        
     }
+    
+    $("#geocoder").geocodify({
+            onSelect: handle_geocode
+    });
 
 }    
 window.add_boundary = function(geoid) {
@@ -83,6 +103,7 @@ window.add_boundary = function(geoid) {
         });
 
         map.addLayer(displayed_polygon);
+        window.boundary_layers[geojson.external_id] = displayed_polygon;
         map.fitBounds(x.bounds);
     });
 }
