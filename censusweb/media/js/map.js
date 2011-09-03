@@ -57,23 +57,37 @@ function leaflet_point_from_google_point(location) {
 }
 
 function handle_geocode(result) {
-    window.geostash = result;
-    window.map.panTo(leaflet_point_from_google_point(result.geometry.location));
-    window.map.fitBounds(leaflet_bounds_from_google_viewport(result.geometry.viewport));
+    // window.map.panTo(leaflet_point_from_google_point(result.geometry.location));
+    // window.map.fitBounds(leaflet_bounds_from_google_viewport(result.geometry.viewport));
+    window.location = "/map/contains?point=" + result.geometry.location.lat() + "," + result.geometry.location.lng();
 }
 
-function init_map(lat, lng) {
+function init_map() {
     if (window.map == null) {
-        if (lat == null || lng == null) {
+        var marker_at_center = false;
+        
+        if (window.location.hash) {
+            var locstr = window.location.hash.substr(1);
+            parts = locstr.split(',');
+            lat = parseFloat(parts[0]);
+            lng = parseFloat(parts[1]);
+            marker_at_center = true;
+        } else {
             lat = 41.882087;
             lng = -87.627799;
-        }  
+        }
+
         var ll = new L.LatLng(lat, lng);
 
         window.map = new L.Map('map', {
             zoom: 14,
             center: ll,
         });
+
+        if (marker_at_center) {
+            user_marker = new L.Marker(ll, { draggable: false });
+            window.map.addLayer(user_marker);
+        }
 
         tiles = new L.TileLayer("http://mt1.google.com/vt/lyrs=m@155000000&hl=en&x={x}&y={y}&z={z}&s={s}", {
             maxZoom: 17,

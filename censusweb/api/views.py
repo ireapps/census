@@ -259,7 +259,7 @@ def map_contains(request):
     point = request.REQUEST.get('point',None)
     try:
         lat,lng = point.split(',',1)
-        point = Point(float(lat),float(lng))
+        point = Point(float(lng),float(lat))
     except:
         raise TypeError("A point must be provided as a comma-separated string, 'lat,lng'")
 
@@ -273,5 +273,6 @@ def map_contains(request):
     boundaries = Boundary.objects.filter(shape__contains=point,set__slug__in=types)
     geoids = sorted(x[0] for x in boundaries.values_list('external_id'))
     geoids = ','.join(geoids)
-    return HttpResponseRedirect(reverse('map',kwargs={'geoids': geoids}))
+    url = reverse('map',kwargs={'geoids': geoids}) + "#%.6f,%.6f" % (point.y,point.x)
+    return HttpResponseRedirect(url)
     
