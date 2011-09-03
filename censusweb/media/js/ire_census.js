@@ -77,6 +77,9 @@ var ire_census = {};
         [/^\d{2}$/,'states'],
         [/^\d{7}$/,'places']
     ];
+    
+    // do_with_geoid: for a string representing a single location, fetch the JSON data (including GeoJSON) 
+    // from GEOAPI_URL and pass it to success_handler.
     // For now, if geoid begins with a slash, it will be treated as a complete type/geoid combo. This
     // leaves it fairly flexible to add more geographies in case sometimes lengths aren't distinctive. 
     // But also for now, we can infer the geography type by the length of the geoID, so the value for 
@@ -85,7 +88,7 @@ var ire_census = {};
     // See http://census.ire.org/docs/boundary.html for more on the API, or to see what data
     // gets returned, look at http://census.ire.org/geo/1.0/boundary-set/places/1714000
     // TK: examples demonstrating how to put the shape which is returned on a map.
-    this.do_with_geojson = function (geoid,success_handler) {
+    this.do_with_geoid = function (geoid,success_handler) {
         if (geoid[0] != '/') {
             var matched = false;
             for (var i=0; i < GEOGRAPHY_TYPES.length; i++) {
@@ -106,6 +109,30 @@ var ire_census = {};
             dataType: "jsonp",
             success: success_handler
         });
+    }
+    
+    // given a point as [lat,lng] or as "lat,lng", call the contains function at GEOAPI_URL and pass the results 
+    // to success_handler. not rigged to handle paginated results, but for foreseeable future, 
+    // the contains query won't return enough for that to matter. 
+    this.do_with_contains_results = function(point,success_handler,options) {
+        if ($.isArray(point)) {
+            point = point.join(',');
+        }
+        var url = '/boundary/?contains=' + point;
+        if (options && options.sets) {
+            if ($.isArray(options.sets)) {
+                url += "&sets=" + options.sets.join(',');
+            } else {
+                url += "&sets=" + options.sets;
+            }
+        }
+        // 38.948337,-92.328032&sets=tracts,counties
+        $.ajax(this.GEOAPI_URL + url, {
+            dataType: "jsonp",
+            success: success_handler
+        });
+
+        
     }
 
     this.STATE_FIPS = {
