@@ -85,13 +85,18 @@ var ire_census = {};
     // See http://census.ire.org/docs/boundary.html for more on the API, or to see what data
     // gets returned, look at http://census.ire.org/geo/1.0/boundary-set/places/1714000
     // TK: examples demonstrating how to put the shape which is returned on a map.
-    this.get_geojson = function (geoid,success_handler) {
+    this.do_with_geojson = function (geoid,success_handler) {
         if (geoid[0] != '/') {
+            var matched = false;
             for (var i=0; i < GEOGRAPHY_TYPES.length; i++) {
                 if (geoid.match(GEOGRAPHY_TYPES[i][0])) {
                     geoid = "/" + GEOGRAPHY_TYPES[i][1] + "/" + geoid;
-                    break
+                    matched = true;
+                    break;
                 }
+            }
+            if (!matched) {
+                throw "Geoid does not match any known types. Check the length."
             }
         }
         if (geoid.substr(0,'/boundary-set'.length) != '/boundary-set') {

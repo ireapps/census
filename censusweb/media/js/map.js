@@ -1,6 +1,9 @@
 $(function(){
 var geocoder = new google.maps.Geocoder();    
-window.boundary_layers = {}    
+window.map = null;    
+window.boundary_layers = {};
+window.bounds = null;
+
 function coords_to_paths(coords) {
     // Construct new polygons
     var paths = [];
@@ -43,21 +46,22 @@ window.parseGeoids = function() {
     return geoids;
 }
 
-function move_map_based_on_geocode(map,result) {
-    var viewport = result.geometry.viewport;
+function leaflet_bounds_from_google_viewport(viewport) {
     var top_left = new L.LatLng(viewport.getNorthEast().lat(), viewport.getSouthWest().lng());
     var bottom_right = new L.LatLng(viewport.getSouthWest().lat(),viewport.getNorthEast().lng())
-    bounds = new L.LatLngBounds(top_left, bottom_right);
-    map.fitBounds(bounds);
+    return new L.LatLngBounds(top_left, bottom_right);
 }
+
+function leaflet_point_from_google_point(location) {
+    return new L.LatLng(location.lat(),location.lng());
+}
+
 function handle_geocode(result) {
     window.geostash = result;
-    lat = result.geometry.location.lat();
-    lng = result.geometry.location.lng();
-    window.map.panTo(new L.LatLng(lat,lng));
-    move_map_based_on_geocode(window.map,result);
+    window.map.panTo(leaflet_point_from_google_point(result.geometry.location));
+    window.map.fitBounds(leaflet_bounds_from_google_viewport(result.geometry.viewport));
 }
-window.map = null;    
+
 function init_map(lat, lng) {
     if (window.map == null) {
         if (lat == null || lng == null) {
@@ -85,12 +89,28 @@ function init_map(lat, lng) {
     }
     
     $("#geocoder").geocodify({
-            onSelect: handle_geocode
+            onSelect: handle_geocode,
+            regionBias: 'us',
+            filterResults: function(results) {
+                var filteredResults =[];
+                $.each(results, function(i,val) {
+                    for (var ac in val.address_components) {
+                        for (var t in val.address_components[ac].types) {
+                            if (val.address_components[ac].types[t] === 'country') {
+                                if (val.address_components[ac].short_name === 'US' || val.address_components[ac].short_name === 'PR') {
+                                    filteredResults.push(val);
+                                }
+                            }
+                        }
+                    }
+                });
+                return filteredResults;
+            }
     });
 
 }    
 window.add_boundary = function(geoid) {
-    ire_census.get_geojson(geoid,function(geojson) {
+    ire_census.do_with_geojson(geoid,function(geojson) {
         window.stash = geojson;
         var x = coords_to_paths(geojson['simple_shape']['coordinates']);
         displayed_polygon = new L.Polygon(x.paths, {
@@ -104,7 +124,13 @@ window.add_boundary = function(geoid) {
 
         map.addLayer(displayed_polygon);
         window.boundary_layers[geojson.external_id] = displayed_polygon;
-        map.fitBounds(x.bounds);
+        if (window.bounds == null) {
+            window.bounds = x.bounds;
+        } else {
+            window.bounds.extend(x.bounds.getNorthEast());
+            window.bounds.extend(x.bounds.getSouthWest());
+        }
+        map.fitBounds(window.bounds);
     });
 }
 $(document).ready(init_map);
