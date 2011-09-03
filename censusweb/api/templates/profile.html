@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load helpertags %}
+{% load humanize %}
+{% block title %}Census Map {% endblock title %}
+{% block content %}
+<link rel="stylesheet" href="{{ MEDIA_URL }}leaflet/leaflet.css" type="text/css" charset="utf-8">
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}leaflet/leaflet.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/profile.js"></script>
+<script id="basic-info" type="text/x-js-template">
+    <h1><%= metadata.NAME %></h1>
+    <dl>
+    <dt>Population</dt>
+    <dd><%= data['2010'].P1.P001001 %></dd>
+    </dl>
+</script>
+<div id="profile">
+    
+</div>
+{% endblock %}
