@@ -136,7 +136,7 @@ $(function(){
             var geoids = parseGeoids();
             for (var i = 0; i < geoids.length; i++) {
                 if (geoids[i]) {
-                    ire_census.do_with_geoid(geoids[i],window.add_boundary);
+                    ire_census.do_with_geodata(geoids[i],window.add_boundary);
                 }
             }
         

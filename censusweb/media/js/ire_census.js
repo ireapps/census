@@ -78,7 +78,7 @@ var ire_census = {};
         [/^\d{7}$/,'places']
     ];
     
-    // do_with_geoid: for a string representing a single location, fetch the JSON data (including GeoJSON) 
+    // do_with_geodata: for a string representing a single location, fetch the JSON data (including GeoJSON) 
     // from GEOAPI_URL and pass it to success_handler.
     // For now, if geoid begins with a slash, it will be treated as a complete type/geoid combo. This
     // leaves it fairly flexible to add more geographies in case sometimes lengths aren't distinctive. 
@@ -88,7 +88,7 @@ var ire_census = {};
     // See http://census.ire.org/docs/boundary.html for more on the API, or to see what data
     // gets returned, look at http://census.ire.org/geo/1.0/boundary-set/places/1714000
     // TK: examples demonstrating how to put the shape which is returned on a map.
-    this.do_with_geoid = function (geoid,success_handler) {
+    this.do_with_geodata = function (geoid,success_handler) {
         if (geoid[0] != '/') {
             var matched = false;
             for (var i=0; i < GEOGRAPHY_TYPES.length; i++) {
