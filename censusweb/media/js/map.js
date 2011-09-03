@@ -56,10 +56,49 @@ function leaflet_point_from_google_point(location) {
     return new L.LatLng(location.lat(),location.lng());
 }
 
+window.remove_all_layers = function(map) {
+    if (map == null) {
+        map = window.map;
+    }
+    for (var geoid in window.boundary_layers) {
+        var layer = window.boundary_layers[geoid]
+        map.removeLayer(layer);
+        delete window.boundary_layers[geoid];
+    }
+}
+
 function handle_geocode(result) {
-    // window.map.panTo(leaflet_point_from_google_point(result.geometry.location));
-    // window.map.fitBounds(leaflet_bounds_from_google_viewport(result.geometry.viewport));
-    window.location = "/map/contains?point=" + result.geometry.location.lat() + "," + result.geometry.location.lng();
+    var point = leaflet_point_from_google_point(result.geometry.location);
+    place_marker(point);
+    window.shapes = [];
+    window.map.panTo(point);
+    window.map.fitBounds(leaflet_bounds_from_google_viewport(result.geometry.viewport));
+    ire_census.do_with_contains_results([point.lat,point.lng],function(results) {
+        remove_all_layers(window.map);
+        var geoids = [];
+        _.each(results.objects,function(census_shape) {
+            geoids.push(census_shape.external_id);
+            window.add_boundary(census_shape);
+        })
+        
+        geoids.sort();
+        try {
+            history.pushState({},result.address_components[0].long_name,"/map/" + geoids.join(',') + ".html")
+        } catch(e) {
+            // no history... skip for now
+        }
+        window.location.hash = result.geometry.location.lat() + "," + result.geometry.location.lng();
+    });
+}
+
+window.place_marker = function(ll) {
+    if (window.marker) {
+        window.map.removeLayer(window.marker);
+        window.marker = null;
+    }
+    var marker = new L.Marker(ll, { draggable: false });
+    window.map.addLayer(marker);
+    window.marker = marker;
 }
 
 function init_map() {
@@ -85,8 +124,7 @@ function init_map() {
         });
 
         if (marker_at_center) {
-            user_marker = new L.Marker(ll, { draggable: false });
-            window.map.addLayer(user_marker);
+            place_marker(ll);
         }
 
         tiles = new L.TileLayer("http://mt1.google.com/vt/lyrs=m@155000000&hl=en&x={x}&y={y}&z={z}&s={s}", {
@@ -97,7 +135,8 @@ function init_map() {
         window.map.addLayer(tiles);
         var geoids = parseGeoids();
         for (var i = 0; i < geoids.length; i++) {
-            add_boundary(geoids[i]);
+            var fit_bounds = (i == geoids.length-1);
+            ire_census.do_with_geoid(geoids[i],window.add_boundary);
         }
         
     }
@@ -123,29 +162,28 @@ function init_map() {
     });
 
 }    
-window.add_boundary = function(geoid) {
-    ire_census.do_with_geojson(geoid,function(geojson) {
-        window.stash = geojson;
-        var x = coords_to_paths(geojson['simple_shape']['coordinates']);
-        displayed_polygon = new L.Polygon(x.paths, {
-            color: "#244f79",
-            opacity: 0.8,
-            weight: 3,
-            fill: true,
-            fillColor: "#244f79",
-            fillOpacity: 0.2
-        });
-
-        map.addLayer(displayed_polygon);
-        window.boundary_layers[geojson.external_id] = displayed_polygon;
-        if (window.bounds == null) {
-            window.bounds = x.bounds;
-        } else {
-            window.bounds.extend(x.bounds.getNorthEast());
-            window.bounds.extend(x.bounds.getSouthWest());
-        }
-        map.fitBounds(window.bounds);
+window.add_boundary = function(geojson,fit_bounds) {
+    var x = coords_to_paths(geojson['simple_shape']['coordinates']);
+    displayed_polygon = new L.Polygon(x.paths, {
+        color: "#244f79",
+        opacity: 0.8,
+        weight: 3,
+        fill: true,
+        fillColor: "#244f79",
+        fillOpacity: 0.2
     });
+
+    map.addLayer(displayed_polygon);
+    window.boundary_layers[geojson.external_id] = displayed_polygon;
+    if (window.bounds == null) {
+        window.bounds = x.bounds;
+    } else {
+        window.bounds.extend(x.bounds.getNorthEast());
+        window.bounds.extend(x.bounds.getSouthWest());
+    }
+    if (fit_bounds) {
+        map.fitBounds(x.bounds);
+    }
 }
 $(document).ready(init_map);
 
