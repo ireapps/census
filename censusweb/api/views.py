@@ -1,13 +1,15 @@
 import simplejson
 
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 
 from django.shortcuts import render_to_response
 from django.contrib.gis.shortcuts import render_to_kml, render_to_kmz
+from django.contrib.gis.geos import Point
 from django.template import RequestContext, Template, Context
+from django.core.urlresolvers import reverse
 
-from boundaryservice.models import Boundary
+from boundaryservice.models import Boundary,BoundarySet
 
 import csv
 import help_text
@@ -16,6 +18,8 @@ import utils
 from datetime import datetime
 
 DATA_ALTERNATIVES = ['2000', '2010', 'delta', 'pct_change']
+
+BOUNDARY_TYPES = [x[0] for x in BoundarySet.objects.values_list('slug').distinct()]
 
 def homepage(request):
     return render_to_response('homepage.html', {
@@ -251,3 +255,23 @@ def generate_sql(request, file_ids=None, table_ids=None, aggregate=None):
 
     return HttpResponseNotFound()
 
+def map_contains(request):
+    point = request.REQUEST.get('point',None)
+    try:
+        lat,lng = point.split(',',1)
+        point = Point(float(lat),float(lng))
+    except:
+        raise TypeError("A point must be provided as a comma-separated string, 'lat,lng'")
+
+    types = request.REQUEST.get('types',[])
+    if types:
+        types = [x for x in types.split(',') if x in BOUNDARY_TYPES]
+        if not types: raise ValueError("None of the specified types are valid. Use one or more of (%s) separated by commas." % ','.join(BOUNDARY_TYPES))
+    else:
+        types = BOUNDARY_TYPES
+
+    boundaries = Boundary.objects.filter(shape__contains=point,set__slug__in=types)
+    geoids = sorted(x[0] for x in boundaries.values_list('external_id'))
+    geoids = ','.join(geoids)
+    return HttpResponseRedirect(reverse('map',kwargs={'geoids': geoids}))
+    

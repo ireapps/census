@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^data/(?P<geoids>[,\d]+)\.html$', views.generic_view, { "template": "data.html" }, name="data"),
     url(r'^data/bulkdata.html$', views.generic_view, { "template": "bulkdata.html" }, name="bulkdata"),
     url(r'^map/(?P<geoids>[,\d]+)\.html$', views.generic_view, { "template": "map.html" }, name="map"),
+    url(r'^map/contains$', views.map_contains, name="map_contains"),
     url(r'^docs/json.html$', views.generic_view, { "template": "docs/json.html" }, name="json-doc"),
     url(r'^docs/boundary.html$', views.generic_view, { "template": "docs/boundary.html" }, name="boundary-documentation"),
     url(r'^util/create_table/(?P<aggregate>(all_files|all_tables))\.sql$', views.generate_sql, name="generate_sql"), # order matters. keep this first to catch only numbers before tables
