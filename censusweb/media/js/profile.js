@@ -13,15 +13,15 @@ $(function(){
         return geoids[0];
     }
 
-    function display_sf1_data(data) {
+    function display_sf1_data(result) {
         console.log("in display_sf1_data");
-        window.sf1 = data;
-        $("#profile").append(basic_info_template(data));
+        window.sf1 = result; // handy while developing...
+        $("#profile").append(basic_info_template({'sf1json': result, 'ire_census': ire_census }));
     }
 
     function display_geodata(geodata) {
         console.log("in display_geodata");
-        window.geodata = geodata;
+        window.geodata = geodata;  // handy while developing...
         if (geodata.objects) {
             console.log("display_geodata: " + geodata.objects[0].external_id);
         }

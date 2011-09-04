@@ -6,15 +6,60 @@
 <link rel="stylesheet" href="{{ MEDIA_URL }}leaflet/leaflet.css" type="text/css" charset="utf-8">
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}leaflet/leaflet.js"></script>
+
 <script type="text/javascript" src="{{ MEDIA_URL }}js/profile.js"></script>
+
 <script id="basic-info" type="text/x-js-template">
-    <h1><%= metadata.NAME %></h1>
+    <h1><%= sf1json.metadata.NAME %></h1>
     <dl>
-    <dt>Population</dt>
-    <dd><%= data['2010'].P1.P001001 %></dd>
+        <dt>Population</dt>
+        <dd><%= ire_census.sf1val(sf1json,'P001001') %></dd>
+        <dt>Median age</dt>
+        <dd>
+            <dl>
+            <dt>Male:</dt><dd><%= ire_census.sf1val(sf1json,'P013002') %></dd>
+            <dt>Female:</dt><dd><%= ire_census.sf1val(sf1json,'P013003') %></dd>
+            </dl>
+        </dd>
     </dl>
+    <table id="racial-breakdown" width="400">
+        <thead>
+        <tr>
+            <th>Race</th>
+            <th>Population</th>
+            <th>Percentage</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>hispanic or latino</td><td><%= ire_census.sf1val(sf1json,'P009002') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009002','2010',1) %>%</td>
+        </tr>
+        <tr>
+            <td>white</td><td><%= ire_census.sf1val(sf1json,'P009005') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009005','2010',1) %>%</td>
+        </tr>
+        <tr>
+            <td>black</td><td><%= ire_census.sf1val(sf1json,'P009006') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009006','2010',1) %>%</td>
+        </tr>
+        <tr>
+            <td>native american/alaskan</td><td><%= ire_census.sf1val(sf1json,'P009007') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009007','2010',1) %>%</td>
+        </tr>
+        <tr>
+            <td>asian</td><td><%= ire_census.sf1val(sf1json,'P009008') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009008','2010',1) %>%</td>
+        </tr>
+        <tr>
+            <td>hawaiian/other pacific islander</td><td><%= ire_census.sf1val(sf1json,'P009009') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009009','2010',1) %>%</td>
+        </tr>
+        <tr>
+            <td>some other race</td><td><%= ire_census.sf1val(sf1json,'P009010') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009010','2010',1) %>%</td>
+        </tr>
+        <tr>
+            <td>two or more races</td><td><%= ire_census.sf1val(sf1json,'P009011') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009011','2010',1) %>%</td>
+        </tr>
+        </tbody>
+    </table>
 </script>
 <div id="profile">
     
 </div>
+<div id="race-chart" style="width:600px;height:150px"></div>
 {% endblock %}
