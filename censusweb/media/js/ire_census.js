@@ -35,6 +35,13 @@ var ire_census = {};
         return key; 
     }
 
+    this.table_from_field = function(field_code) {
+        parts = field_code.match(/^(H|P|HCT|PCT|PCO)(\d{3})(\D)?(\d{3})$/i);
+        if (!parts) throw "Invalid field code."
+        while (parts[2][0] == '0') parts[2] = parts[2].substr(1);
+        return parts.slice(1,4).join('').toUpperCase();
+    }
+
     this.build_bulk_data_url = function(state,sumlev,table,format) {
         if (!format) {
             format = 'csv';
@@ -133,7 +140,29 @@ var ire_census = {};
         });
 
         
+    };
+
+    // Given a JSON object of the typical structure returned from the do_with_sf1_data AJAX call,
+    // return a simple field value. Just makes some things a little more concise.
+    this.sf1val = function(sf1_json,field,year_or_cat) {
+        var year_or_cat = year_or_cat || '2010';
+        var table = this.table_from_field(field);
+        return sf1_json.data[year_or_cat][table][field];
     }
+
+    // Given a JSON object of the typical structure returned from the do_with_sf1_data AJAX call,
+    // return a field value as a percentage of total population or housing units (as appropriate for the field)
+    // if this is to "work" for 'delta' or 'pct_change' special handling should be added. For now it's naive and 
+    // thus probably wrong...
+    this.sf1val_pct = function(sf1_json,field,year_or_cat,precision) {
+        var year_or_cat = year_or_cat || '2010';
+        var precision = precision || 2;
+        var val = parseFloat(this.sf1val(sf1_json,field,year_or_cat))
+        var denom_field = (field.toUpperCase()[0] == 'H') ? "H001001" : "P001001";
+        var denom_val = parseFloat(this.sf1val(sf1_json,denom_field,year_or_cat));
+        return (val / denom_val * 100).toFixed(precision);
+    }
+
 
     this.STATE_FIPS = {
         "Alabama": "01",
