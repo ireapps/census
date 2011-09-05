@@ -72,9 +72,9 @@ var ire_census = {};
         apiRequest("/" + window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, handler);
     }
 
-    this.do_with_sf1_data = function(geoid, callback) {
+    this.do_with_sf1_data = function(geoid, handler) {
         var state = geoid.substring(0, 2);
-        apiRequest("/" + state + "/" + geoid + ".jsonp", "geoid_" + geoid, callback);
+        apiRequest("/" + state + "/" + geoid + ".jsonp", "geoid_" + geoid, handler);
     }
     
     GEOGRAPHY_TYPES = [
