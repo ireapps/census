@@ -2,7 +2,7 @@
 {% block title %}Using the Census Data as JSON{% endblock title %}
 {% block content %}
 <h2>JSON Data API</h2>
-<p>All data used by this application is retrieved via JSON from a server which you can use for your own applications. If you know the GeoID for a census geography of interest, it is easy to retrieve the data.</p>
+<p>All data used by this application is retrieved via JSON from a server which you can use for your own applications. If you know the GeoID for a census geography of interest, it is easy to retrieve the data. If all of this seems kind of complicated, you may prefer to start with <a href="{% url js-lib-documentation %}">the documentation for our javascript library</a> which hides some of these details.</p>
 <h2>What's a GeoID?</h2>
 <p>
     For every distinct geography in a census summary level, it is possible to construct a unique identifier. These identifiers can be found in <a href="http://www.census.gov/geo/www/tiger/tgrshp2010/tgrshp2010.html">TIGER shapefiles</a> and can also be looked up for a given latitude/longitude using our experimental <a href="{% url boundary-documentation %}">Boundary Location API.</a>.

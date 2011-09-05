@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Using the ire_census.js library{% endblock title %}
+{% block content %}
+<div id="javascript-documentation">
+    <h2>ire_census.js</h2>
+    <p>This application is built upon a reusable javascript library that is meant to make it very easy for you to add census data to your own web apps. If this library doesn't completely serve your needs, you may wish to read more about the <a href="{% url json-doc %}">data JSON API</a> and <a href="{% url boundary-documentation %}">geographic boundary service</a> which the library uses.</p>
+    <h2>Where do I get it?</h2>
+    <p>
+        The library is stored on GitHub. The easiest thing to do is to load it from there using this HTML:</p>
+        <p><code id="js-source-example">&lt;script src=&quot;https://raw.github.com/ireapps/census/master/tools/js/ire_census.js&quot;&gt;&lt;/script&gt;</code> </p>
+        <p>Of course, you can also download it and serve it locally, min-ify it, etc. </p>
+        <p>Note: this library depends upon <a href="http://jquery.org">jQuery</a>. You must load the jQuery library before loading <code>ire_census.js</code>.</p>
+    <h2>What does it do?</h2>
+    <p>
+        The library creates a javascript "namespace" <code>ire_census</code>. All functions described below are called using that namespace, e.g. <code>ire_census.get_state_fips('Illinois')</code>
+    </p>
+    <h3>AJAX helpers</h3>
+    <p>
+        The most interesting features of the library are those which simplify the process of making an AJAX call to <a href="{% url json-doc %}">fetch SF1 data</a> or <a href="{% url boundary-documentation %}">census geography data</a>.</p>
+        <h4 class='jsfunc'>do_with_sf1_data(<span class='jsarg'>geoid</span>,<span class='jsarg'>handler</span>)</h4>
+        Arguments:
+        <ul class='jsargs'>
+            <li><span class='js jsarg'>geoid</span>: a 2-to-11 digit unique identifier for a census geography.</li>
+            <li><span class='js jsarg'>handler</span>: a javascript function which expects as its only argument a JSON bundle of data for that geography. All geographies have the same basic structure. For an example, see the <a target="_blank" href="{{ settings.API_URL }}/17/1714000.jsonp">raw JSON for Chicago</a>, or see the <a href="{% url json-doc %}">JSON API doc</a> elsewhere on this site. Note that some other functions in this library described below make it easier to use this data.</li>
+        </ul>
+
+        <h4 class='jsfunc'>do_with_geodata(<span class='jsarg'>geoid</span>,<span class='jsarg'>handler</span>)</h4>
+        Arguments:
+        <ul class='jsargs'>
+            <li><span class='js jsarg'>geoid</span>: a 2-to-11 digit unique identifier for a census geography.</li>
+            <li><span class='js jsarg'>handler</span>: a javascript function which expects as its only argument a JSON bundle of geodata for that geography. All geographies have the same basic structure. For an example, see the <a target="_blank" href="http://{{ settings.GEO_API_ROOT }}/1.0/boundary-set/places/1714000">raw JSON for Chicago</a>, or see the <a href="{% url boundary-documentation %}">boundary service API doc</a> elsewhere on this site. For an example of how to use this to put a shape on a map, look at the source for <a href="{% url map %}">the mapping tool on this site</a>.</li>
+        </ul>
+
+        <h4 class='jsfunc'>do_with_contains_results(<span class='jsarg'>point</span>,<span class='jsarg'>handler</span>,<span class='jsarg optional'>options</span>)</h4>
+        Arguments:
+        <ul class='jsargs'>
+            <li><span class='js jsarg'>point</span>: a 2-item array, [<span class='jsarg'>lat</span>,<span class='jsarg'>lng</span>], or a string, <span class='jsarg'>lat,lng</span></li>
+            <li><span class='js jsarg'>handler</span>: a javascript function which expects as its only argument a JSON object returned from the <a href="{% url boundary-documentation %}">boundary service</a>. Most often, you'll want to go directly to the 'objects' property of this JSON object, which will be an array of one or more geographies containing the given point. These geographies each have the same structure as the single geography used in the handler for <span class='js'>do_with_geodata</span>.</li>
+            <li><span class='jsarg optional'>options</span>: a dictionary of options for the function. At this time, only one option is available.<ul>
+                <li><span class='jsarg'>sets</span>: an array of one or more valid geography types: <code>[tracts, county-subdivisions, counties, states, places]</code>
+                </li>
+            </ul></li>
+        </ul>
+
+        <h4 class='jsfunc'>do_with_available_states(<span class='jsarg'>handler</span>)</h4>
+        Arguments:
+        <ul class='jsargs'>
+            <li><span class='jsarg'>handler</span>: a javascript function which receives as its only argument a list of the names of states which are available from the data server. For the IRE app, this is currently all states, plus Washington, DC and Puerto Rico.</li>
+        </ul>
+        <h4 class='jsfunc'>do_with_labels(<span class='jsarg'>handler</span>)</h4>
+        Arguments:
+        <ul class='jsargs'>
+            <li><span class='jsarg'>handler</span>: a javascript function which receives as its only argument a JSON object of label information for the Census SF1 dataset. It can be used to look up English language labels for table and field codes. Note that some other functions in this library described below make it easier to use this data. For more complete details, <a href="http://censusdata.ire.org/SF1_labels.jsonp" target="_blank">download and inspect the data which is returned.</a></li>
+        </ul>
+
+    <h3>Data helpers</h3>
+    <h4 class='jsfunc'>sf1val(<span class='jsarg'>sf1_json</span>,<span class='jsarg'>field</span>,<span class='jsarg optional'>year_or_cat</span>)</h4>
+    <p>
+        Given an SF1 data JSON object (of the type passed to the callback for do_with_sf1_data) and a field code, return the value for 2010. Optionally, a third argument may be passed to retrieve other data: '2000', 'delta', or 'pct_change'
+    </p>
+    <h4 class='jsfunc'>sf1val_pct(<span class='jsarg'>sf1_json</span>,<span class='jsarg'>field</span>,<span class='jsarg optional'>year_or_cat</span>)</h4>
+    <p>
+        Given an SF1 data JSON object (of the type passed to the callback for do_with_sf1_data) and a field code, return the 2010 value as a percentage of the total population or number of housing units for that geography. Optionally, a third argument may be passed to retrieve other data: '2000'. The other two categories ('delta' and 'pct_change') are not meaningfully implemented for this function.
+    </p>
+
+    <h4 class='jsfunc'>table_name(<span class='jsarg'>label_data</span>, <span class='jsarg'>table_code</span>)</h4>
+    <h4 class='jsfunc'>table_universe(<span class='jsarg'>label_data</span>, <span class='jsarg'>table_code</span>)</h4>
+    <h4 class='jsfunc'>table_size(<span class='jsarg'>label_data</span>, <span class='jsarg'>table_code</span>)</h4>
+    <p>
+        Given a label_data structure (of the type passed to the callback for do_with_labels), and a table code, return the name, universe, or size (number of fields) for that table.
+    </p>
+    <h4 class='jsfunc'>label_text(<span class='jsarg'>label_data</span>, <span class='jsarg'>field_code</span>)</h4>
+    <p>
+        Given a label_data structure (of the type passed to the callback for do_with_labels), and a field code, return the name for that field. Note that for fields which are "children" of other fields, the label may be difficult to interpret without information about the parents. That information is in the label_data structure, but you are on your own for navigating it.
+    </p>
+    <h4 class='jsfunc'>get_state_fips(<span class='jsarg'>state</span>)</h4>
+    <p>
+        Given the properly capitalized name of a state (or state-like geography), return the two digit FIPS code for that state.
+    </p>
+    <h4 class='jsfunc'>get_fips_state(<span class='jsarg'>fips</span>)</h4>
+    <p>
+        Given a two-digit FIPS code for a state (or state-like geography), return the name of that state.
+    </p>
+    <h4 class='jsfunc'>table_from_field(<span class='jsarg'>field_code</span>)</h4>
+    <p>Given a field code, compute the appropriate table code. e.g. given <code>P001001</code> return <code>P1</code></p>
+    <h4 class='jsfunc'>build_bulk_data_url(<span class='jsarg'>state</span>,<span class='jsarg'>sumlev</span>,<span class='jsarg'>table</span>,<span class='jsarg optional'>format</span>)</h4>
+    <p>
+        Given a state, summary level, and table, compute the URL for downloading the <a href="{% url bulkdata %}">bulkdata export for that combination.</a>. If omitted, the 'format' is assumed to be CSV, and for the moment, only CSV data is available from the IRE census service.
+    </p>
+    <h4 class='jsfunc'>build_shapefile_url(<span class='jsarg'>state</span>,<span class='jsarg'>sumlev</span>)</h4>
+    <p>Given a state FIPS code and a summary level code, download the corresponding official census shapefiles. At this time, only 040 (state), 050 (county), 060 (county subdivision), 140 (census tract) and 160 (census designated place) are supported.</p>
+    <h4 class='jsfunc'>table_comparator(<span class='jsarg'>table</span>)</h4>
+    <p>Probably misnamed, this is actually a key function meant to be used with a javascript sort function to make P/PCT/PCO tables sort ahead of H/HCT tables, because that's how the Census does it.</p>
+    Arguments:
+    <ul class='jsargs'>
+        <li><span class='jsarg'>table</span>: for the given table code, adjust it slightly so that when sorted with other table codes that have also been processed by this function, they will sort with population tables ahead of housing tables, and with tables in numeric order instead of alphabetic number sorting.</li>
+    </ul>
+</div>{% endblock content %}

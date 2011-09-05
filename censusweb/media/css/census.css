@@ -397,3 +397,10 @@ dl#bulk-download-url-format-explainer-list dd { margin-left: 35px; }
 #gzip-note { margin: 15px 0 0 0; }
 #gzip-code-example { margin: 0 20px 20px;}
 #census-data-links { margin: 0 20px 20px;}
+
+#js-source-example { background-color: #eeeeee; border: 1px solid #aaaaaa; font-family: monospace; padding: 3px 3px; }
+#javascript-documentation { width: 90%;}
+.jsfunc {font-family: monospace;}
+ul.jsargs { margin-left: 1em; margin-bottom: 2em; padding-left: 1em; text-indent: -1em; }
+.js { font-family: monospace;}
+.jsarg { font-style: italic;}

@@ -68,8 +68,10 @@ var ire_census = {};
         apiRequest("/states.jsonp", "states", handler);
     }
 
-    this.do_with_labels = function(handler) {
-        apiRequest("/" + window.DATASET + "_labels.jsonp", "labels_" + window.DATASET, handler);
+    this.do_with_labels = function(handler,options) {
+        opts = { 'dataset': 'SF1'} // at this time there are no plans to include other datasets in the IRE app, so this may go away.
+        $.extend(opts,options);
+        apiRequest("/" + opts.dataset + "_labels.jsonp", "labels_" + opts.dataset, handler);
     }
 
     this.do_with_sf1_data = function(geoid, handler) {
@@ -112,6 +114,7 @@ var ire_census = {};
         if (geoid.substr(0,'/boundary-set'.length) != '/boundary-set') {
             geoid = '/boundary-set' + geoid;
         }
+        console.log(this.GEOAPI_URL + geoid);
         $.ajax(this.GEOAPI_URL + geoid, {
             dataType: "jsonp",
             success: success_handler
@@ -162,6 +165,22 @@ var ire_census = {};
         return val / denom_val * 100;
     }
 
+    this.table_name = function(label_data, table_code) {
+        return label_data['tables'][table_code]['name'];
+    }
+
+    this.table_universe = function(label_data, table_code) {
+        return label_data['tables'][table_code]['universe'];
+    }
+
+    this.table_size = function(label_data, table_code) {
+        return label_data['tables'][table_code]['size'];
+    }
+
+    this.label_text = function(label_data, field_code) {
+        var table_code = this.table_from_field(field_code);
+        return label_data['tables'][table_code]['labels'][field_code]['text']
+    }
 
     this.STATE_FIPS = {
         "Alabama": "01",
