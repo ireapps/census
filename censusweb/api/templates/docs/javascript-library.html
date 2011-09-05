@@ -88,7 +88,7 @@
         Given a state, summary level, and table, compute the URL for downloading the <a href="{% url bulkdata %}">bulkdata export for that combination.</a>. If omitted, the 'format' is assumed to be CSV, and for the moment, only CSV data is available from the IRE census service.
     </p>
     <h4 class='jsfunc'>build_shapefile_url(<span class='jsarg'>state</span>,<span class='jsarg'>sumlev</span>)</h4>
-    <p>Given a state FIPS code and a summary level code, download the corresponding official census shapefiles. At this time, only 040 (state), 050 (county), 060 (county subdivision), 140 (census tract) and 160 (census designated place) are supported.</p>
+    <p>Given a state FIPS code and a summary level code, compute the URL for downloading the corresponding official census shapefiles. At this time, only 040 (state), 050 (county), 060 (county subdivision), 140 (census tract) and 160 (census designated place) are supported.</p>
     <h4 class='jsfunc'>table_comparator(<span class='jsarg'>table</span>)</h4>
     <p>Probably misnamed, this is actually a key function meant to be used with a javascript sort function to make P/PCT/PCO tables sort ahead of H/HCT tables, because that's how the Census does it.</p>
     Arguments:
