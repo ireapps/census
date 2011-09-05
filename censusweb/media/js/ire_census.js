@@ -154,13 +154,12 @@ var ire_census = {};
     // return a field value as a percentage of total population or housing units (as appropriate for the field)
     // if this is to "work" for 'delta' or 'pct_change' special handling should be added. For now it's naive and 
     // thus probably wrong...
-    this.sf1val_pct = function(sf1_json,field,year_or_cat,precision) {
+    this.sf1val_pct = function(sf1_json,field,year_or_cat) {
         var year_or_cat = year_or_cat || '2010';
-        var precision = precision || 2;
         var val = parseFloat(this.sf1val(sf1_json,field,year_or_cat))
         var denom_field = (field.toUpperCase()[0] == 'H') ? "H001001" : "P001001";
         var denom_val = parseFloat(this.sf1val(sf1_json,denom_field,year_or_cat));
-        return (val / denom_val * 100).toFixed(precision);
+        return val / denom_val * 100;
     }
 
 
