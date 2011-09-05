@@ -9,7 +9,16 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.geocodify.min.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/map.js"></script>
 <div id="legend">
-<form id="geocoder"></form>
+    <select id="types">
+        <option value="">all geographies</option>
+        <option value="tracts">census tract</option>
+        <option value="county-subdivisions">county subdivision</option>
+        <option value="counties">county</option>
+        <option value="places">place</option>
+        <option value="states">state</option>
+    </select> containing
+<form id="geocoder">
+</form>
 </div>
 <div id="map" style="height: 500px"></div>
 {% endblock %}

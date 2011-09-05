@@ -73,12 +73,16 @@ $(function(){
         window.shapes = [];
         window.map.panTo(point);
         window.map.fitBounds(leaflet_bounds_from_google_viewport(result.geometry.viewport));
+        contains_opts = {}
+        if ($("#types").val()) {
+            contains_opts['sets'] = $("#types").val();
+        }
         ire_census.do_with_contains_results([point.lat,point.lng],function(results) {
             remove_all_layers(window.map);
             var geoids = [];
             _.each(results.objects,function(census_shape) {
                 geoids.push(census_shape.external_id);
-                window.add_boundary(census_shape);
+                window.add_boundary(census_shape,true);
             })
         
             geoids.sort();
@@ -88,7 +92,7 @@ $(function(){
                 // no history... skip for now
             }
             window.location.hash = result.geometry.location.lat() + "," + result.geometry.location.lng();
-        });
+        }, contains_opts);
     }
 
     window.place_marker = function(ll) {
