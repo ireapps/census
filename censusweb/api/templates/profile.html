@@ -32,28 +32,28 @@
         </thead>
         <tbody>
         <tr>
-            <td>hispanic or latino</td><td><%= ire_census.sf1val(sf1json,'P009002') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009002','2010',1) %>%</td>
+            <td>hispanic or latino</td><td><%= ire_census.sf1val(sf1json,'P009002') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009002').toFixed(1) %>%</td>
         </tr>
         <tr>
-            <td>white</td><td><%= ire_census.sf1val(sf1json,'P009005') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009005','2010',1) %>%</td>
+            <td>white</td><td><%= ire_census.sf1val(sf1json,'P009005') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009005').toFixed(1) %>%</td>
         </tr>
         <tr>
-            <td>black</td><td><%= ire_census.sf1val(sf1json,'P009006') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009006','2010',1) %>%</td>
+            <td>black</td><td><%= ire_census.sf1val(sf1json,'P009006') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009006').toFixed(1) %>%</td>
         </tr>
         <tr>
-            <td>native american/alaskan</td><td><%= ire_census.sf1val(sf1json,'P009007') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009007','2010',1) %>%</td>
+            <td>native american/alaskan</td><td><%= ire_census.sf1val(sf1json,'P009007') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009007').toFixed(1) %>%</td>
         </tr>
         <tr>
-            <td>asian</td><td><%= ire_census.sf1val(sf1json,'P009008') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009008','2010',1) %>%</td>
+            <td>asian</td><td><%= ire_census.sf1val(sf1json,'P009008') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009008').toFixed(1) %>%</td>
         </tr>
         <tr>
-            <td>hawaiian/other pacific islander</td><td><%= ire_census.sf1val(sf1json,'P009009') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009009','2010',1) %>%</td>
+            <td>hawaiian/other pacific islander</td><td><%= ire_census.sf1val(sf1json,'P009009') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009009').toFixed(1) %>%</td>
         </tr>
         <tr>
-            <td>some other race</td><td><%= ire_census.sf1val(sf1json,'P009010') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009010','2010',1) %>%</td>
+            <td>some other race</td><td><%= ire_census.sf1val(sf1json,'P009010') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009010').toFixed(1) %>%</td>
         </tr>
         <tr>
-            <td>two or more races</td><td><%= ire_census.sf1val(sf1json,'P009011') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009011','2010',1) %>%</td>
+            <td>two or more races</td><td><%= ire_census.sf1val(sf1json,'P009011') %></td><td><%= ire_census.sf1val_pct(sf1json,'P009011').toFixed(1) %>%</td>
         </tr>
         </tbody>
     </table>
