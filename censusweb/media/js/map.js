@@ -172,7 +172,6 @@ $(function(){
     }
     $(document).ready(function() {
         init_map();
-        window.map.fitBounds(window.bounds);
         $("#geocoder").geocodify({
                 onSelect: handle_geocode,
                 regionBias: 'us',
