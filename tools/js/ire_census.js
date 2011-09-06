@@ -114,7 +114,6 @@ var ire_census = {};
         if (geoid.substr(0,'/boundary-set'.length) != '/boundary-set') {
             geoid = '/boundary-set' + geoid;
         }
-        console.log(this.GEOAPI_URL + geoid);
         $.ajax(this.GEOAPI_URL + geoid, {
             dataType: "jsonp",
             success: success_handler
