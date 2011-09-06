@@ -4,6 +4,8 @@ $(function(){
     window.boundary_layers = {};
     window.bounds = null;
 
+    var popup_template = _.template($("#popup-template").html());
+    var legend_template = _.template($("#legend-template").html());
     function coords_to_paths(coords) {
         // Construct new polygons
         var paths = [];
@@ -157,7 +159,7 @@ $(function(){
             fillColor: "#244f79",
             fillOpacity: 0.2
         });
-
+        displayed_polygon.bindPopup(popup_template({'geojson': geojson}));
         map.addLayer(displayed_polygon);
         window.boundary_layers[geojson.external_id] = displayed_polygon;
         if (window.bounds == null) {
