@@ -6,7 +6,9 @@ var ire_census = {};
     this.GEOAPI_URL = "http://census.ire.org/geo/1.0"
     
     function apiRequest(path, callback, handler) {
-        $.ajax(this.API_URL + path, {
+        var api_url = this.API_URL;
+        console.log("apiRequest: " + api_url);
+        $.ajax(api_url + path, {
             dataType: "jsonp",
             jsonpCallback: callback,
             success: handler
