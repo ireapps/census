@@ -2,6 +2,9 @@
 // jQuery
 var ire_census = {};
 (function() { 
+    this.API_URL = "http://censusdata.ire.org"
+    this.GEOAPI_URL = "http://census.ire.org/geo/1.0"
+    
     function apiRequest(path, callback, handler) {
         $.ajax(this.API_URL + path, {
             dataType: "jsonp",
@@ -10,9 +13,6 @@ var ire_census = {};
         });
     }
 
-    this.API_URL = "http://censusdata.ire.org"
-    this.GEOAPI_URL = "http://census.ire.org/geo/1.0"
-    
     this.table_comparator = function (table) {
         parts = table.match(/([A-Z]+)(\d+)([A-Z]+)?/);
 
