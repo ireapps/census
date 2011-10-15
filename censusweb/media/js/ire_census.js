@@ -2,11 +2,11 @@
 // jQuery
 var ire_census = {};
 (function() { 
-    this.API_URL = "http://censusdata.ire.org"
-    this.GEOAPI_URL = "http://census.ire.org/geo/1.0"
+    this.API_URL = "http://censusdata.ire.org" // can be overridden
+    this.GEOAPI_URL = "http://census.ire.org/geo/1.0"  // can be overridden
     
     function apiRequest(path, callback, handler) {
-        $.ajax(API_URL + path, {
+        $.ajax(ire_census.API_URL + path, {
             dataType: "jsonp",
             jsonpCallback: callback,
             success: handler
@@ -51,7 +51,7 @@ var ire_census = {};
         } else {
             table = "";
         }
-        return this.API_URL + "/" + state + "/all_" + sumlev + "_in_"+state+table+"." + format;
+        return ire_census.API_URL + "/" + state + "/all_" + sumlev + "_in_"+state+table+"." + format;
     }
 
     this.build_shapefile_url = function(state,sumlev) {
@@ -114,7 +114,7 @@ var ire_census = {};
         if (geoid.substr(0,'/boundary-set'.length) != '/boundary-set') {
             geoid = '/boundary-set' + geoid;
         }
-        $.ajax(this.GEOAPI_URL + geoid, {
+        $.ajax(ire_census.GEOAPI_URL + geoid, {
             dataType: "jsonp",
             success: success_handler
         });
@@ -136,7 +136,7 @@ var ire_census = {};
             }
         }
         // 38.948337,-92.328032&sets=tracts,counties
-        $.ajax(this.GEOAPI_URL + url, {
+        $.ajax(ire_census.GEOAPI_URL + url, {
             dataType: "jsonp",
             success: success_handler
         });
