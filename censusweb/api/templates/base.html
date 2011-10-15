@@ -18,8 +18,8 @@
         <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->      
         <script type="text/javascript">
+            ire_census.API_URL = "{{ settings.API_URL }}";
             window.DATASET = "{{ settings.DATASET }}";
-            window.API_URL = "{{ settings.API_URL }}";
             window.DEFAULT_TABLES = "{{ settings.DEFAULT_TABLES|join:',' }}";
         </script>
         <script type="text/javascript">

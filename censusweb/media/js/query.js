@@ -237,7 +237,7 @@ $(function(){
         },
 
         loadCounties: function() {
-            $.ajax(API_URL + "/" + this.get(SUMLEV_STATE) + "/counties.jsonp", {
+            $.ajax(ire_census.API_URL + "/" + this.get(SUMLEV_STATE) + "/counties.jsonp", {
                 dataType: "jsonp",
                 jsonpCallback: "counties",
                 success: _.bind(function(response) {
@@ -248,7 +248,7 @@ $(function(){
         },
 
         loadCountySubdivisions: function() {
-            $.ajax(API_URL + "/" + this.get(SUMLEV_STATE) + "/county_subdivisions_" + this.get(SUMLEV_COUNTY) + ".jsonp", {
+            $.ajax(ire_census.API_URL + "/" + this.get(SUMLEV_STATE) + "/county_subdivisions_" + this.get(SUMLEV_COUNTY) + ".jsonp", {
                 dataType: "jsonp",
                 jsonpCallback: "county_subdivisions_" + this.get(SUMLEV_COUNTY),
                 success: _.bind(function(response) {
@@ -259,7 +259,7 @@ $(function(){
         },
 
         loadPlaces: function() {
-            $.ajax(API_URL + "/" + this.get(SUMLEV_STATE) + "/places.jsonp", {
+            $.ajax(ire_census.API_URL + "/" + this.get(SUMLEV_STATE) + "/places.jsonp", {
                 dataType: "jsonp",
                 jsonpCallback: "places",
                 success: _.bind(function(response) {
@@ -270,7 +270,7 @@ $(function(){
         },
 
         loadTracts: function() {
-            $.ajax(API_URL + "/" + this.get(SUMLEV_STATE) + "/tracts_" + this.get(SUMLEV_COUNTY) + ".jsonp", {
+            $.ajax(ire_census.API_URL + "/" + this.get(SUMLEV_STATE) + "/tracts_" + this.get(SUMLEV_COUNTY) + ".jsonp", {
                 dataType: "jsonp",
                 jsonpCallback: "tracts_" + this.get(SUMLEV_COUNTY),
                 success: _.bind(function(response) {
