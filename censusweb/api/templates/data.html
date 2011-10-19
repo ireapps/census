@@ -47,7 +47,7 @@
         <colgroup></colgroup><colgroup></colgroup><colgroup></colgroup><colgroup></colgroup>
         <% }); %>
         <tr>
-            <th rowspan="2" class="labeldef"><strong><%=key %>.</strong> <%= name %><br /><span class="universe">Universe: <%= universe %></span></th>
+            <th rowspan="2" class="labeldef"><strong><%=key %>.</strong> <%= name %><% if (key == "PCT15" || key == "PCT17") { %><sup>*</sup><%}%><br /><span class="universe">Universe: <%= universe %></span></th>
             <% _.each(columns, function(c) { %>
             <th colspan="4" class="locationdef">
                 <%= c.name %>
@@ -94,6 +94,8 @@
         </tr>
         <% }); %>
     </table>
+    <% if (key == "PCT15" || key == "PCT17") { %><sup>*</sup>NOTE: On Sept. 27, 2011, the Census Bureau released <a href="http://www.census.gov/newsroom/releases/archives/2010_census/cb11-cn181.html">revised estimated for same-sex couples</a>, including both unmarried partners and married couples.  These revisions adjust for likely tabulation errors in the 2010 Census. These estimates should be used for state-level analysis instead of data presented here. No estimates were released for smaller geographies.
+    <%}%>
 </script>
 
 <nav>
