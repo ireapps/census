@@ -17,7 +17,7 @@ The in2csv example above handles this correctly. in2csv always writes output fil
 
 Thanks to Ron Campbell of the Orange County Register for contributing the basis of **geo_2010.sql** Thanks to Mike Stucka of the Telegraph of Macon for suggestions to clarify the SQL and make it more compatible. Thanks to Tom Meagher of the Star-Ledger for SQL scripts for the 2000 census.
 
-Note that the column IDs do not exactly match the values printed in the SF1 technical documentation. Our method was to zero-pad digits to three positions, but we made no allowance for the occasional presence of letters qualifying race/ethnic variations on certain tables. Therefore, our column lengths vary in length somewhat compared to the SF1 versions of the labels. (If anyone is motivated to create an alternate SQL file or view which maintains tighter consistency with the SF1 technical documentation, please feel free to send a file or issue a pull request.)
+Note that the column IDs do not exactly match the values printed in the SF1 technical documentation. Our method was to zero-pad digits to three positions, but we made no allowance for the occasional presence of letters qualifying race/ethnic variations on certain tables. Therefore, our column lengths vary in length somewhat compared to the SF1 versions of the labels. A fixed version with columns that match the documentation precisly is available in the sql/2010_correct_columns directory.
 
 The column names in our SQL files align with the metadata files described below.
 
