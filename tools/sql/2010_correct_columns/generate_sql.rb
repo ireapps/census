@@ -47,6 +47,8 @@ end
 creates = File.open('all_sf1_files.sql', 'w')
 rename = File.open('rename_columns.sql', 'w')
 
+`grep FLOAT ../all_sf1_files.sql > floats`
+
 # For each segment (aka file) produce a CREATE TABLE statement
 segments.keys.sort.each do |segment|
   creates.write """CREATE TABLE sf1_#{segment} (
@@ -62,7 +64,8 @@ segments.keys.sort.each do |segment|
       proper_name = data_dictionary_reference_name(table, i + 1)
       original_name = data_dictionary_reference_name(table, i + 1, true)
 
-      columns << "\t#{proper_name} INTEGER NOT NULL"
+      decimal = `grep #{original_name} floats`
+      columns << "\t#{proper_name} #{decimal.empty? ? 'INTEGER' : 'DECIMAL(16,3)' } NOT NULL"
       rename.write "ALTER TABLE sf1_#{segment} RENAME COLUMN #{original_name} TO #{proper_name};\n"
     end
   end
@@ -72,3 +75,4 @@ end
 
 creates.close
 rename.close
+`rm floats`
