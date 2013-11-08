@@ -21,15 +21,25 @@ LOWER_TABLE=`echo $TABLE | tr '[A-Z]' '[a-z]'`
 CSV_FILENAME=all_${SUMLEV}_in_${STATE}.${TABLE}.csv
 
 if command -v gzcat >/dev/null; then
-        GZCAT=gzcat
+        GZCAT_CMD=gzcat
 elif command -v zcat >/dev/null; then
-        GZCAT=zcat
+        GZCAT_CMD=zcat
 else        
         echo "gzcat or zcat not found"
         exit 1
 fi
 
+if command -v spatialite >/dev/null; then
+        SQLITE_CMD=spatialite
+elif command -v spatialite >/dev/null; then
+        SQLITE_CMD=sqlite3
+else
+        echo "spatialite or sqlite3 command not found"
+        exit 1
+fi
+
 echo "Loading table $TABLE for state $STATE and summary level $SUMLEV into $DATABASE"
 curl https://raw.github.com/ireapps/census/master/tools/sql/ire_export/ire_${TABLE}.sql | sqlite3 $DATABASE
-curl http://censusdata.ire.org/${STATE}/all_${SUMLEV}_in_${STATE}.${TABLE}.csv | $GZCAT > ${CSV_FILENAME} 
-echo -e ".mode csv\n.import ${CSV_FILENAME} ire_${LOWER_TABLE}\n" | sqlite3 ${DATABASE}
+# Use tail to strip the header row from the file so it doesn't get imported
+curl http://censusdata.ire.org/${STATE}/all_${SUMLEV}_in_${STATE}.${TABLE}.csv | $GZCAT_CMD | tail -n +2 > ${CSV_FILENAME} 
+echo -e ".mode csv\n.import ${CSV_FILENAME} ire_${LOWER_TABLE}\n" | ${SQLITE_CMD} ${DATABASE}
