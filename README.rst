@@ -1,6 +1,8 @@
 census.ire.org
 ==============
 
+**Summer 2022 update**: This site is shutting down, as many better options now exist to browse decennial census data. We recommend checking out [censusreporter.org](https://censusreporter.org/) or [data.census.gov](https://data.census.gov).
+
 A nationwide census browser for 2000 and 2010 census data.
 
 Dependencies
